@@ -1,0 +1,111 @@
+<!-- 员工端 - 创建订单 -->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="back-btn">‹</view>
+    <view class="header-title">创建订单</view>
+    <view class="mode-badge">员工模式</view>
+  </view>
+
+  <!-- 说明提示 -->
+  <view class="tip-box">
+    <text class="tip-icon">ℹ️</text>
+    <text class="tip-text">只能为管理员绑定的老板创建订单，订单无金额，仅用于服务记录</text>
+  </view>
+
+  <scroll-view scroll-y="{{true}}" class="scroll-content">
+    <view class="form-container">
+      <!-- 选择老板 -->
+      <view class="form-section">
+        <text class="form-label">选择老板 *</text>
+        <picker mode="selector" range="{{bossList}}" range-key="nickname" bindchange="onBossChange">
+          <view class="picker-input">
+            <text wx:if="{{selectedBossId}}">{{selectedBossDisplay}}</text>
+            <text wx:else>请选择老板</text>
+            <text class="arrow">›</text>
+          </view>
+        </picker>
+        <text class="form-hint" wx:if="{{bossList.length === 0}}">暂无绑定老板，请联系管理员</text>
+        <text class="form-hint" wx:else>选择已绑定的老板创建订单</text>
+      </view>
+
+      <!-- 游戏类型 -->
+      <view class="form-section">
+        <text class="form-label">游戏类型 *</text>
+        <picker mode="selector" range="{{games}}" bindchange="onGameChange">
+          <view class="picker-input">
+            <text>{{selectedGame || '请选择游戏'}}</text>
+            <text class="arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 服务时长 -->
+      <view class="form-section">
+        <text class="form-label">服务时长 *</text>
+        <view class="duration-grid">
+          <view class="duration-btn {{item.selected ? 'selected' : ''}}" wx:for="{{durations}}" wx:key="value" data-value="{{item.value}}" bindtap="onDurationSelect">
+            {{item.label}}
+          </view>
+        </view>
+        <input class="form-input" placeholder="自定义时长（小时）" type="digit" />
+      </view>
+
+      <!-- 服务金额 -->
+      <view class="form-section">
+        <text class="form-label">服务金额 *</text>
+        <view class="price-input-container">
+          <text class="price-prefix">¥</text>
+          <input class="price-input" placeholder="请输入金额" type="digit" value="{{amount}}" bindinput="onAmountInput" />
+        </view>
+        <text class="price-hint">建议价格：1小时50-200元，根据游戏类型调整</text>
+      </view>
+
+      <!-- 服务日期 -->
+      <view class="form-section">
+        <text class="form-label">服务日期 *</text>
+        <picker mode="date" value="{{date}}" bindchange="onDateChange">
+          <view class="picker-input">
+            <text>{{date || '请选择日期'}}</text>
+            <text class="arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 游戏位置/角色 -->
+      <view class="form-section">
+        <text class="form-label">游戏位置/角色</text>
+        <view class="position-grid">
+          <view class="position-btn {{item.selected ? 'selected' : ''}}" wx:for="{{positions}}" wx:key="value" data-value="{{item.value}}" bindtap="onPositionSelect">
+            {{item.label}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 备注信息 -->
+      <view class="form-section">
+        <text class="form-label">备注信息</text>
+        <textarea class="form-textarea" value="{{remark}}" bindinput="onRemarkInput" placeholder="请输入订单备注，如特殊要求、老板喜好等..." maxlength="200" />
+      </view>
+
+      <!-- 服务内容 -->
+      <view class="form-section">
+        <text class="form-label">服务内容 *</text>
+        <checkbox-group bindchange="onServiceChange">
+          <view class="checkbox-list">
+            <label class="checkbox-item" wx:for="{{services}}" wx:key="value">
+              <checkbox value="{{item.value}}" checked="{{item.checked}}" />
+              <text class="checkbox-label">{{item.label}}</text>
+            </label>
+          </view>
+        </checkbox-group>
+      </view>
+
+      <!-- 提交按钮 -->
+      <view class="submit-section">
+        <button class="submit-btn {{submitting ? 'disabled' : ''}}" bindtap="onSubmit" disabled="{{submitting}}">{{submitting ? '提交中...' : '提交订单'}}</button>
+        <text class="submit-hint">提交后订单状态为「待老板确认」</text>
+      </view>
+    </view>
+  </scroll-view>
+</view>

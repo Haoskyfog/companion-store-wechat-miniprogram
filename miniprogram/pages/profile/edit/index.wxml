@@ -1,0 +1,77 @@
+<!-- 编辑用户资料 -->
+<view class="page">
+  <scroll-view scroll-y="{{true}}" class="scroll-content">
+    <view class="form-container">
+
+      <!-- 头像设置 -->
+      <view class="form-section">
+        <text class="form-label">头像 *</text>
+        <view class="avatar-section" bindtap="showAvatarSelector">
+          <view class="current-avatar">
+            <image wx:if="{{userInfo.avatar}}" src="{{userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
+            <text wx:else class="avatar-placeholder">👤</text>
+          </view>
+          <view class="avatar-info">
+            <text class="avatar-text">点击更换头像</text>
+            <text class="avatar-desc">支持自定义上传或选择预设头像</text>
+          </view>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+
+      <!-- 昵称设置 -->
+      <view class="form-section">
+        <text class="form-label">昵称 *</text>
+        <input class="form-input"
+               placeholder="请输入您的昵称"
+               value="{{userInfo.nickname}}"
+               bindinput="onNicknameInput"
+               maxlength="20" />
+        <text class="form-hint">昵称将在所有地方显示，限20个字符</text>
+      </view>
+
+      <!-- 用户ID设置 -->
+      <view class="form-section">
+        <text class="form-label">用户ID *</text>
+        <input class="form-input"
+               placeholder="请输入用户ID"
+               value="{{userInfo.userId}}"
+               bindinput="onUserIdInput"
+               maxlength="15" />
+        <text class="form-hint">用户ID是您的唯一标识，只能包含字母、数字、下划线</text>
+      </view>
+
+      <!-- 保存按钮 -->
+      <view class="save-section">
+        <button class="save-btn {{saving ? 'disabled' : ''}}"
+                bindtap="saveProfile"
+                disabled="{{saving}}">
+          {{saving ? '保存中...' : '保存资料'}}
+        </button>
+        <text class="save-hint">保存后将立即生效，所有用户都能看到更新</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 头像选择器弹窗 -->
+  <view class="avatar-selector {{avatarSelectorVisible ? 'visible' : ''}}">
+    <view class="selector-overlay" bindtap="hideAvatarSelector"></view>
+    <view class="selector-content">
+      <view class="selector-header">
+        <text class="selector-title">选择头像</text>
+        <view class="close-btn" bindtap="hideAvatarSelector">✕</view>
+      </view>
+
+      <view class="avatar-grid">
+        <view class="avatar-item" wx:for="{{avatarOptions}}" wx:key="*this" bindtap="selectAvatar" data-avatar="{{item}}">
+          <image src="{{item}}" mode="aspectFill" class="avatar-option" />
+        </view>
+      </view>
+
+      <view class="upload-section">
+        <button class="upload-btn" bindtap="uploadAvatar">上传自定义头像</button>
+        <text class="upload-tip">上传后可裁剪为正方形头像</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工端 - 提交报备</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/tdesign-mobile/dist/tdesign.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+        }
+        .form-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen pb-24">
+        <!-- 顶部导航 -->
+        <div class="bg-white px-4 py-3 flex items-center sticky top-0 z-10 shadow-sm">
+            <button class="mr-3">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </button>
+            <div class="text-xl font-bold text-gray-800 flex-1">提交报备</div>
+            <button class="text-sm text-blue-600 font-medium">报备记录</button>
+        </div>
+
+        <!-- 说明提示 -->
+        <div class="px-4 py-4">
+            <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-xl p-3">
+                <div class="flex items-start">
+                    <svg class="w-5 h-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                    <div class="text-sm text-blue-900">
+                        报备用于记录接单信息，提交后需等待管理员审核
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 表单 -->
+        <div class="px-4">
+            <div class="bg-white rounded-2xl p-5 shadow-sm">
+                <!-- 关联老板 -->
+                <div class="mb-5">
+                    <label class="form-label">关联老板 *</label>
+                    <div class="border border-gray-200 rounded-lg p-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-300 to-orange-400 flex items-center justify-center text-xl mr-3">
+                                    👑
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-gray-800">李老板</div>
+                                    <div class="text-xs text-gray-500">ID: 88888</div>
+                                </div>
+                            </div>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 接单日期 -->
+                <div class="mb-5">
+                    <label class="form-label">接单日期 *</label>
+                    <input type="text" class="form-input" value="2025-12-13" placeholder="选择日期">
+                </div>
+
+                <!-- 游戏类型 -->
+                <div class="mb-5">
+                    <label class="form-label">游戏类型 *</label>
+                    <select class="form-input">
+                        <option>王者荣耀</option>
+                        <option>和平精英</option>
+                        <option>英雄联盟</option>
+                        <option>原神</option>
+                        <option>其他</option>
+                    </select>
+                </div>
+
+                <!-- 服务时长 -->
+                <div class="mb-5">
+                    <label class="form-label">服务时长 *</label>
+                    <div class="grid grid-cols-4 gap-2 mb-2">
+                        <button class="py-2 border border-gray-200 rounded-lg text-sm text-gray-700 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600">1小时</button>
+                        <button class="py-2 border border-gray-200 rounded-lg text-sm text-gray-700 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600">2小时</button>
+                        <button class="py-2 border-2 border-blue-500 bg-blue-50 rounded-lg text-sm text-blue-600 font-medium">3小时</button>
+                        <button class="py-2 border border-gray-200 rounded-lg text-sm text-gray-700 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600">4小时</button>
+                    </div>
+                    <input type="text" class="form-input" placeholder="自定义时长（小时）">
+                </div>
+
+                <!-- 接单平台 -->
+                <div class="mb-5">
+                    <label class="form-label">接单平台</label>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="px-3 py-1.5 border-2 border-blue-500 bg-blue-50 text-blue-600 rounded-full text-sm font-medium">比心</button>
+                        <button class="px-3 py-1.5 border border-gray-200 text-gray-700 rounded-full text-sm hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600">闪电鱼</button>
+                        <button class="px-3 py-1.5 border border-gray-200 text-gray-700 rounded-full text-sm hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600">小鹿陪玩</button>
+                        <button class="px-3 py-1.5 border border-gray-200 text-gray-700 rounded-full text-sm hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600">其他</button>
+                    </div>
+                </div>
+
+                <!-- 服务内容 -->
+                <div class="mb-5">
+                    <label class="form-label">服务内容</label>
+                    <div class="space-y-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 text-blue-600 rounded" checked>
+                            <span class="ml-2 text-sm text-gray-700">游戏陪玩</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 text-blue-600 rounded" checked>
+                            <span class="ml-2 text-sm text-gray-700">语音聊天</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" class="w-4 h-4 text-blue-600 rounded">
+                            <span class="ml-2 text-sm text-gray-700">技术指导</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 备注说明 -->
+                <div class="mb-5">
+                    <label class="form-label">备注说明</label>
+                    <textarea class="form-input" rows="4" placeholder="请输入备注信息，如特殊情况、额外说明等..."></textarea>
+                </div>
+
+                <!-- 截图上传 -->
+                <div class="mb-2">
+                    <label class="form-label">订单截图（选填）</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        <svg class="w-12 h-12 mx-auto text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <div class="text-sm text-gray-600">点击上传订单截图</div>
+                        <div class="text-xs text-gray-400 mt-1">支持 JPG、PNG 格式，最多3张</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 提交按钮 -->
+            <div class="mt-6 pb-4">
+                <button class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white py-4 rounded-xl font-bold text-lg shadow-lg active:scale-95 transition-transform">
+                    提交报备
+                </button>
+                <div class="text-center text-xs text-gray-500 mt-3">
+                    提交后等待管理员审核
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+

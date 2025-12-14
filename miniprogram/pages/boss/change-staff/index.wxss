@@ -1,0 +1,183 @@
+/* 老板更换直属员工页面样式 */
+.container {
+  padding: 16rpx;
+  background-color: #f6f7fb;
+  min-height: 100vh;
+}
+
+/* 提示说明 */
+.notice {
+  background-color: #fef3c7;
+  border: 1rpx solid #f59e0b;
+  border-radius: 8rpx;
+  padding: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.notice-text {
+  font-size: 26rpx;
+  color: #92400e;
+  line-height: 1.5;
+}
+
+/* 区域容器 */
+.section {
+  background-color: white;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 16rpx;
+}
+
+/* 员工列表 */
+.staff-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.staff-item {
+  display: flex;
+  align-items: center;
+  padding: 16rpx;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 8rpx;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.staff-item.selected {
+  border-color: #7c3aed;
+  background-color: #faf5ff;
+}
+
+.staff-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  margin-right: 16rpx;
+  overflow: hidden;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.staff-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-text {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #6b7280;
+}
+
+.staff-info {
+  flex: 1;
+}
+
+.staff-name {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #1f2937;
+  margin-bottom: 4rpx;
+}
+
+.staff-id {
+  font-size: 24rpx;
+  color: #6b7280;
+  margin-bottom: 4rpx;
+}
+
+.staff-stats {
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+.select-indicator {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background-color: #7c3aed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+/* 原因输入框 */
+.reason-input {
+  width: 100%;
+  min-height: 120rpx;
+  padding: 16rpx;
+  border: 1rpx solid #d1d5db;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  line-height: 1.5;
+  background-color: #f9fafb;
+}
+
+/* 提交按钮区域 */
+.submit-section {
+  padding: 32rpx 0;
+}
+
+.submit-btn {
+  width: 100%;
+  background-color: #7c3aed;
+  color: white;
+  border-radius: 8rpx;
+  font-size: 32rpx;
+  padding: 24rpx;
+  border: none;
+}
+
+.submit-btn::after {
+  border: none;
+}
+
+.empty {
+  padding: 60rpx 0;
+  text-align: center;
+  color: #6b7280;
+  font-size: 26rpx;
+}
+
+.loading {
+  padding: 120rpx 0;
+  text-align: center;
+  color: #6b7280;
+  font-size: 28rpx;
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .staff-item {
+    padding: 12rpx;
+  }
+
+  .staff-avatar {
+    width: 60rpx;
+    height: 60rpx;
+  }
+
+  .staff-name {
+    font-size: 28rpx;
+  }
+
+  .staff-id,
+  .staff-stats {
+    font-size: 22rpx;
+  }
+}

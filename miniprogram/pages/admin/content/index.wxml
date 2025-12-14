@@ -1,0 +1,163 @@
+<!-- 管理员端 - 内容管理 -->
+<view class="page">
+  <!-- 标签页 -->
+  <view class="tabs">
+    <view class="tab-btn {{activeTab === item.key ? 'active' : ''}}" wx:for="{{tabs}}" wx:key="key" data-tab="{{item.key}}" bindtap="onTabChange">
+      {{item.label}}
+    </view>
+  </view>
+
+  <!-- 添加按钮 -->
+  <view class="add-btn" bindtap="showAddModal">
+    <text class="add-icon">+</text>
+    <text class="add-text">添加{{activeTab === 'banner' ? '轮播图' : (activeTab === 'notice' ? '公告' : (activeTab === 'gallery' ? '相册' : '推荐'))}}</text>
+  </view>
+
+  <!-- 内容列表 -->
+  <view class="content-list" wx:if="{{!loading}}">
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{contentList.length === 0}}">
+      <view class="empty-icon">📄</view>
+      <view class="empty-text">暂无{{activeTab === 'banner' ? '轮播图' : (activeTab === 'notice' ? '公告' : (activeTab === 'gallery' ? '相册' : '推荐'))}}内容</view>
+      <view class="empty-desc">点击上方按钮添加内容</view>
+    </view>
+
+    <!-- 内容项 -->
+    <view class="content-item" wx:for="{{contentList}}" wx:key="_id">
+      <view class="content-header">
+        <view class="content-info">
+          <text class="content-title">{{item.title}}</text>
+          <text class="content-meta">{{item.createTime}} · 排序:{{item.order}}</text>
+        </view>
+        <view class="content-status {{item.status === 'active' ? 'status-active' : 'status-inactive'}}">
+          {{item.status === 'active' ? '启用' : '禁用'}}
+        </view>
+      </view>
+
+      <!-- 内容预览 -->
+      <view class="content-preview" wx:if="{{item.content}}">
+        <text class="content-text">{{item.content}}</text>
+      </view>
+
+      <!-- 员工预览（推荐内容） -->
+      <view class="staff-preview" wx:if="{{item.type === 'recommend' && item.staffList && item.staffList.length > 0}}">
+        <text class="staff-label">推荐员工:</text>
+        <view class="staff-avatars">
+          <view class="staff-avatar" wx:for="{{item.staffList}}" wx:key="_openid">
+            <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" />
+            <text wx:else>👤</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 图片预览（公告类型不显示） -->
+      <view class="image-preview" wx:if="{{item.type !== 'notice' && item.images && item.images.length > 0}}">
+        <image class="preview-image" wx:for="{{item.images}}" wx:for-item="image" wx:key="*this" src="{{image}}" mode="aspectFill" />
+        <text class="image-count" wx:if="{{item.images.length > 3}}">+{{item.images.length - 3}}</text>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="content-actions">
+        <button class="action-btn edit-btn" data-content="{{item}}" bindtap="editContent">
+          编辑
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <!-- 添加/编辑模态框 -->
+  <view class="modal-overlay {{showAddModal ? 'visible' : ''}}" bindtap="hideModal">
+    <view class="modal-content" catchtap="preventTap">
+      <view class="modal-header">
+        <text class="modal-title">{{editingContent ? '编辑' : '添加'}}{{activeTab === 'banner' ? '轮播图' : (activeTab === 'notice' ? '公告' : (activeTab === 'gallery' ? '相册' : '推荐'))}}</text>
+        <view class="close-btn" bindtap="hideModal">✕</view>
+      </view>
+
+      <scroll-view scroll-y="{{true}}" class="modal-body">
+        <!-- 标题 -->
+        <view class="form-group">
+          <text class="form-label">标题 *</text>
+          <input class="form-input" placeholder="请输入标题" value="{{formData.title}}" data-field="title" bindinput="onInputChange" maxlength="50" />
+        </view>
+
+        <!-- 内容（公告和推荐需要） -->
+        <view class="form-group" wx:if="{{activeTab === 'notice' || activeTab === 'recommend'}}">
+          <text class="form-label">内容</text>
+          <textarea class="form-textarea" placeholder="请输入内容" value="{{formData.content}}" data-field="content" bindinput="onInputChange" maxlength="500" />
+        </view>
+
+        <!-- 排序 -->
+        <view class="form-group">
+          <text class="form-label">排序</text>
+          <input class="form-input" type="number" placeholder="数字越小越靠前" value="{{formData.order}}" data-field="order" bindinput="onInputChange" />
+        </view>
+
+        <!-- 状态 -->
+        <view class="form-group">
+          <text class="form-label">状态</text>
+          <radio-group data-field="status" bindchange="onStatusChange">
+            <label class="radio-item" wx:for="{{[{value:'active', label:'启用'}, {value:'inactive', label:'禁用'}]}}" wx:key="value">
+              <radio value="{{item.value}}" checked="{{item.value === formData.status}}" />
+              <text class="radio-text">{{item.label}}</text>
+            </label>
+          </radio-group>
+        </view>
+
+        <!-- 图片上传（公告类型不显示） -->
+        <view class="form-group" wx:if="{{activeTab !== 'notice'}}">
+          <text class="form-label">图片 {{activeTab === 'gallery' ? '(最多9张)' : '(选填)'}}</text>
+          <view class="image-upload">
+            <view class="image-list">
+              <view class="image-item" wx:for="{{formData.images}}" wx:key="*this">
+                <image class="uploaded-image" src="{{item}}" mode="aspectFill" />
+                <view class="delete-btn" data-index="{{index}}" bindtap="deleteImage">×</view>
+              </view>
+              <view class="upload-btn" wx:if="{{formData.images.length < 9}}" bindtap="uploadImages">
+                <text class="upload-icon">+</text>
+                <text class="upload-text">上传</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 员工选择（仅推荐功能） -->
+        <view class="form-group" wx:if="{{activeTab === 'recommend'}}">
+          <text class="form-label">选择推荐员工 * (最多3个)</text>
+          <view class="staff-selection">
+            <view class="selected-count">已选择 {{selectedStaffCount}}/3 个员工</view>
+            <view class="staff-list">
+              <view class="staff-item {{isStaffSelected(item._openid) ? 'selected' : ''}}"
+                    wx:for="{{staffList}}"
+                    wx:key="_openid"
+                    data-staff-id="{{item._openid}}"
+                    bindtap="toggleStaffSelection">
+                <view class="staff-avatar">
+                  <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" />
+                  <text wx:else>👤</text>
+                </view>
+                <view class="staff-info">
+                  <text class="staff-name">{{item.nickname}}</text>
+                  <text class="staff-id">ID: {{item.userId}}</text>
+                </view>
+                <view class="select-indicator" wx:if="{{isStaffSelected(item._openid)}}">
+                  <text>✓</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="modal-footer">
+        <button class="cancel-btn" bindtap="hideModal">取消</button>
+        <button class="delete-modal-btn" wx:if="{{editingContent}}" bindtap="deleteContentFromModal">删除</button>
+        <button class="confirm-btn" bindtap="saveContent">保存</button>
+      </view>
+    </view>
+  </view>
+</view>

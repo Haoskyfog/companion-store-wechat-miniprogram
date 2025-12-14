@@ -1,0 +1,188 @@
+/* 数据统计页面样式 */
+.container {
+  padding: 16rpx;
+  background-color: #f6f7fb;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: 24rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 8rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #6b7280;
+}
+
+/* 统计卡片网格 */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16rpx;
+  margin-bottom: 32rpx;
+}
+
+.stat-card {
+  background-color: white;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.card-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #374151;
+}
+
+.card-total {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #7c3aed;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-label {
+  font-size: 26rpx;
+  color: #6b7280;
+}
+
+.stat-value {
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+/* 状态颜色 */
+.stat-value.boss { color: #7c3aed; }
+.stat-value.staff { color: #10b981; }
+.stat-value.admin { color: #f59e0b; }
+.stat-value.pending { color: #f59e0b; }
+.stat-value.confirmed { color: #3b82f6; }
+.stat-value.completed { color: #10b981; }
+.stat-value.cancelled { color: #ef4444; }
+.stat-value.approved { color: #10b981; }
+.stat-value.rejected { color: #ef4444; }
+.stat-value.binding { color: #8b5cf6; }
+.stat-value.request { color: #f97316; }
+
+/* 图表区域 */
+.charts-section {
+  margin-bottom: 32rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1f2937;
+  margin-bottom: 16rpx;
+}
+
+.chart-card {
+  background-color: white;
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.chart-header {
+  padding: 24rpx 24rpx 0;
+}
+
+.chart-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #374151;
+}
+
+.chart-content {
+  padding: 16rpx 24rpx 24rpx;
+}
+
+.chart-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.chart-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.bar-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bar-label {
+  font-size: 26rpx;
+  color: #6b7280;
+}
+
+.bar-value {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #374151;
+}
+
+.bar-container {
+  height: 24rpx;
+  background-color: #e5e7eb;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 12rpx;
+  transition: width 0.3s ease;
+}
+
+.loading {
+  padding: 120rpx 0;
+  text-align: center;
+  color: #6b7280;
+  font-size: 28rpx;
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 20rpx;
+  }
+
+  .chart-card {
+    margin-bottom: 12rpx;
+  }
+}

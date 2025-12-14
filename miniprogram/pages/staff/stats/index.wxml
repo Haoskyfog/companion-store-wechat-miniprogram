@@ -1,0 +1,111 @@
+<view class="container">
+  <!-- 用户信息卡片 -->
+  <view class="user-card" wx:if="{{!loading}}">
+    <view class="user-info">
+      <image class="avatar" src="{{userInfo.avatar || '/assets/default-avatar.png'}}" mode="aspectFill" wx:if="{{userInfo.avatar}}"></image>
+      <view class="default-avatar" wx:else>{{userInfo.nickname.charAt(0)}}</view>
+      <view class="user-details">
+        <text class="nickname">{{userInfo.nickname}}</text>
+        <text class="user-id">ID: {{userInfo.userId}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 统计卡片 -->
+  <view class="stats-section" wx:if="{{!loading}}">
+    <!-- 订单统计 -->
+    <view class="stat-card">
+      <view class="card-header">
+        <text class="card-icon">📋</text>
+        <text class="card-title">订单统计</text>
+      </view>
+      <view class="card-content">
+        <view class="stat-grid">
+          <view class="stat-item">
+            <text class="stat-value">{{statistics.orders.total}}</text>
+            <text class="stat-label">总订单</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-value pending">{{statistics.orders.pending}}</text>
+            <text class="stat-label">待确认</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-value confirmed">{{statistics.orders.confirmed}}</text>
+            <text class="stat-label">已确认</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-value completed">{{statistics.orders.completed}}</text>
+            <text class="stat-label">已完成</text>
+          </view>
+        </view>
+
+        <view class="stat-extra">
+          <view class="extra-item">
+            <text class="extra-label">总服务时长</text>
+            <text class="extra-value">{{formatDuration(statistics.orders.totalDuration)}}</text>
+          </view>
+          <view class="extra-item">
+            <text class="extra-label">完成率</text>
+            <text class="extra-value success">{{getCompletionRate()}}</text>
+          </view>
+          <view class="extra-item">
+            <text class="extra-label">平均时长</text>
+            <text class="extra-value">{{getAverageDuration()}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 报备统计 -->
+    <view class="stat-card">
+      <view class="card-header">
+        <text class="card-icon">📝</text>
+        <text class="card-title">报备统计</text>
+      </view>
+      <view class="card-content">
+        <view class="stat-grid">
+          <view class="stat-item">
+            <text class="stat-value">{{statistics.reports.total}}</text>
+            <text class="stat-label">总报备</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-value pending">{{statistics.reports.pending}}</text>
+            <text class="stat-label">待审核</text>
+          </view>
+          <view class="stat-item">
+            <text class="stat-value approved">{{statistics.reports.approved}}</text>
+            <text class="stat-label">已通过</text>
+          </view>
+        </view>
+
+        <view class="stat-extra">
+          <view class="extra-item">
+            <text class="extra-label">审核通过率</text>
+            <text class="extra-value success">
+              {{statistics.reports.total > 0 ? Math.round((statistics.reports.approved / statistics.reports.total) * 100) + '%' : '0%'}}
+            </text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 进度条 -->
+    <view class="progress-card">
+      <view class="progress-header">
+        <text class="progress-title">本月目标进度</text>
+        <text class="progress-percent">{{getCompletionRate()}}</text>
+      </view>
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{getCompletionRate()}};"></view>
+      </view>
+      <view class="progress-desc">
+        <text>已完成 {{statistics.orders.completed}} 个订单</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

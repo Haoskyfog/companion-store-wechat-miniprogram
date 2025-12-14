@@ -1,0 +1,173 @@
+<!-- 管理员端 - 审核中心 -->
+<view class="page">
+  <!-- 标签页 -->
+  <view class="tabs">
+    <view class="tab-btn {{activeTab === 'reports' ? 'active' : ''}}" bindtap="onTabChange" data-tab="reports">
+      报备审核 ({{reports.length}})
+    </view>
+    <view class="tab-btn {{activeTab === 'requests' ? 'active' : ''}}" bindtap="onTabChange" data-tab="requests">
+      更换申请 ({{requests.length}})
+    </view>
+  </view>
+
+  <!-- 报备审核列表 -->
+  <view class="audit-list" wx:if="{{activeTab === 'reports'}}">
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <view class="loading-text">加载中...</view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:elif="{{reports.length === 0}}">
+      <view class="empty-icon">✅</view>
+      <view class="empty-text">暂无待审核报备</view>
+    </view>
+
+    <!-- 报备项 -->
+    <block wx:elif="{{reports.length > 0}}">
+      <view class="audit-item" wx:for="{{reports}}" wx:key="_id">
+      <view class="audit-header">
+        <view class="staff-info">
+          <view class="staff-avatar">🎮</view>
+          <view class="staff-details">
+            <text class="staff-name">{{item.staffInfo.nickname}}</text>
+            <text class="staff-id">ID: {{item.staffInfo.userId}}</text>
+          </view>
+        </view>
+        <view class="boss-info">
+          <text class="boss-label">关联老板:</text>
+          <text class="boss-name">{{item.bossInfo.nickname}} (ID: {{item.bossInfo.userId}})</text>
+        </view>
+      </view>
+
+      <view class="audit-content">
+        <view class="audit-info">
+          <view class="info-row">
+            <text class="info-label">接单日期:</text>
+            <text class="info-value">{{item.date}}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">游戏类型:</text>
+            <text class="info-value">{{item.game}}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">服务时长:</text>
+            <text class="info-value">{{item.duration}}小时</text>
+          </view>
+          <view class="info-row" wx:if="{{item.platform}}">
+            <text class="info-label">接单平台:</text>
+            <text class="info-value">{{item.platform}}</text>
+          </view>
+          <view class="info-row" wx:if="{{item.services && item.services.length > 0}}">
+            <text class="info-label">服务内容:</text>
+            <text class="info-value">{{item.services.join('、')}}</text>
+          </view>
+          <view class="info-row" wx:if="{{item.remark}}">
+            <text class="info-label">备注:</text>
+            <text class="info-value">{{item.remark}}</text>
+          </view>
+        </view>
+
+        <!-- 截图预览 -->
+        <view class="image-preview" wx:if="{{item.images && item.images.length > 0}}">
+          <view class="image-list">
+            <image class="preview-image" wx:for="{{item.images}}" wx:key="*this"
+                   src="{{item}}" mode="aspectFill"
+                   bindtap="onPreviewImage" data-images="{{item.images}}" data-index="{{index}}" />
+          </view>
+        </view>
+      </view>
+
+      <view class="audit-time">
+        <text>{{item.createTime}} 提交</text>
+      </view>
+
+      <!-- 审核操作 -->
+      <view class="audit-actions">
+        <button class="action-btn reject-btn"
+                data-report-id="{{item._id}}"
+                data-action="reject"
+                bindtap="onAuditReport">
+          驳回
+        </button>
+        <button class="action-btn approve-btn"
+                data-report-id="{{item._id}}"
+                data-action="approve"
+                bindtap="onAuditReport">
+          通过
+        </button>
+      </view>
+    </view>
+    </block>
+  </view>
+
+  <!-- 更换申请列表 -->
+  <view class="audit-list" wx:if="{{activeTab === 'requests'}}">
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <view class="loading-text">加载中...</view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:elif="{{requests.length === 0}}">
+      <view class="empty-icon">🔄</view>
+      <view class="empty-text">暂无待审核申请</view>
+    </view>
+
+    <!-- 申请项 -->
+    <block wx:elif="{{requests.length > 0}}">
+      <view class="audit-item" wx:for="{{requests}}" wx:key="_id">
+      <view class="audit-header">
+        <view class="boss-info">
+          <view class="boss-avatar">👑</view>
+          <view class="boss-details">
+            <text class="boss-name">{{item.bossInfo.nickname}}</text>
+            <text class="boss-id">ID: {{item.bossInfo.userId}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="audit-content">
+        <view class="audit-info">
+          <view class="info-row">
+            <text class="info-label">申请类型:</text>
+            <text class="info-value">更换直属员工</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">当前员工:</text>
+            <text class="info-value">{{item.currentStaffInfo.nickname}} (ID: {{item.currentStaffInfo.userId}})</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">目标员工:</text>
+            <text class="info-value">{{item.targetStaffInfo.nickname}} (ID: {{item.targetStaffInfo.userId}})</text>
+          </view>
+          <view class="info-row" wx:if="{{item.reason}}">
+            <text class="info-label">申请原因:</text>
+            <text class="info-value">{{item.reason}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="audit-time">
+        <text>{{item.createTime}} 提交</text>
+      </view>
+
+      <!-- 审核操作 -->
+      <view class="audit-actions">
+        <button class="action-btn reject-btn"
+                data-request-id="{{item._id}}"
+                data-action="reject"
+                bindtap="onAuditRequest">
+          驳回
+        </button>
+        <button class="action-btn approve-btn"
+                data-request-id="{{item._id}}"
+                data-action="approve"
+                bindtap="onAuditRequest">
+          通过
+        </button>
+      </view>
+    </view>
+    </block>
+  </view>
+</view>

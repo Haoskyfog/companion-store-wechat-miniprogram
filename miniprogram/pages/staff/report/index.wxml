@@ -1,0 +1,116 @@
+<!-- 员工端 - 提交报备 -->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="back-btn">‹</view>
+    <view class="header-title">提交报备</view>
+    <view class="header-link">报备记录</view>
+  </view>
+
+  <!-- 说明提示 -->
+  <view class="tip-box">
+    <text class="tip-icon">ℹ️</text>
+    <text class="tip-text">报备用于记录接单信息，提交后需等待管理员审核</text>
+  </view>
+
+  <scroll-view scroll-y="{{true}}" class="scroll-content">
+    <view class="form-container">
+      <!-- 关联老板 -->
+      <view class="form-section">
+        <text class="form-label">关联老板 *</text>
+        <picker mode="selector" range="{{bossList}}" range-key="nickname" bindchange="onBossChange">
+          <view class="picker-input">
+            <text wx:if="{{selectedBossId}}">{{selectedBossDisplay}}</text>
+            <text wx:else>请选择老板</text>
+            <text class="arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 接单日期 -->
+      <view class="form-section">
+        <text class="form-label">接单日期 *</text>
+        <picker mode="date" value="{{date}}" bindchange="onDateChange">
+          <view class="picker-input">
+            <text>{{date}}</text>
+            <text class="arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 游戏类型 -->
+      <view class="form-section">
+        <text class="form-label">游戏类型 *</text>
+        <picker mode="selector" range="{{games}}" bindchange="onGameChange">
+          <view class="picker-input">
+            <text>{{selectedGame}}</text>
+            <text class="arrow">›</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 服务时长 -->
+      <view class="form-section">
+        <text class="form-label">服务时长 *</text>
+        <view class="duration-grid">
+          <view class="duration-btn {{item.selected ? 'selected' : ''}}" wx:for="{{durations}}" wx:key="value" data-value="{{item.value}}" bindtap="onDurationSelect">
+            {{item.label}}
+          </view>
+        </view>
+        <input class="form-input" placeholder="自定义时长（小时）" type="digit" />
+      </view>
+
+      <!-- 接单平台 -->
+      <view class="form-section">
+        <text class="form-label">接单平台</text>
+        <view class="platform-grid">
+          <view class="platform-btn {{item.selected ? 'selected' : ''}}" wx:for="{{platforms}}" wx:key="value" data-value="{{item.value}}" bindtap="onPlatformSelect">
+            {{item.label}}
+          </view>
+        </view>
+      </view>
+
+      <!-- 服务内容 -->
+      <view class="form-section">
+        <text class="form-label">服务内容 *</text>
+        <checkbox-group bindchange="onServiceChange">
+          <view class="checkbox-list">
+            <label class="checkbox-item" wx:for="{{services}}" wx:key="value">
+              <checkbox value="{{item.value}}" checked="{{item.checked}}" />
+              <text class="checkbox-label">{{item.label}}</text>
+            </label>
+          </view>
+        </checkbox-group>
+      </view>
+
+      <!-- 备注说明 -->
+      <view class="form-section">
+        <text class="form-label">备注说明</text>
+        <textarea class="form-textarea" value="{{remark}}" bindinput="onRemarkInput" placeholder="请输入备注信息，如特殊情况、额外说明等..." maxlength="200" />
+      </view>
+
+      <!-- 截图上传 -->
+      <view class="form-section">
+        <text class="form-label">订单截图（选填，最多3张）</text>
+        <view class="image-upload">
+          <view class="image-list">
+            <view class="image-item" wx:for="{{images}}" wx:key="*this">
+              <image class="uploaded-image" src="{{item}}" mode="aspectFill" />
+              <view class="delete-btn" data-index="{{index}}" bindtap="onDeleteImage">×</view>
+            </view>
+            <view class="upload-btn" wx:if="{{images.length < 3}}" bindtap="onUploadImage">
+              <text class="upload-icon">+</text>
+              <text class="upload-text">上传</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 提交按钮 -->
+      <view class="submit-section">
+        <button class="submit-btn {{submitting ? 'disabled' : ''}}" bindtap="onSubmit" disabled="{{submitting}}">{{submitting ? '提交中...' : '提交报备'}}</button>
+        <text class="submit-hint">提交后等待管理员审核</text>
+      </view>
+    </view>
+  </scroll-view>
+</view>

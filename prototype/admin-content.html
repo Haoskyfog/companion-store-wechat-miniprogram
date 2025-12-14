@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>管理员端 - 内容管理</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://unpkg.com/tdesign-mobile/dist/tdesign.min.css">
+  <link rel="stylesheet" href="acrylic.css">
+  <style>
+    .tap:active { transform: scale(.98); }
+  </style>
+</head>
+<body class="acrylic-page">
+  <div class="min-h-screen pb-20">
+    <!-- 顶部导航 -->
+    <div class="bg-white px-4 py-3 flex items-center sticky top-0 z-10 shadow-sm">
+      <button class="mr-3 tap">
+        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+      <div class="text-xl font-bold text-gray-800 flex-1">内容管理</div>
+      <div class="bg-indigo-100 text-indigo-700 text-xs px-2 py-1 rounded-full font-medium">Admin</div>
+    </div>
+
+    <!-- 内容入口 -->
+    <div class="px-4 py-4">
+      <div class="bg-white rounded-2xl p-4 shadow-sm">
+        <div class="text-sm text-gray-600">管理主页与推荐页内容（无支付版本）</div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 mt-4">
+        <button class="bg-white rounded-2xl p-4 shadow-sm tap text-left">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="w-12 h-12 rounded-2xl bg-purple-100 flex items-center justify-center text-2xl">🖼️</div>
+              <div class="ml-3">
+                <div class="font-bold text-gray-800">主页轮播图</div>
+                <div class="text-xs text-gray-500 mt-1">上传/排序/下架</div>
+              </div>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+        </button>
+
+        <button class="bg-white rounded-2xl p-4 shadow-sm tap text-left">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center text-2xl">📢</div>
+              <div class="ml-3">
+                <div class="font-bold text-gray-800">公示信息</div>
+                <div class="text-xs text-gray-500 mt-1">公告/生日祝福</div>
+              </div>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+        </button>
+
+        <button class="bg-white rounded-2xl p-4 shadow-sm tap text-left">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="w-12 h-12 rounded-2xl bg-pink-100 flex items-center justify-center text-2xl">🗂️</div>
+              <div class="ml-3">
+                <div class="font-bold text-gray-800">卡类集合</div>
+                <div class="text-xs text-gray-500 mt-1">相册分组/内容</div>
+              </div>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+        </button>
+
+        <button class="bg-white rounded-2xl p-4 shadow-sm tap text-left">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <div class="w-12 h-12 rounded-2xl bg-green-100 flex items-center justify-center text-2xl">⭐</div>
+              <div class="ml-3">
+                <div class="font-bold text-gray-800">推荐页配置</div>
+                <div class="text-xs text-gray-500 mt-1">今日/新人推荐</div>
+              </div>
+            </div>
+            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- 模拟编辑面板 -->
+    <div class="px-4">
+      <div class="bg-white rounded-2xl p-5 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <div class="font-bold text-gray-800">正在编辑：主页轮播图</div>
+          <span class="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-medium">草稿</span>
+        </div>
+
+        <div class="space-y-3">
+          <div class="bg-white rounded-xl p-3 border">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center text-white">1</div>
+                <div class="ml-3">
+                  <div class="font-semibold text-gray-800">欢迎页 Banner</div>
+                  <div class="text-xs text-gray-500 mt-1">更新时间：今天 10:24</div>
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <button class="text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 tap">排序</button>
+                <button class="text-xs px-3 py-1.5 rounded-full bg-red-50 text-red-600 tap">下架</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl p-3 border">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-cyan-500 flex items-center justify-center text-white">2</div>
+                <div class="ml-3">
+                  <div class="font-semibold text-gray-800">新人活动 Banner</div>
+                  <div class="text-xs text-gray-500 mt-1">更新时间：昨天 18:02</div>
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <button class="text-xs px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 tap">排序</button>
+                <button class="text-xs px-3 py-1.5 rounded-full bg-red-50 text-red-600 tap">下架</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="w-full mt-5 py-3 rounded-xl text-white font-bold acrylic-btn-primary tap">
+          + 新增轮播图
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部导航 -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+    <div class="flex items-center justify-around">
+      <div class="flex flex-col items-center text-gray-400">
+        <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+        </svg>
+        <span class="text-xs">仪表板</span>
+      </div>
+      <div class="flex flex-col items-center text-gray-400">
+        <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+        </svg>
+        <span class="text-xs">用户</span>
+      </div>
+      <div class="flex flex-col items-center text-gray-400">
+        <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        <span class="text-xs">审核</span>
+      </div>
+      <div class="flex flex-col items-center text-purple-600">
+        <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"></path>
+        </svg>
+        <span class="text-xs font-medium">内容</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

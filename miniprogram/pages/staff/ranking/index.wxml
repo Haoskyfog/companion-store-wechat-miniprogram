@@ -1,0 +1,102 @@
+<!-- 员工端 - 排行榜 -->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="back-btn" bindtap="onBack">‹</view>
+    <view class="header-title">排行榜</view>
+  </view>
+
+  <!-- 标题区域 -->
+  <view class="title-section">
+    <text class="title-text">🏆 员工总排行榜</text>
+    <text class="subtitle">共 {{rankings.length}} 位员工</text>
+  </view>
+
+  <scroll-view scroll-y="{{true}}" class="scroll-content">
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <view class="loading-text">加载中...</view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:elif="{{rankings.length === 0}}">
+      <view class="empty-icon">📊</view>
+      <view class="empty-text">暂无员工数据</view>
+      <view class="empty-desc">请联系管理员添加员工信息</view>
+    </view>
+
+    <!-- 排名列表 -->
+    <view class="ranking-section" wx:else>
+      <view class="section-title">
+        <text class="title-icon">🏆</text>
+        <text class="title-text">总排行榜</text>
+      </view>
+
+      <!-- 前三名特殊展示 -->
+      <view class="top-three-section" wx:if="{{rankings.length >= 3}}">
+        <view class="top-three">
+          <!-- 第二名 -->
+          <view class="top-item top-2" wx:if="{{rankings[1]}}">
+            <view class="top-avatar">
+              <image wx:if="{{rankings[1].userInfo && rankings[1].userInfo.avatar}}" src="{{rankings[1].userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
+              <text wx:else class="avatar-emoji">🥈</text>
+              <view class="rank-badge badge-2">2</view>
+            </view>
+            <text class="top-name">{{rankings[1].userInfo.nickname}}</text>
+            <text class="top-orders highlight">{{rankings[1].orderCount}} 通过</text>
+          </view>
+
+          <!-- 第一名 -->
+          <view class="top-item top-1" wx:if="{{rankings[0]}}">
+            <view class="top-avatar top-1-avatar">
+              <image wx:if="{{rankings[0].userInfo && rankings[0].userInfo.avatar}}" src="{{rankings[0].userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
+              <text wx:else class="avatar-emoji">🥇</text>
+              <view class="rank-badge badge-1">1</view>
+            </view>
+            <text class="top-name">{{rankings[0].userInfo.nickname}}</text>
+            <text class="top-orders highlight">{{rankings[0].orderCount}} 通过</text>
+          </view>
+
+          <!-- 第三名 -->
+          <view class="top-item top-3" wx:if="{{rankings[2]}}">
+            <view class="top-avatar">
+              <image wx:if="{{rankings[2].userInfo && rankings[2].userInfo.avatar}}" src="{{rankings[2].userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
+              <text wx:else class="avatar-emoji">🥉</text>
+              <view class="rank-badge badge-3">3</view>
+            </view>
+            <text class="top-name">{{rankings[2].userInfo.nickname}}</text>
+            <text class="top-orders highlight">{{rankings[2].orderCount}} 通过</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 完整排名列表 -->
+      <view class="ranking-list">
+        <view class="ranking-item {{item.rank <= 3 ? 'top-rank' : ''}}" wx:for="{{rankings}}" wx:key="staffId">
+          <view class="rank-number {{getRankClass(item.rank)}}">
+            <text wx:if="{{item.rank > 3}}">{{getRankIcon(item.rank)}}</text>
+            <text wx:else>{{getRankIcon(item.rank)}}</text>
+          </view>
+          <view class="staff-avatar">
+            <image wx:if="{{item.userInfo && item.userInfo.avatar}}" src="{{item.userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
+            <view wx:else class="avatar-placeholder">
+              <text class="avatar-emoji">👤</text>
+            </view>
+          </view>
+          <view class="staff-info">
+            <text class="staff-name">{{item.userInfo.nickname}}</text>
+            <text class="staff-id">ID: {{item.userInfo.userId}}</text>
+          </view>
+          <view class="staff-stats">
+            <text class="stat-orders">{{item.orderCount}} 通过</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+
+  <!-- 自定义TabBar -->
+  <custom-tab-bar />
+</view>

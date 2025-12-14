@@ -1,0 +1,109 @@
+<view class="container">
+  <!-- 筛选器 -->
+  <view class="filter-bar">
+    <scroll-view scroll-x="true" class="filter-scroll">
+      <view class="filter-list">
+        <view class="filter-item {{getFilterClass(item.value)}}"
+              wx:for="{{statusOptions}}"
+              wx:key="value"
+              data-status="{{item.value}}"
+              bindtap="onStatusFilter">
+          {{item.label}}
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 报备列表 -->
+  <view class="report-list" wx:if="{{!loading}}">
+    <view class="report-item" wx:for="{{reports}}" wx:key="_id">
+      <view class="report-header">
+        <view class="report-main">
+          <text class="boss-name">{{item.bossInfo.nickname}} ({{item.bossInfo.userId}})</text>
+          <view class="report-status {{getStatusClass(item.status)}}">
+            {{getStatusText(item.status)}}
+          </view>
+        </view>
+        <view class="report-time">{{item.createTime}}</view>
+      </view>
+
+      <view class="report-content">
+        <view class="report-info">
+          <view class="info-row">
+            <text class="info-label">游戏：</text>
+            <text class="info-value">{{item.game}}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">时长：</text>
+            <text class="info-value">{{item.duration}}小时</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">日期：</text>
+            <text class="info-value">{{item.date}}</text>
+          </view>
+          <view class="info-row" wx:if="{{item.platform}}">
+            <text class="info-label">平台：</text>
+            <text class="info-value">{{item.platform}}</text>
+          </view>
+          <view class="info-row" wx:if="{{item.services && item.services.length > 0}}">
+            <text class="info-label">服务：</text>
+            <text class="info-value">{{item.services.join('、')}}</text>
+          </view>
+          <view class="info-row" wx:if="{{item.remark}}">
+            <text class="info-label">备注：</text>
+            <text class="info-value">{{item.remark}}</text>
+          </view>
+        </view>
+
+        <!-- 图片列表 -->
+        <view class="images-section" wx:if="{{item.images && item.images.length > 0}}">
+          <text class="images-label">订单截图：</text>
+          <view class="images-grid">
+            <image class="report-image"
+                   wx:for="{{item.images}}"
+                   wx:key="*this"
+                   src="{{item}}"
+                   mode="aspectFill"
+                   data-images="{{item.images}}"
+                   data-index="{{index}}"
+                   bindtap="onPreviewImage">
+            </image>
+          </view>
+        </view>
+
+        <!-- 审核信息 -->
+        <view class="audit-section" wx:if="{{item.status !== 'pending'}}">
+          <view class="audit-info">
+            <view class="audit-row">
+              <text class="audit-label">审核人：</text>
+              <text class="audit-value">{{item.auditorInfo ? item.auditorInfo.nickname : '管理员'}}</text>
+            </view>
+            <view class="audit-row" wx:if="{{item.auditTime}}">
+              <text class="audit-label">审核时间：</text>
+              <text class="audit-value">{{item.auditTime}}</text>
+            </view>
+            <view class="audit-row" wx:if="{{item.auditRemark}}">
+              <text class="audit-label">审核备注：</text>
+              <text class="audit-value">{{item.auditRemark}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多提示 -->
+    <view class="load-more" wx:if="{{!hasMore && reports.length > 0}}">
+      <text>没有更多报备了</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{reports.length === 0}}">
+      <text>暂无报备记录</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

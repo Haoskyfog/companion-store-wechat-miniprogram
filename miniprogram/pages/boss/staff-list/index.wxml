@@ -1,0 +1,52 @@
+<!-- 老板端 - 员工列表页 -->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="nav-back" bindtap="goBack">←</view>
+    <view class="header-title">员工列表</view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <!-- 员工列表 -->
+  <view class="staff-list" wx:else>
+    <view class="staff-item" wx:for="{{staffList}}" wx:key="_openid" data-staff="{{item}}" bindtap="viewStaffDetail">
+      <view class="staff-avatar">
+        <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image" />
+        <view wx:else class="avatar-placeholder">
+          <text class="avatar-emoji">👧</text>
+        </view>
+      </view>
+
+      <view class="staff-info">
+        <view class="staff-header">
+          <text class="staff-name">{{item.nickname}}</text>
+          <view class="voice-badge" wx:if="{{item.voiceType}}">
+            <text class="voice-text">{{item.voiceType === 'normal' ? '普通音色' : item.voiceType === 'cute' ? '可爱音色' : item.voiceType === 'cool' ? '酷炫音色' : '成熟音色'}}</text>
+          </view>
+        </view>
+
+        <text class="staff-id">ID: {{item.userId}}</text>
+
+        <view class="staff-intro" wx:if="{{item.introduction}}">
+          <text class="intro-text">{{item.introduction}}</text>
+        </view>
+
+        <view class="staff-actions">
+          <button class="detail-btn">查看详情</button>
+          <button class="audio-btn" wx:if="{{item.audioUrl}}" data-audio="{{item.audioUrl}}" bindtap="playStaffAudio" catchtap>🎵</button>
+          <text class="no-audio" wx:else>暂无音频</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!loading && staffList.length === 0}}">
+    <view class="empty-icon">👥</view>
+    <view class="empty-text">暂无员工</view>
+  </view>
+</view>

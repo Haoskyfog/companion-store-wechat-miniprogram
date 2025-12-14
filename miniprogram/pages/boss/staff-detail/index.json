@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "员工详情",
+  "navigationBarBackgroundColor": "#f6f7fb",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#fef3f2",
+  "enablePullDownRefresh": false,
+  "usingComponents": {}
+}

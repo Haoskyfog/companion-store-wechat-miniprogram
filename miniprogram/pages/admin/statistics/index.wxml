@@ -1,0 +1,147 @@
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="header">
+    <view class="title">数据统计</view>
+    <view class="subtitle">平台运营数据概览</view>
+  </view>
+
+  <!-- 统计卡片 -->
+  <view class="stats-grid" wx:if="{{!loading}}">
+    <!-- 用户统计 -->
+    <view class="stat-card">
+      <view class="card-header">
+        <text class="card-title">用户统计</text>
+        <text class="card-total">{{statistics.users.total}}</text>
+      </view>
+      <view class="card-content">
+        <view class="stat-item">
+          <text class="stat-label">老板</text>
+          <text class="stat-value boss">{{statistics.users.boss}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">员工</text>
+          <text class="stat-value staff">{{statistics.users.staff}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">管理员</text>
+          <text class="stat-value admin">{{statistics.users.admin}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 订单统计 -->
+    <view class="stat-card">
+      <view class="card-header">
+        <text class="card-title">订单统计</text>
+        <text class="card-total">{{statistics.orders.total}}</text>
+      </view>
+      <view class="card-content">
+        <view class="stat-item">
+          <text class="stat-label">待确认</text>
+          <text class="stat-value pending">{{statistics.orders.pending}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">已确认</text>
+          <text class="stat-value confirmed">{{statistics.orders.confirmed}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">已完成</text>
+          <text class="stat-value completed">{{statistics.orders.completed}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">已取消</text>
+          <text class="stat-value cancelled">{{statistics.orders.cancelled}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 报备统计 -->
+    <view class="stat-card">
+      <view class="card-header">
+        <text class="card-title">报备统计</text>
+        <text class="card-total">{{statistics.reports.total}}</text>
+      </view>
+      <view class="card-content">
+        <view class="stat-item">
+          <text class="stat-label">待审核</text>
+          <text class="stat-value pending">{{statistics.reports.pending}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">已通过</text>
+          <text class="stat-value approved">{{statistics.reports.approved}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">已驳回</text>
+          <text class="stat-value rejected">{{statistics.reports.rejected}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 其他统计 -->
+    <view class="stat-card">
+      <view class="card-header">
+        <text class="card-title">其他数据</text>
+      </view>
+      <view class="card-content">
+        <view class="stat-item">
+          <text class="stat-label">绑定关系</text>
+          <text class="stat-value binding">{{statistics.bindings.active}}</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-label">待审核申请</text>
+          <text class="stat-value request">{{statistics.requests.pending}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 图表区域 -->
+  <view class="charts-section" wx:if="{{!loading}}">
+    <view class="section-title">数据分布</view>
+
+    <!-- 用户分布图表 -->
+    <view class="chart-card">
+      <view class="chart-header">
+        <text class="chart-title">用户角色分布</text>
+      </view>
+      <view class="chart-content">
+        <view class="chart-bars">
+          <view class="chart-bar" wx:for="{{charts.userDistribution}}" wx:key="name">
+            <view class="bar-info">
+              <text class="bar-label">{{item.name}}</text>
+              <text class="bar-value">{{item.value}}</text>
+            </view>
+            <view class="bar-container">
+              <view class="bar-fill" style="width: {{item.value / statistics.users.total * 100}}%; background-color: {{item.color}};"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 订单状态图表 -->
+    <view class="chart-card">
+      <view class="chart-header">
+        <text class="chart-title">订单状态分布</text>
+      </view>
+      <view class="chart-content">
+        <view class="chart-bars">
+          <view class="chart-bar" wx:for="{{charts.orderStatus}}" wx:key="name">
+            <view class="bar-info">
+              <text class="bar-label">{{item.name}}</text>
+              <text class="bar-value">{{item.value}}</text>
+            </view>
+            <view class="bar-container">
+              <view class="bar-fill" style="width: {{item.value / statistics.orders.total * 100}}%; background-color: {{item.color}};"></view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

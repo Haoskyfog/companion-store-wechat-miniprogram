@@ -1,0 +1,89 @@
+<!-- 管理员端 - 用户管理 -->
+<view class="page">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input">
+      <input placeholder="搜索用户昵称或ID" bindinput="onSearch" value="{{keyword}}" />
+      <text class="search-icon">🔍</text>
+    </view>
+    <view class="search-actions">
+      <button class="diagnostic-btn" bindtap="goToDiagnostic">头像诊断</button>
+      <button class="refresh-btn" bindtap="forceRefresh">强制刷新</button>
+    </view>
+  </view>
+
+  <!-- 角色筛选 -->
+  <view class="role-filter">
+    <scroll-view scroll-x="{{true}}" class="role-scroll">
+      <view class="role-btn {{!roleFilter ? 'active' : ''}}" bindtap="onRoleFilter" data-role="">全部</view>
+      <view class="role-btn {{roleFilter === 'Boss' ? 'active' : ''}}" bindtap="onRoleFilter" data-role="Boss">老板</view>
+      <view class="role-btn {{roleFilter === 'Staff' ? 'active' : ''}}" bindtap="onRoleFilter" data-role="Staff">员工</view>
+      <view class="role-btn {{roleFilter === 'Admin' ? 'active' : ''}}" bindtap="onRoleFilter" data-role="Admin">管理员</view>
+      <view class="role-btn {{roleFilter === 'SuperAdmin' ? 'active' : ''}}" bindtap="onRoleFilter" data-role="SuperAdmin">超级管理员</view>
+    </scroll-view>
+  </view>
+
+  <!-- 用户列表 -->
+  <view class="user-list" wx:if="{{!loading}}">
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{users.length === 0}}">
+      <view class="empty-icon">👥</view>
+      <view class="empty-text">暂无用户数据</view>
+    </view>
+
+    <!-- 用户项 -->
+    <view class="user-item" wx:for="{{users}}" wx:key="_id">
+      <view class="user-header">
+        <view class="user-avatar">
+          <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image" />
+          <text wx:else class="avatar-placeholder">👤</text>
+        </view>
+        <view class="user-info">
+          <view class="user-name-row">
+            <text class="user-name">{{item.nickname || '未设置昵称'}}</text>
+            <view class="role-badge {{getRoleClass(item.role)}}">{{getRoleName(item.role)}}</view>
+          </view>
+          <text class="user-id">ID: {{item.userId || '未设置'}} · {{item.createTime}}</text>
+        </view>
+        <view class="user-actions">
+          <button class="action-btn" bindtap="onChangeRole" data-user-id="{{item._id}}" data-current-role="{{item.role}}">
+            修改角色
+          </button>
+        </view>
+      </view>
+
+      <!-- 统计信息 -->
+      <view class="user-stats">
+        <view class="stat-item" wx:if="{{item.role === 'Boss'}}">
+          <text class="stat-value">{{item.staffCount || 0}}</text>
+          <text class="stat-label">直属员工</text>
+        </view>
+        <view class="stat-item" wx:if="{{item.role === 'Boss'}}">
+          <text class="stat-value">{{item.orderCount || 0}}</text>
+          <text class="stat-label">订单数量</text>
+        </view>
+        <view class="stat-item" wx:if="{{item.role === 'Staff'}}">
+          <text class="stat-value">{{item.totalOrders || 0}}</text>
+          <text class="stat-label">总订单</text>
+        </view>
+        <view class="stat-item" wx:if="{{item.role === 'Staff'}}">
+          <text class="stat-value">{{item.totalDuration || 0}}h</text>
+          <text class="stat-label">服务时长</text>
+        </view>
+        <view class="stat-item" wx:if="{{item.role === 'Admin' || item.role === 'SuperAdmin'}}">
+          <text class="stat-value">--</text>
+          <text class="stat-label">管理员</text>
+        </view>
+        <view class="stat-item" wx:if="{{item.role === 'Admin' || item.role === 'SuperAdmin'}}">
+          <text class="stat-value">--</text>
+          <text class="stat-label">系统权限</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-text">加载中...</view>
+  </view>
+</view>

@@ -1,0 +1,245 @@
+<!-- 员工端 - 主页 -->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="header-bg">
+      <view class="header-blur"></view>
+      <view class="header-shine"></view>
+    </view>
+    <view class="header-content">
+      <view class="header-title">
+        <text class="title-text">🎄 sonnet陪玩店</text>
+        <text class="title-subtitle">Merry Christmas</text>
+      </view>
+      <view class="header-actions">
+        <view class="icon-btn notification-btn">
+          <text class="bell-icon">🔔</text>
+          <view class="notification-dot" wx:if="{{false}}"></view>
+        </view>
+      </view>
+    </view>
+    <!-- 圣诞装饰 -->
+    <view class="christmas-decoration">
+      <text class="snowflake">❄️</text>
+      <text class="christmas-light light-1">🎄</text>
+      <text class="christmas-light light-2">🎅</text>
+    </view>
+  </view>
+
+  <scroll-view scroll-y="{{true}}" class="scroll-content">
+    <!-- 轮播图 -->
+    <view class="banner-section" wx:if="{{banners.length > 0}}">
+      <view class="section-container">
+        <swiper class="banner-swiper"
+                indicator-dots
+                indicator-color="rgba(255,255,255,0.3)"
+                indicator-active-color="#ffffff"
+                autoplay
+                circular
+                interval="4000"
+                duration="800">
+          <swiper-item wx:for="{{banners}}" wx:key="_id">
+            <view class="banner-item">
+              <view class="banner-bg">
+                <image wx:if="{{item.images && item.images.length > 0}}"
+                       src="{{item.images[0]}}"
+                       mode="aspectFill"
+                       class="banner-bg-image" />
+                <view wx:else class="banner-bg-gradient banner-gradient-christmas"></view>
+                <view class="banner-overlay"></view>
+                <!-- 圣诞装饰元素 -->
+                <view class="christmas-elements">
+                  <text class="christmas-star">⭐</text>
+                  <text class="christmas-snow snow-1">❄️</text>
+                  <text class="christmas-snow snow-2">❄️</text>
+                  <text class="christmas-snow snow-3">❄️</text>
+                </view>
+              </view>
+              <view class="banner-glass">
+                <view class="banner-content">
+                  <view class="banner-title">{{item.title}}</view>
+                  <view class="banner-desc" wx:if="{{item.content}}">{{item.content}}</view>
+                  <view class="banner-tag">🎄 圣诞特惠</view>
+                </view>
+              </view>
+            </view>
+          </swiper-item>
+        </swiper>
+      </view>
+    </view>
+
+    <!-- 默认轮播图（如果没有设置轮播图） -->
+    <view class="banner-section" wx:elif="{{banners.length === 0}}">
+      <view class="section-container">
+        <swiper class="banner-swiper"
+                indicator-dots
+                indicator-color="rgba(255,255,255,0.3)"
+                indicator-active-color="#ffffff"
+                autoplay
+                circular
+                interval="4000"
+                duration="800">
+          <swiper-item>
+            <view class="banner-item">
+              <view class="banner-bg">
+                <view class="banner-bg-gradient banner-gradient-christmas"></view>
+                <view class="banner-overlay"></view>
+                <view class="christmas-elements">
+                  <text class="christmas-tree">🎄</text>
+                  <text class="christmas-gift">🎁</text>
+                  <text class="christmas-snow snow-1">❄️</text>
+                </view>
+              </view>
+              <view class="banner-glass">
+                <view class="banner-content">
+                  <view class="banner-title">🎄 Merry Christmas</view>
+                  <view class="banner-desc">精彩活动即将上线</view>
+                  <view class="banner-tag">✨ 节日快乐</view>
+                </view>
+              </view>
+            </view>
+          </swiper-item>
+          <swiper-item>
+            <view class="banner-item">
+              <view class="banner-bg">
+                <view class="banner-bg-gradient banner-gradient-warm"></view>
+                <view class="banner-overlay"></view>
+                <view class="christmas-elements">
+                  <text class="christmas-santa">🎅</text>
+                  <text class="christmas-cookie">🍪</text>
+                  <text class="christmas-snow snow-2">❄️</text>
+                </view>
+              </view>
+              <view class="banner-glass">
+                <view class="banner-content">
+                  <view class="banner-title">✨ 新人推荐</view>
+                  <view class="banner-desc">查看今日推荐员工</view>
+                  <view class="banner-tag">🔥 热门推荐</view>
+                </view>
+              </view>
+            </view>
+          </swiper-item>
+          <swiper-item>
+            <view class="banner-item">
+              <view class="banner-bg">
+                <view class="banner-bg-gradient banner-gradient-festive"></view>
+                <view class="banner-overlay"></view>
+                <view class="christmas-elements">
+                  <text class="christmas-bell">🔔</text>
+                  <text class="christmas-candle">🕯️</text>
+                  <text class="christmas-snow snow-3">❄️</text>
+                </view>
+              </view>
+              <view class="banner-glass">
+                <view class="banner-content">
+                  <view class="banner-title">🎉 精彩活动</view>
+                  <view class="banner-desc">更多惊喜等你发现</view>
+                  <view class="banner-tag">🎊 节日特惠</view>
+                </view>
+              </view>
+            </view>
+          </swiper-item>
+        </swiper>
+      </view>
+    </view>
+
+    <!-- 公示信息 -->
+    <view class="notice-section">
+      <view class="section-container">
+        <view class="glass-card notice-card" wx:if="{{notices.length > 0}}">
+          <view class="card-blur"></view>
+          <view class="card-shine"></view>
+          <view class="notice-header">
+            <view class="notice-icon-wrapper">
+              <text class="notice-icon">🔔</text>
+              <text class="notice-sparkle">✨</text>
+            </view>
+            <view class="notice-content-wrapper">
+              <text class="notice-title">{{notices[0].title}}</text>
+              <text class="notice-time">{{notices[0].createTime}}</text>
+            </view>
+          </view>
+          <view class="notice-body">
+            <text class="notice-content">{{notices[0].content}}</text>
+          </view>
+          <view class="card-decoration">
+            <text class="decoration-star">⭐</text>
+          </view>
+        </view>
+
+        <!-- 默认公告（如果没有设置公告） -->
+        <view class="glass-card notice-card" wx:elif="{{notices.length === 0}}">
+          <view class="card-blur"></view>
+          <view class="card-shine"></view>
+          <view class="notice-header">
+            <view class="notice-icon-wrapper">
+              <text class="notice-icon">🎄</text>
+              <text class="notice-sparkle">❄️</text>
+            </view>
+            <view class="notice-content-wrapper">
+              <text class="notice-title">节日公告</text>
+              <text class="notice-time">今天</text>
+            </view>
+          </view>
+          <view class="notice-body">
+            <text class="notice-content">🎅 圣诞快乐！今日推荐员工已更新，快去看看吧！</text>
+          </view>
+          <view class="card-decoration">
+            <text class="decoration-tree">🎄</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 卡类集合 -->
+    <view class="gallery-section" wx:if="{{galleryList.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">相册精选</text>
+        <view class="section-more">
+          <text>更多</text>
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+
+      <view class="gallery-grid">
+        <view class="gallery-item" wx:for="{{galleryList}}" wx:key="_id" data-gallery="{{item}}" bindtap="viewGallery">
+          <view class="gallery-cover">
+            <image wx:if="{{item.images && item.images.length > 0}}"
+                   src="{{item.images[0]}}"
+                   mode="aspectFill"
+                   class="gallery-image" />
+            <view wx:else class="gallery-placeholder" style="background: linear-gradient(135deg, #93c5fd, #67e8f9);">
+              <text class="gallery-emoji">📸</text>
+            </view>
+          </view>
+          <view class="gallery-name">{{item.title}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 默认相册（如果没有设置相册） -->
+    <view class="gallery-section" wx:elif="{{galleryList.length === 0}}">
+      <view class="section-header">
+        <text class="section-title">相册精选</text>
+        <view class="section-more">
+          <text>更多</text>
+          <text class="arrow-icon">›</text>
+        </view>
+      </view>
+
+      <view class="gallery-grid">
+        <view class="gallery-item" wx:for="{{[{id:1,name:'精彩瞬间',emoji:'🌸',color1:'#86efac',color2:'#5eead4'},{id:2,name:'游戏时刻',emoji:'🎮',color1:'#93c5fd',color2:'#67e8f9'},{id:3,name:'美好回忆',emoji:'✨',color1:'#fb7185',color2:'#f472b6'}]}}" wx:key="id">
+          <view class="gallery-cover" style="background: linear-gradient(135deg, {{item.color1}}, {{item.color2}});">
+            <text class="gallery-emoji">{{item.emoji}}</text>
+          </view>
+          <view class="gallery-name">{{item.name}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+
+  <!-- 自定义TabBar -->
+  <custom-tab-bar />
+</view>

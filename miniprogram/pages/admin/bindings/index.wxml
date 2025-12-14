@@ -1,0 +1,77 @@
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="header">
+    <view class="title">绑定关系管理</view>
+    <button class="create-btn" bindtap="showCreateModal">创建绑定</button>
+  </view>
+
+  <!-- 绑定关系列表 -->
+  <view class="content" wx:if="{{!loading}}">
+    <view class="binding-list" wx:if="{{bindings.length > 0}}">
+      <view class="binding-item" wx:for="{{bindings}}" wx:key="_id">
+        <view class="binding-info">
+          <view class="binding-main">
+            <text class="boss-name">{{item.bossInfo.nickname}} ({{item.bossInfo.userId}})</text>
+            <text class="arrow">→</text>
+            <text class="staff-name">{{item.staffInfo.nickname}} ({{item.staffInfo.userId}})</text>
+          </view>
+          <view class="binding-time">创建时间：{{item.createTime}}</view>
+        </view>
+        <button class="delete-btn"
+                data-binding-id="{{item._id}}"
+                data-boss-nickname="{{item.bossInfo.nickname}}"
+                data-staff-nickname="{{item.staffInfo.nickname}}"
+                bindtap="deleteBinding">
+          解绑
+        </button>
+      </view>
+    </view>
+
+    <view class="empty" wx:else>
+      <text>暂无绑定关系</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>
+
+<!-- 创建绑定模态框 -->
+<view class="modal-overlay {{showCreateModal ? 'visible' : ''}}" bindtap="hideModal">
+  <view class="modal-content" catchtap="">
+    <view class="modal-header">
+      <text class="modal-title">创建绑定关系</text>
+    </view>
+
+    <scroll-view scroll-y="{{true}}" class="modal-body">
+      <view class="form-item">
+        <text class="form-label">选择老板：</text>
+        <picker mode="selector"
+                range="{{bossList}}"
+                range-key="nickname"
+                value="{{selectedBossIndex}}"
+                bindchange="onBossChange">
+          <view class="picker">{{selectedBossId ? '老板已选择' : '请选择老板'}}</view>
+        </picker>
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">选择员工：</text>
+        <picker mode="selector"
+                range="{{staffList}}"
+                range-key="nickname"
+                value="{{selectedStaffIndex}}"
+                bindchange="onStaffChange">
+          <view class="picker">{{selectedStaffId ? '员工已选择' : '请选择员工'}}</view>
+        </picker>
+      </view>
+    </scroll-view>
+
+    <view class="modal-footer">
+      <button class="cancel-btn" bindtap="hideModal">取消</button>
+      <button class="confirm-btn" bindtap="createBinding">创建</button>
+    </view>
+  </view>
+</view>

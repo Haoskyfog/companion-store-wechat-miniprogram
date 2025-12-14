@@ -1,0 +1,40 @@
+<!-- 头像诊断页面 -->
+<view class="page">
+  <view class="header">
+    <text class="title">头像诊断工具</text>
+    <button class="refresh-btn" bindtap="onRefresh">刷新诊断</button>
+  </view>
+
+  <!-- 诊断结果 -->
+  <view class="results">
+    <view class="result-item" wx:for="{{diagnosticResults}}" wx:key="userId">
+      <view class="user-info">
+        <view class="avatar-section">
+          <image wx:if="{{item.tempUrl}}" src="{{item.tempUrl}}" class="avatar-image" />
+          <text wx:else class="avatar-placeholder">👤</text>
+        </view>
+        <view class="user-details">
+          <text class="user-name">{{item.nickname}}</text>
+          <text class="user-id">ID: {{item.userId}}</text>
+        </view>
+      </view>
+
+      <view class="diagnostic-info">
+        <view class="status {{getStatusClass(item.status)}}">
+          {{getStatusText(item.status)}}
+        </view>
+        <text class="message">{{item.message}}</text>
+        <text wx:if="{{item.avatar}}" class="avatar-url">{{item.avatar}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-text">加载中...</view>
+  </view>
+</view>
+
+
+
+

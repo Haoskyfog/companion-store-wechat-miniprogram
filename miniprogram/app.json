@@ -1,0 +1,82 @@
+{
+  "pages": [
+    "pages/auth/index",
+    "pages/boss/home/index",
+    "pages/boss/recommend/index",
+    "pages/boss/profile/index",
+    "pages/boss/orders/index",
+    "pages/boss/change-staff/index",
+    "pages/boss/staff-detail/index",
+    "pages/staff/index/index",
+    "pages/staff/recommend/index",
+    "pages/staff/home/index",
+    "pages/staff/profile/index",
+    "pages/staff/create-order/index",
+    "pages/staff/report/index",
+    "pages/staff/ranking/index",
+    "pages/staff/stats/index",
+    "pages/staff/orders/index",
+    "pages/staff/reports/index",
+    "pages/admin/dashboard/index",
+    "pages/admin/content/index",
+    "pages/admin/users/index",
+    "pages/admin/avatar-diagnostic/index",
+    "pages/admin/audit/index",
+    "pages/admin/bindings/index",
+    "pages/admin/statistics/index",
+    "pages/profile/edit/index"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "陪玩店",
+    "navigationBarBackgroundColor": "#f6f7fb"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#5f6472",
+    "selectedColor": "#7c3aed",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/boss/home/index",
+        "text": "首页",
+        "iconPath": "assets/tab/home.png",
+        "selectedIconPath": "assets/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/boss/recommend/index",
+        "text": "推荐",
+        "iconPath": "assets/tab/recommend.png",
+        "selectedIconPath": "assets/tab/recommend-active.png"
+      },
+      {
+        "pagePath": "pages/boss/profile/index",
+        "text": "我的",
+        "iconPath": "assets/tab/profile.png",
+        "selectedIconPath": "assets/tab/profile-active.png"
+      },
+      {
+        "pagePath": "pages/staff/index/index",
+        "text": "首页",
+        "iconPath": "assets/tab/home.png",
+        "selectedIconPath": "assets/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/staff/recommend/index",
+        "text": "推荐",
+        "iconPath": "assets/tab/recommend.png",
+        "selectedIconPath": "assets/tab/recommend-active.png"
+      },
+      {
+        "pagePath": "pages/staff/home/index",
+        "text": "我的",
+        "iconPath": "assets/tab/profile.png",
+        "selectedIconPath": "assets/tab/profile-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "lazyCodeLoading": "requiredComponents"
+}

@@ -1,0 +1,123 @@
+<!-- 管理员端 - 仪表板 -->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="header-info">
+      <text class="header-title">管理后台</text>
+      <text class="header-subtitle">欢迎回来，管理员</text>
+    </view>
+    <view class="header-actions">
+      <view class="admin-badge">Admin</view>
+      <text class="icon-btn">🔔</text>
+    </view>
+  </view>
+
+  <!-- 快速统计 -->
+  <view class="stats-grid" wx:if="{{!loading}}">
+    <view class="stat-item stat-blue">
+      <text class="stat-value">{{statistics.users.total}}</text>
+      <text class="stat-label">总用户</text>
+    </view>
+    <view class="stat-item stat-green">
+      <text class="stat-value">{{statistics.users.staff}}</text>
+      <text class="stat-label">员工</text>
+    </view>
+    <view class="stat-item stat-purple">
+      <text class="stat-value">{{statistics.users.boss}}</text>
+      <text class="stat-label">老板</text>
+    </view>
+    <view class="stat-item stat-orange">
+      <text class="stat-value">{{statistics.bindings.active}}</text>
+      <text class="stat-label">绑定关系</text>
+    </view>
+    <view class="stat-item stat-red">
+      <text class="stat-value">{{statistics.orders.total}}</text>
+      <text class="stat-label">总订单</text>
+    </view>
+    <view class="stat-item stat-yellow">
+      <text class="stat-value">{{statistics.reports.pending + statistics.requests.pending}}</text>
+      <text class="stat-label">待审核</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <!-- 待办提醒 -->
+  <view class="todo-card" wx:if="{{!loading && (statistics.reports.pending + statistics.requests.pending) > 0}}" bindtap="onFunctionTap" data-action="audit">
+    <view class="todo-content">
+      <text class="todo-icon">⚠️</text>
+      <view class="todo-info">
+        <text class="todo-title">有 {{statistics.reports.pending + statistics.requests.pending}} 条待审核</text>
+        <text class="todo-desc">{{statistics.reports.pending}}条报备 + {{statistics.requests.pending}}条更换申请</text>
+      </view>
+    </view>
+    <text class="arrow">›</text>
+  </view>
+
+  <scroll-view scroll-y="{{true}}" class="scroll-content">
+    <!-- 快捷功能 -->
+    <view class="quick-functions">
+      <text class="section-title">快捷功能</text>
+      <view class="functions-grid">
+        <view class="function-item" wx:for="{{functions}}" wx:key="id" data-action="{{item.action}}" bindtap="onFunctionTap">
+          <view class="function-icon" style="background: {{item.bgColor}};">
+            <text class="icon-emoji">{{item.icon}}</text>
+          </view>
+          <text class="function-label">{{item.label}}</text>
+          <text class="function-desc">{{item.desc}}</text>
+        </view>
+      </view>
+    </view>
+
+
+    <!-- 最新报备 -->
+    <view class="reports-section" wx:if="{{recentReports.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">最新报备</text>
+        <text class="section-more" bindtap="onViewMoreReports">查看全部</text>
+      </view>
+      <view class="reports-list">
+        <view class="report-item" wx:for="{{recentReports}}" wx:key="_id">
+          <view class="report-header">
+            <view class="report-user">
+              <view class="report-avatar" style="background: linear-gradient(135deg, #93c5fd, #67e8f9);">
+                <text class="report-emoji">🎮</text>
+              </view>
+              <view class="report-user-info">
+                <text class="report-name">{{item.staffInfo.nickname}}</text>
+                <text class="report-time">{{item.createTime}}</text>
+              </view>
+            </view>
+            <view class="report-status {{item.status === 'pending' ? 'status-pending' : item.status === 'approved' ? 'status-approved' : 'status-rejected'}}">
+              {{item.status === 'pending' ? '待审核' : item.status === 'approved' ? '已通过' : '已驳回'}}
+            </view>
+          </view>
+          <text class="report-detail">{{item.game}} {{item.duration}}小时</text>
+        </view>
+      </view>
+    </view>
+
+
+    <!-- 核心数据 -->
+    <view class="core-stats">
+      <text class="section-title">核心数据</text>
+      <view class="stats-card">
+        <view class="stat-box">
+          <text class="stat-big-value purple">{{statistics.orders.total}}</text>
+          <text class="stat-big-label">总订单</text>
+          <text class="stat-trend">📊 实时统计</text>
+        </view>
+        <view class="stat-box">
+          <text class="stat-big-value green">¥{{statistics.revenue.total || 0}}</text>
+          <text class="stat-big-label">总流水</text>
+          <text class="stat-trend">💰 累计收入</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+</view>

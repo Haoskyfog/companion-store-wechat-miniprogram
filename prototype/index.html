@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>陪玩店小程序 - 原型展示</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/tdesign-mobile/dist/tdesign.min.css">
+    <link rel="stylesheet" href="acrylic.css">
+    <style>
+        body { padding: 40px 20px; }
+        .prototype-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        .section-title {
+            color: rgba(255,255,255,.92);
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 0 10px 30px rgba(2,6,23,.35);
+        }
+        
+        .role-section {
+            margin-bottom: 80px;
+        }
+        
+        .devices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, 393px);
+            gap: 40px;
+            justify-content: center;
+        }
+        
+        .device-label {
+            text-align: center;
+            color: rgba(255,255,255,.92);
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: 15px;
+            text-shadow: 0 10px 30px rgba(2,6,23,.35);
+        }
+
+        .role-panel {
+            background: rgba(255,255,255,.10);
+            border: 1px solid rgba(255,255,255,.18);
+            border-radius: 24px;
+            padding: 26px 18px 30px;
+            box-shadow: 0 30px 80px rgba(0,0,0,.25);
+            backdrop-filter: blur(18px) saturate(140%);
+            -webkit-backdrop-filter: blur(18px) saturate(140%);
+        }
+    </style>
+</head>
+<body class="acrylic-page">
+    <div class="prototype-container">
+        <div class="text-center mb-10">
+            <h1 class="text-white text-5xl font-bold tracking-tight">陪玩店小程序原型展示</h1>
+            <div class="text-white/80 mt-3">亚克力玻璃风 · iPhone 15 Pro 尺寸 · iframe 平铺预览</div>
+        </div>
+        
+        <!-- 老板端 -->
+        <div class="role-section">
+            <h2 class="section-title">👑 老板端（Boss）</h2>
+            <div class="role-panel">
+            <div class="devices-grid">
+                <div>
+                    <div class="device-frame">
+                        <div class="screen">
+                            <iframe src="boss-home.html"></iframe>
+                        </div>
+                    </div>
+                    <div class="device-label">主页</div>
+                </div>
+                
+                <div>
+                    <div class="device-frame">
+                        <div class="screen">
+                            <iframe src="boss-recommend.html"></iframe>
+                        </div>
+                    </div>
+                    <div class="device-label">推荐页</div>
+                </div>
+                
+                <div>
+                    <div class="device-frame">
+                        <div class="screen">
+                            <iframe src="boss-profile.html"></iframe>
+                        </div>
+                    </div>
+                    <div class="device-label">我的</div>
+                </div>
+            </div>
+            </div>
+        </div>
+        
+        <!-- 员工端 -->
+        <div class="role-section">
+            <h2 class="section-title">🎧 员工端（Staff）</h2>
+            <div class="role-panel">
+            <div class="devices-grid">
+                <div>
+                    <div class="device-frame">
+                        <div class="screen">
+                            <iframe src="staff-home.html"></iframe>
+                        </div>
+                    </div>
+                    <div class="device-label">主页</div>
+                </div>
+                
+                <div>
+                    <div class="device-frame">
+                        <div class="screen">
+                            <iframe src="staff-recommend.html"></iframe>
+                        </div>
+                    </div>
+                    <div class="device-label">推荐页</div>
+                </div>
+                
+                <div>
+                    <div class="device-frame">
+                        <div class="screen">
+                            <iframe src="staff-profile.html"></iframe>
+                        </div>
+                    </div>
+                    <div class="device-label">我的</div>
+                </div>
+                
+                <div>
+                    <div class="device-frame">
+                        <div class="screen">
+                            <iframe src="staff-create-order.html"></iframe>
+                        </div>
+                    </div>
+                    <div class="device-label">创建订单</div>
+                </div>
+                
+                <div>
+                    <div class="device-frame">
+                        <div class="screen">
+                            <iframe src="staff-report.html"></iframe>
+                        </div>
+                    </div>
+                    <div class="device-label">报备</div>
+                </div>
+                
+                <div>
+                    <div class="device-frame">
+                        <div class="screen">
+                            <iframe src="staff-ranking.html"></iframe>
+                        </div>
+                    </div>
+                    <div class="device-label">排行榜</div>
+                </div>
+            </div>
+            </div>
+        </div>
+        
+        <!-- 管理员端 -->
+        <div class="role-section">
+            <h2 class="section-title">🛠️ 管理员端（Admin）</h2>
+            <div class="role-panel">
+            <div class="devices-grid">
+                <div>
+                    <div class="device-frame">
+                        <div class="screen">
+                            <iframe src="admin-dashboard.html"></iframe>
+                        </div>
+                    </div>
+                    <div class="device-label">仪表板</div>
+                </div>
+                
+                <div>
+                    <div class="device-frame">
+                        <div class="screen">
+                            <iframe src="admin-users.html"></iframe>
+                        </div>
+                    </div>
+                    <div class="device-label">用户管理</div>
+                </div>
+                
+                <div>
+                    <div class="device-frame">
+                        <div class="screen">
+                            <iframe src="admin-content.html"></iframe>
+                        </div>
+                    </div>
+                    <div class="device-label">内容管理</div>
+                </div>
+                
+                <div>
+                    <div class="device-frame">
+                        <div class="screen">
+                            <iframe src="admin-audit.html"></iframe>
+                        </div>
+                    </div>
+                    <div class="device-label">审核中心</div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>员工端 - 推荐页</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/tdesign-mobile/dist/tdesign.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen pb-20">
+        <!-- 顶部导航 -->
+        <div class="bg-white px-4 py-3 flex items-center justify-between sticky top-0 z-10">
+            <div class="text-xl font-bold text-gray-800 text-center flex-1">推荐员工</div>
+            <div class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-medium">员工模式</div>
+        </div>
+
+        <!-- 说明提示 -->
+        <div class="px-4 py-3">
+            <div class="bg-blue-50 rounded-xl p-3 flex items-start">
+                <svg class="w-5 h-5 text-blue-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                </svg>
+                <div class="text-sm text-blue-800">
+                    员工可以浏览其他员工信息，学习优秀案例
+                </div>
+            </div>
+        </div>
+
+        <!-- 今日推荐 -->
+        <div class="px-4 py-2">
+            <div class="flex items-center mb-3">
+                <span class="text-2xl mr-2">⭐</span>
+                <h2 class="text-lg font-bold text-gray-800">今日推荐</h2>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="bg-white rounded-xl p-4 shadow-sm">
+                    <div class="flex">
+                        <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-pink-300 to-purple-400 flex items-center justify-center text-3xl flex-shrink-0">
+                            👧
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <span class="font-bold text-gray-800 text-lg">小雪</span>
+                                    <span class="ml-2 bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full font-medium">在线</span>
+                                </div>
+                                <div class="text-sm text-gray-500">ID: 10086</div>
+                            </div>
+                            <div class="flex flex-wrap gap-1 mb-2">
+                                <span class="bg-purple-50 text-purple-600 text-xs px-2 py-1 rounded-full">王者荣耀</span>
+                                <span class="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded-full">中路</span>
+                                <span class="bg-green-50 text-green-600 text-xs px-2 py-1 rounded-full">声音甜美</span>
+                            </div>
+                            <div class="text-sm text-gray-600">擅长中单，陪你上分～</div>
+                            <div class="mt-2 text-xs text-gray-500">
+                                本月订单：156 | 好评率：98%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl p-4 shadow-sm">
+                    <div class="flex">
+                        <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-blue-300 to-cyan-400 flex items-center justify-center text-3xl flex-shrink-0">
+                            🎮
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <span class="font-bold text-gray-800 text-lg">小优</span>
+                                    <span class="ml-2 bg-pink-100 text-pink-600 text-xs px-2 py-1 rounded-full font-medium">在线</span>
+                                </div>
+                                <div class="text-sm text-gray-500">ID: 10087</div>
+                            </div>
+                            <div class="flex flex-wrap gap-1 mb-2">
+                                <span class="bg-purple-50 text-purple-600 text-xs px-2 py-1 rounded-full">王者荣耀</span>
+                                <span class="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded-full">打野</span>
+                                <span class="bg-orange-50 text-orange-600 text-xs px-2 py-1 rounded-full">技术型</span>
+                            </div>
+                            <div class="text-sm text-gray-600">带你飞，节奏带师！</div>
+                            <div class="mt-2 text-xs text-gray-500">
+                                本月订单：203 | 好评率：99%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新人推荐 -->
+        <div class="px-4 py-2">
+            <div class="flex items-center mb-3">
+                <span class="text-2xl mr-2">🌟</span>
+                <h2 class="text-lg font-bold text-gray-800">新人推荐</h2>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="bg-white rounded-xl p-4 shadow-sm">
+                    <div class="flex">
+                        <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-green-300 to-teal-400 flex items-center justify-center text-3xl flex-shrink-0">
+                            🎀
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <span class="font-bold text-gray-800 text-lg">小可</span>
+                                    <span class="ml-2 bg-yellow-100 text-yellow-600 text-xs px-2 py-1 rounded-full font-medium">新人</span>
+                                </div>
+                                <div class="text-sm text-gray-500">ID: 10088</div>
+                            </div>
+                            <div class="flex flex-wrap gap-1 mb-2">
+                                <span class="bg-purple-50 text-purple-600 text-xs px-2 py-1 rounded-full">王者荣耀</span>
+                                <span class="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded-full">辅助</span>
+                                <span class="bg-pink-50 text-pink-600 text-xs px-2 py-1 rounded-full">温柔</span>
+                            </div>
+                            <div class="text-sm text-gray-600">新人报到，请多关照～</div>
+                            <div class="mt-2 text-xs text-gray-500">
+                                本月订单：23 | 好评率：100%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 优秀员工案例 -->
+        <div class="px-4 py-2 pb-4">
+            <div class="flex items-center mb-3">
+                <span class="text-2xl mr-2">💡</span>
+                <h2 class="text-lg font-bold text-gray-800">优秀案例分享</h2>
+            </div>
+            
+            <div class="bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl p-4 text-white">
+                <div class="flex items-center mb-3">
+                    <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-2xl mr-3">
+                        🏆
+                    </div>
+                    <div>
+                        <div class="font-bold text-lg">本月之星：小雪</div>
+                        <div class="text-sm opacity-90">连续3个月排名第一</div>
+                    </div>
+                </div>
+                <div class="bg-white/10 rounded-lg p-3 text-sm">
+                    <div class="font-medium mb-1">成功经验：</div>
+                    <div class="opacity-90">
+                        • 及时响应老板需求<br>
+                        • 保持良好的服务态度<br>
+                        • 定期更新个人资料和语音
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2">
+        <div class="flex items-center justify-around">
+            <div class="flex flex-col items-center text-gray-400">
+                <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                </svg>
+                <span class="text-xs">主页</span>
+            </div>
+            <div class="flex flex-col items-center text-purple-600">
+                <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path>
+                </svg>
+                <span class="text-xs font-medium">推荐</span>
+            </div>
+            <div class="flex flex-col items-center text-gray-400">
+                <svg class="w-6 h-6 mb-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                </svg>
+                <span class="text-xs">我的</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+
+
+
+

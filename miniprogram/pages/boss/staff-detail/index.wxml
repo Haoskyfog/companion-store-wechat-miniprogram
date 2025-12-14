@@ -1,0 +1,57 @@
+<!-- 老板端 - 员工详情页 -->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="nav-back" bindtap="goBack">←</view>
+    <view class="header-title">员工详情</view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <!-- 员工信息 -->
+  <view class="staff-detail" wx:elif="{{staff}}">
+    <!-- 头像区域 -->
+    <view class="avatar-section">
+      <view class="avatar-container">
+        <image wx:if="{{staff.avatar}}" src="{{staff.avatar}}" mode="aspectFill" class="avatar-image" />
+        <view wx:else class="avatar-placeholder">
+          <text class="avatar-emoji">👧</text>
+        </view>
+      </view>
+      <view class="staff-basic-info">
+        <text class="staff-name">{{staff.nickname}}</text>
+        <text class="staff-id">ID: {{staff.userId}}</text>
+      </view>
+    </view>
+
+    <!-- 详细信息 -->
+    <view class="info-section">
+      <view class="info-item">
+        <text class="info-label">音色类型:</text>
+        <text class="info-value">{{staff.voiceType === 'normal' ? '普通音色' : staff.voiceType === 'cute' ? '可爱音色' : staff.voiceType === 'cool' ? '酷炫音色' : '成熟音色'}}</text>
+      </view>
+
+      <view class="info-item">
+        <text class="info-label">自我介绍:</text>
+        <text class="info-value">{{staff.introduction}}</text>
+      </view>
+    </view>
+
+    <!-- 音频播放区域 -->
+    <view class="audio-section" wx:if="{{staff.audioUrl}}">
+      <view class="audio-player">
+        <text class="audio-icon">🎵</text>
+        <text class="audio-text">语音介绍</text>
+        <button class="play-btn" bindtap="playAudioIntro">播放</button>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="action-section">
+      <button class="primary-btn" bindtap="createOrder">创建订单</button>
+    </view>
+  </view>
+</view>

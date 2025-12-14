@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "内容管理",
+  "navigationBarBackgroundColor": "#f6f7fb",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#f6f7fb",
+  "enablePullDownRefresh": true
+}

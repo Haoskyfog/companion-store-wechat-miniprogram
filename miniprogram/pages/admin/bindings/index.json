@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "绑定关系管理",
+  "usingComponents": {},
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50
+}

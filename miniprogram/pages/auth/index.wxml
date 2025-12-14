@@ -1,0 +1,6 @@
+<view class='page scaffold-page'>
+  <view class='card'>
+    <view class='title'>登录与角色</view>
+    <view class='sub'>页面建设中…</view>
+  </view>
+</view>

@@ -1,0 +1,247 @@
+/* 编辑用户资料 */
+.page {
+  background: #f6f7fb;
+  min-height: 100vh;
+}
+
+.scroll-content {
+  padding: 32rpx 0;
+}
+
+.form-container {
+  padding: 0 32rpx;
+}
+
+.form-section {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 16rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 24rpx;
+}
+
+.form-input {
+  width: 100%;
+  height: 88rpx;
+  border: 2rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: #7c3aed;
+}
+
+.form-hint {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 12rpx;
+  line-height: 1.4;
+}
+
+/* 头像设置 */
+.avatar-section {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+}
+
+.current-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #93c5fd, #67e8f9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 24rpx;
+  overflow: hidden;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.avatar-placeholder {
+  font-size: 48rpx;
+}
+
+.avatar-info {
+  flex: 1;
+}
+
+.avatar-text {
+  display: block;
+  font-size: 32rpx;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.avatar-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.arrow {
+  font-size: 32rpx;
+  color: #ccc;
+}
+
+/* 保存按钮 */
+.save-section {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 48rpx 32rpx;
+  margin-top: 48rpx;
+}
+
+.save-btn {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  color: #fff;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  font-weight: 500;
+  border: none;
+}
+
+.save-btn.disabled {
+  background: #ccc;
+}
+
+.save-btn::after {
+  border: none;
+}
+
+.save-hint {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  text-align: center;
+  margin-top: 16rpx;
+}
+
+/* 头像选择器弹窗 */
+.avatar-selector {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.avatar-selector.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.selector-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.selector-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  padding: 32rpx;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.selector-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.close-btn {
+  font-size: 36rpx;
+  color: #999;
+  padding: 8rpx;
+}
+
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24rpx;
+  margin-bottom: 32rpx;
+}
+
+.avatar-item {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4rpx solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.avatar-item:active {
+  border-color: #7c3aed;
+}
+
+.avatar-option {
+  width: 100%;
+  height: 100%;
+}
+
+.upload-section {
+  border-top: 2rpx solid #f0f0f0;
+  padding-top: 32rpx;
+}
+
+.upload-btn {
+  width: 100%;
+  height: 80rpx;
+  background: #f6f7fb;
+  color: #7c3aed;
+  border: 2rpx solid #7c3aed;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+}
+
+.upload-btn::after {
+  border: none;
+}
+
+.upload-tip {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  text-align: center;
+  margin-top: 16rpx;
+}

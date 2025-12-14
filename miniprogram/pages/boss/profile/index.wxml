@@ -1,0 +1,70 @@
+<!-- 老板端 - 我的 -->
+<view class="page">
+  <!-- 顶部背景 -->
+  <view class="top-bg">
+    <view class="settings-btn">⚙️</view>
+  </view>
+
+  <scroll-view scroll-y="{{true}}" class="scroll-content">
+    <!-- 用户信息卡片 -->
+    <view class="user-card" wx:if="{{!loading}}">
+      <view class="user-header">
+        <view class="user-avatar">
+          <image wx:if="{{userInfo.avatar}}" src="{{userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
+          <text wx:else>👑</text>
+        </view>
+        <view class="user-info">
+          <view class="user-name-row">
+            <text class="user-name">{{userInfo.nickname || '未设置昵称'}}</text>
+            <view class="vip-badge" wx:if="{{userInfo.vipLevel}}">{{userInfo.vipLevel}}</view>
+          </view>
+          <text class="user-id">ID: {{userInfo.userId || '未设置'}}</text>
+        </view>
+      </view>
+
+      <!-- VIP 信息 -->
+      <view class="vip-info">
+        <view class="vip-content">
+          <text class="vip-icon">💎</text>
+          <view class="vip-details">
+            <view class="vip-title">尊贵VIP会员</view>
+            <view class="vip-desc">专属服务 · 优先推荐</view>
+          </view>
+        </view>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 我的直属员工 -->
+    <view class="staff-section">
+      <view class="section-header">
+        <text class="section-title">我的直属员工</text>
+        <text class="section-more">查看全部</text>
+      </view>
+      <scroll-view scroll-x="{{true}}" class="staff-scroll">
+        <view class="staff-item" wx:for="{{myStaffs}}" wx:key="id">
+          <view class="staff-avatar-small" style="background: linear-gradient(135deg, {{item.color1}}, {{item.color2}});">
+            <text class="staff-emoji-small">{{item.emoji}}</text>
+          </view>
+          <text class="staff-name-small">{{item.name}}</text>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 菜单列表 -->
+    <view class="menu-section">
+      <view class="menu-item" wx:for="{{menuList}}" wx:key="id" data-action="{{item.action}}" bindtap="onMenuTap">
+        <view class="menu-icon" style="background: {{item.bgColor}};">
+          <text class="icon-emoji">{{item.icon}}</text>
+        </view>
+        <view class="menu-info">
+          <view class="menu-title">{{item.title}}</view>
+          <view class="menu-desc">{{item.desc}}</view>
+        </view>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+</view>

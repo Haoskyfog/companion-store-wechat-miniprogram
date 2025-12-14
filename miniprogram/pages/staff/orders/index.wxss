@@ -1,0 +1,158 @@
+/* 员工订单页面样式 */
+.container {
+  background-color: #f6f7fb;
+  min-height: 100vh;
+}
+
+/* 筛选器 */
+.filter-bar {
+  background-color: white;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #e5e7eb;
+}
+
+.filter-scroll {
+  white-space: nowrap;
+}
+
+.filter-list {
+  display: inline-flex;
+  padding: 0 16rpx;
+  gap: 12rpx;
+}
+
+.filter-item {
+  display: inline-block;
+  padding: 12rpx 24rpx;
+  border-radius: 20rpx;
+  font-size: 26rpx;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.filter-normal {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.filter-active {
+  background-color: #7c3aed;
+  color: white;
+}
+
+/* 订单列表 */
+.order-list {
+  padding: 16rpx;
+}
+
+.order-item {
+  background-color: white;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16rpx;
+}
+
+.order-main {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.boss-name {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.order-status {
+  padding: 6rpx 16rpx;
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+}
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.status-confirmed {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.status-completed {
+  background-color: #d1fae5;
+  color: #059669;
+}
+
+.status-cancelled {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.order-time {
+  font-size: 24rpx;
+  color: #6b7280;
+  margin-top: 8rpx;
+}
+
+.order-content {
+  border-top: 1rpx solid #e5e7eb;
+  padding-top: 16rpx;
+}
+
+.order-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.info-label {
+  font-size: 26rpx;
+  color: #6b7280;
+  min-width: 120rpx;
+  flex-shrink: 0;
+}
+
+.info-value {
+  font-size: 26rpx;
+  color: #374151;
+  flex: 1;
+  word-break: break-all;
+}
+
+.load-more {
+  padding: 32rpx 0;
+  text-align: center;
+  color: #6b7280;
+  font-size: 26rpx;
+}
+
+.empty {
+  padding: 120rpx 0;
+  text-align: center;
+  color: #6b7280;
+  font-size: 28rpx;
+}
+
+.loading {
+  padding: 120rpx 0;
+  text-align: center;
+  color: #6b7280;
+  font-size: 28rpx;
+}

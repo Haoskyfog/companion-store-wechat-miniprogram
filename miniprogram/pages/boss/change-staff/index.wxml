@@ -1,0 +1,90 @@
+<view class="container">
+  <!-- 页面说明 -->
+  <view class="notice">
+    <text class="notice-text">更换直属员工需要管理员审核，请填写详细的更换原因。</text>
+  </view>
+
+  <!-- 当前直属员工 -->
+  <view class="section" wx:if="{{!loading}}">
+    <view class="section-title">选择要更换的员工</view>
+    <view class="staff-list" wx:if="{{myStaffs.length > 0}}">
+      <view class="staff-item {{selectedCurrentStaff === item._openid ? 'selected' : ''}}"
+            wx:for="{{myStaffs}}"
+            wx:key="_openid"
+            data-staff-id="{{item._openid}}"
+            bindtap="onCurrentStaffSelect">
+        <view class="staff-avatar">
+          <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill"></image>
+          <view class="avatar-text" wx:else>{{item.nickname.charAt(0)}}</view>
+        </view>
+        <view class="staff-info">
+          <view class="staff-name">{{item.nickname}}</view>
+          <view class="staff-id">ID: {{item.userId}}</view>
+          <view class="staff-stats">
+            <text>已完成 {{item.totalOrders}} 单，{{formatDuration(item.totalDuration)}}</text>
+          </view>
+        </view>
+        <view class="select-indicator" wx:if="{{selectedCurrentStaff === item._openid}}">
+          <text>✓</text>
+        </view>
+      </view>
+    </view>
+    <view class="empty" wx:else>
+      <text>暂无直属员工</text>
+    </view>
+  </view>
+
+  <!-- 目标员工 -->
+  <view class="section" wx:if="{{!loading && selectedCurrentStaff}}">
+    <view class="section-title">选择目标员工</view>
+    <view class="staff-list" wx:if="{{availableStaffs.length > 0}}">
+      <view class="staff-item {{selectedTargetStaff === item._openid ? 'selected' : ''}}"
+            wx:for="{{availableStaffs}}"
+            wx:key="_openid"
+            data-staff-id="{{item._openid}}"
+            bindtap="onTargetStaffSelect">
+        <view class="staff-avatar">
+          <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill"></image>
+          <view class="avatar-text" wx:else>{{item.nickname.charAt(0)}}</view>
+        </view>
+        <view class="staff-info">
+          <view class="staff-name">{{item.nickname}}</view>
+          <view class="staff-id">ID: {{item.userId}}</view>
+          <view class="staff-stats">
+            <text>已完成 {{item.totalOrders}} 单，{{formatDuration(item.totalDuration)}}</text>
+          </view>
+        </view>
+        <view class="select-indicator" wx:if="{{selectedTargetStaff === item._openid}}">
+          <text>✓</text>
+        </view>
+      </view>
+    </view>
+    <view class="empty" wx:else>
+      <text>暂无可选员工</text>
+    </view>
+  </view>
+
+  <!-- 申请原因 -->
+  <view class="section" wx:if="{{!loading && selectedCurrentStaff && selectedTargetStaff}}">
+    <view class="section-title">更换原因</view>
+    <textarea class="reason-input"
+              placeholder="请详细说明更换原因，管理员会根据您的描述进行审核..."
+              value="{{reason}}"
+              bindinput="onReasonInput">
+    </textarea>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section" wx:if="{{!loading && selectedCurrentStaff && selectedTargetStaff && reason}}">
+    <button class="submit-btn"
+            loading="{{submitting}}"
+            bindtap="onSubmit">
+      提交更换申请
+    </button>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+</view>

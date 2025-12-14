@@ -1,0 +1,65 @@
+<!-- 员工端 - 主页 -->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="header-title">陪玩店</view>
+    <view class="header-actions">
+      <view class="mode-badge">员工模式</view>
+      <text class="icon-btn">🔔</text>
+    </view>
+  </view>
+
+  <scroll-view scroll-y="{{true}}" class="scroll-content">
+    <!-- 快捷操作 -->
+    <view class="quick-actions">
+      <view class="action-btn action-primary" bindtap="onCreateOrder">
+        <text class="action-icon">📝</text>
+        <text class="action-title">创建订单</text>
+        <text class="action-desc">为老板创建服务记录</text>
+      </view>
+      <view class="action-btn action-secondary" bindtap="onSubmitReport">
+        <text class="action-icon">📋</text>
+        <text class="action-title">提交报备</text>
+        <text class="action-desc">记录接单信息</text>
+      </view>
+    </view>
+
+    <!-- 功能导航 -->
+    <view class="function-grid">
+      <view class="function-item" bindtap="onViewRanking">
+        <text class="function-icon">🏆</text>
+        <text class="function-title">排行榜</text>
+        <text class="function-desc">查看排名情况</text>
+      </view>
+      <view class="function-item" bindtap="onViewProfile">
+        <text class="function-icon">👤</text>
+        <text class="function-title">个人资料</text>
+        <text class="function-desc">完善个人信息</text>
+      </view>
+      <view class="function-item" bindtap="onViewOrders">
+        <text class="function-icon">📋</text>
+        <text class="function-title">我的订单</text>
+        <text class="function-desc">订单历史记录</text>
+      </view>
+      <view class="function-item" bindtap="onViewReports">
+        <text class="function-icon">📄</text>
+        <text class="function-title">报备记录</text>
+        <text class="function-desc">报备历史记录</text>
+      </view>
+    </view>
+
+    <!-- 温馨提示 -->
+    <view class="welcome-card">
+      <text class="welcome-icon">💡</text>
+      <view class="welcome-content">
+        <text class="welcome-title">欢迎使用陪玩店</text>
+        <text class="welcome-text">请及时维护个人资料，提升服务质量和推荐率！</text>
+      </view>
+    </view>
+
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+
+  <!-- 自定义TabBar -->
+  <custom-tab-bar />
+</view>

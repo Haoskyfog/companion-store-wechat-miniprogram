@@ -1,0 +1,16 @@
+<view class="custom-tab-bar surface">
+  <block wx:for="{{list}}" wx:key="pagePath">
+    <view
+      class="tab-item {{selected === index ? 'active' : ''}}"
+      data-index="{{index}}"
+      data-path="{{item.pagePath}}"
+      bindtap="onTap"
+    >
+      <view class="icon-container">
+        <image class="icon" mode="aspectFit" src="{{selected === index ? item.selectedIcon : item.icon}}" binderror="onIconError" data-emoji="{{item.emoji}}" />
+        <text class="emoji-fallback" wx:if="{{!item.iconLoaded}}">{{item.emoji}}</text>
+      </view>
+      <text class="label">{{item.text}}</text>
+    </view>
+  </block>
+</view>

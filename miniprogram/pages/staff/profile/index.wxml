@@ -1,0 +1,87 @@
+<!-- 员工端 - 我的 -->
+<view class="page">
+  <!-- 顶部背景 -->
+  <view class="top-bg">
+    <view class="back-btn" bindtap="onBack">‹</view>
+    <view class="mode-badge">员工模式</view>
+    <view class="settings-btn">⚙️</view>
+  </view>
+
+  <scroll-view scroll-y="{{true}}" class="scroll-content">
+    <!-- 用户信息卡片 -->
+    <view class="user-card">
+      <view class="user-header">
+        <view class="user-avatar">
+          <image wx:if="{{userInfo.avatar}}" src="{{userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
+          <text wx:else>👧</text>
+        </view>
+        <view class="user-info">
+          <view class="user-name-row">
+            <text class="user-name">{{userInfo.nickname || '未设置昵称'}}</text>
+            <view class="status-badge">在线</view>
+          </view>
+          <text class="user-id">ID: {{userInfo.userId || '未设置'}}</text>
+        </view>
+      </view>
+
+      <!-- 本月数据 -->
+      <view class="stats-grid" wx:if="{{!loading}}">
+        <view class="stat-box stat-purple">
+          <text class="stat-value">{{stats.totalOrders}}</text>
+          <text class="stat-label">本月订单</text>
+        </view>
+        <view class="stat-box stat-blue">
+          <text class="stat-value">{{stats.totalDuration}}</text>
+          <text class="stat-label">服务时长(h)</text>
+        </view>
+        <view class="stat-box stat-green">
+          <text class="stat-value">{{stats.rating}}%</text>
+          <text class="stat-label">好评率</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 快捷功能 -->
+    <view class="quick-grid">
+      <view class="quick-item" wx:for="{{quickActions}}" wx:key="id" data-action="{{item.action}}" bindtap="onQuickAction">
+        <view class="quick-icon" style="background: {{item.bgColor}};">
+          <text class="quick-emoji">{{item.icon}}</text>
+        </view>
+        <text class="quick-label">{{item.label}}</text>
+      </view>
+    </view>
+
+    <!-- 个人资料维护 -->
+    <view class="section-card">
+      <view class="section-header-special">
+        <text class="section-icon">✨</text>
+        <text class="section-title">个人资料</text>
+      </view>
+
+      <view class="menu-item" wx:for="{{profileMenu}}" wx:key="id" data-action="{{item.action}}" bindtap="onProfileMenu">
+        <text class="menu-icon">{{item.icon}}</text>
+        <text class="menu-label">{{item.label}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 其他功能 -->
+    <view class="section-card">
+      <view class="menu-item" wx:for="{{otherMenu}}" wx:key="id" data-action="{{item.action}}" bindtap="onOtherMenu">
+        <view class="menu-icon-box" style="background: {{item.bgColor}};">
+          <text class="menu-icon-emoji">{{item.icon}}</text>
+        </view>
+        <view class="menu-info">
+          <text class="menu-title">{{item.title}}</text>
+          <text class="menu-desc">{{item.desc}}</text>
+        </view>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+
+  <!-- 自定义TabBar -->
+  <custom-tab-bar />
+</view>
