@@ -1,10 +1,10 @@
 <!-- 员工端 - 我的 -->
 <view class="page">
-  <!-- 顶部背景 -->
-  <view class="top-bg">
-    <view class="back-btn" bindtap="onBack">‹</view>
-    <view class="mode-badge">员工模式</view>
-    <view class="settings-btn">⚙️</view>
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="nav-back" bindtap="onBack">←</view>
+    <view class="header-title">个人资料</view>
+    <view class="refresh-btn" bindtap="onRefresh">🔄</view>
   </view>
 
   <scroll-view scroll-y="{{true}}" class="scroll-content">
@@ -30,13 +30,9 @@
           <text class="stat-value">{{stats.totalOrders}}</text>
           <text class="stat-label">本月订单</text>
         </view>
-        <view class="stat-box stat-blue">
-          <text class="stat-value">{{stats.totalDuration}}</text>
-          <text class="stat-label">服务时长(h)</text>
-        </view>
         <view class="stat-box stat-green">
-          <text class="stat-value">{{stats.rating}}%</text>
-          <text class="stat-label">好评率</text>
+          <text class="stat-value">¥{{stats.personalRevenue || 0}}</text>
+          <text class="stat-label">个人流水</text>
         </view>
       </view>
     </view>
@@ -56,6 +52,21 @@
       <view class="section-header-special">
         <text class="section-icon">✨</text>
         <text class="section-title">个人资料</text>
+      </view>
+
+      <!-- 自我介绍图片展示 -->
+      <view class="intro-image-section" wx:if="{{voiceSettings.introImage}}">
+        <text class="intro-image-label">自我介绍图片：</text>
+        <image src="{{voiceSettings.introImage}}" mode="aspectFill" class="intro-image" />
+      </view>
+
+      <!-- 语音介绍展示 -->
+      <view class="audio-section" wx:if="{{voiceSettings.audioUrl}}">
+        <text class="audio-label">语音介绍：</text>
+        <view class="audio-info">
+          <text class="audio-icon">🎵</text>
+          <text class="audio-text">已上传语音介绍</text>
+        </view>
       </view>
 
       <view class="menu-item" wx:for="{{profileMenu}}" wx:key="id" data-action="{{item.action}}" bindtap="onProfileMenu">

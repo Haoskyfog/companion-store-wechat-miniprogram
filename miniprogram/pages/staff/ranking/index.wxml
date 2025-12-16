@@ -8,8 +8,8 @@
 
   <!-- 标题区域 -->
   <view class="title-section">
-    <text class="title-text">🏆 员工总排行榜</text>
-    <text class="subtitle">共 {{rankings.length}} 位员工</text>
+    <text class="title-text">🏆 个人流水排行榜</text>
+    <text class="subtitle">按个人流水排名</text>
   </view>
 
   <scroll-view scroll-y="{{true}}" class="scroll-content">
@@ -29,7 +29,7 @@
     <view class="ranking-section" wx:else>
       <view class="section-title">
         <text class="title-icon">🏆</text>
-        <text class="title-text">总排行榜</text>
+        <text class="title-text">个人流水排行榜</text>
       </view>
 
       <!-- 前三名特殊展示 -->
@@ -43,7 +43,7 @@
               <view class="rank-badge badge-2">2</view>
             </view>
             <text class="top-name">{{rankings[1].userInfo.nickname}}</text>
-            <text class="top-orders highlight">{{rankings[1].orderCount}} 通过</text>
+            <text class="top-orders highlight">¥{{rankings[1].totalRevenueDisplay || '0.00'}}</text>
           </view>
 
           <!-- 第一名 -->
@@ -54,7 +54,7 @@
               <view class="rank-badge badge-1">1</view>
             </view>
             <text class="top-name">{{rankings[0].userInfo.nickname}}</text>
-            <text class="top-orders highlight">{{rankings[0].orderCount}} 通过</text>
+            <text class="top-orders highlight">¥{{rankings[0].totalRevenueDisplay || '0.00'}}</text>
           </view>
 
           <!-- 第三名 -->
@@ -65,7 +65,7 @@
               <view class="rank-badge badge-3">3</view>
             </view>
             <text class="top-name">{{rankings[2].userInfo.nickname}}</text>
-            <text class="top-orders highlight">{{rankings[2].orderCount}} 通过</text>
+            <text class="top-orders highlight">¥{{rankings[2].totalRevenueDisplay || '0.00'}}</text>
           </view>
         </view>
       </view>
@@ -88,7 +88,7 @@
             <text class="staff-id">ID: {{item.userInfo.userId}}</text>
           </view>
           <view class="staff-stats">
-            <text class="stat-orders">{{item.orderCount}} 通过</text>
+            <text class="stat-orders">¥{{item.totalRevenueDisplay || '0.00'}}</text>
           </view>
         </view>
       </view>

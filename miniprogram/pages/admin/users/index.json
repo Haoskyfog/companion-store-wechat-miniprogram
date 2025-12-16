@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "用户与绑定"
+  "navigationBarTitleText": "用户与绑定",
+  "onReachBottomDistance": 50,
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark"
 }

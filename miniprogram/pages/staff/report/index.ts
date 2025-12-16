@@ -3,19 +3,9 @@ Page({
   data: {
     games: ['王者荣耀', '和平精英', '英雄联盟', '原神', '其他'],
     selectedGame: '王者荣耀',
-    durations: [
-      { label: '1小时', value: 1, selected: false },
-      { label: '2小时', value: 2, selected: false },
-      { label: '3小时', value: 3, selected: true },
-      { label: '4小时', value: 4, selected: false }
-    ],
+    duration: '',
+    amount: '',
     date: '',
-    platforms: [
-      { label: '比心', value: 'bixin', selected: true },
-      { label: '闪电鱼', value: 'shandiangyu', selected: false },
-      { label: '小鹿陪玩', value: 'xiaolu', selected: false },
-      { label: '其他', value: 'other', selected: false }
-    ],
     services: [
       { label: '游戏陪玩', value: 'game', checked: true },
       { label: '语音聊天', value: 'voice', checked: true },
@@ -30,59 +20,72 @@ Page({
   },
 
   onLoad() {
+    console.log('报备页面onLoad开始')
+
     // 设置默认日期为昨天
     const yesterday = new Date()
     yesterday.setDate(yesterday.getDate() - 1)
     const dateStr = yesterday.toISOString().split('T')[0]
-    this.setData({ date: dateStr })
+
+    // 初始化所有数据字段
+    this.setData({
+      date: dateStr,
+      duration: '',
+      amount: '',
+      remark: '',
+      selectedGame: '王者荣耀',
+      bossList: [],
+      selectedBossId: '',
+      selectedBossDisplay: '',
+      submitting: false,
+      games: ['王者荣耀', '和平精英', '英雄联盟', '原神', '其他'],
+      services: [
+        { label: '游戏陪玩', value: 'game', checked: true },
+        { label: '语音聊天', value: 'voice', checked: true },
+        { label: '技术指导', value: 'guide', checked: false }
+      ],
+      images: []
+    })
+
+    console.log('报备页面数据初始化完成')
 
     // 获取可选择的绑定老板列表
     this.getBossList()
   },
 
-  // 获取绑定老板列表
+  // 获取所有老板列表
   getBossList() {
     wx.showLoading({ title: '加载中...' })
-    wx.cloud.callFunction({
-      name: 'getUserInfo',
-      success: (userRes: any) => {
-        if (userRes.result && userRes.result.success) {
-          const userInfo = userRes.result.data
-          // 查询绑定关系
-          wx.cloud.database().collection('bindings')
+    
+    // 直接查询所有角色为 Boss 的用户
+    wx.cloud.database().collection('users')
             .where({
-              staffId: userInfo._openid,
-              status: 'active'
+        role: 'Boss'
             })
             .get()
-            .then((bindingRes: any) => {
+      .then((bossRes: any) => {
               wx.hideLoading()
-              if (bindingRes.data && bindingRes.data.length > 0) {
-                // 获取老板信息
-                const bossPromises = bindingRes.data.map((binding: any) =>
-                  wx.cloud.database().collection('users').doc(binding.bossId).get()
-                )
-
-                Promise.all(bossPromises).then((bossResults: any[]) => {
-                  const bossList = bossResults
-                    .filter(result => result.data)
-                    .map(result => result.data)
+        
+        if (bossRes.data && bossRes.data.length > 0) {
+          const bossList = bossRes.data.map((boss: any) => ({
+            _openid: boss._openid,
+            nickname: boss.nickname || '未设置昵称',
+            userId: boss.userId || ''
+          }))
+          
                   this.setData({
                     bossList,
-                    selectedBossId: bossList.length > 0 ? bossList[0]._openid : ''
-                  })
+            selectedBossId: bossList.length > 0 ? bossList[0]._openid : '',
+            selectedBossDisplay: bossList.length > 0 ? `${bossList[0].nickname} (ID: ${bossList[0].userId})` : ''
                 })
               } else {
-                wx.showToast({ title: '暂无绑定老板', icon: 'none' })
-              }
-            })
+          wx.showToast({ title: '暂无老板用户', icon: 'none' })
         }
-      },
-      fail: (err) => {
+      })
+      .catch((err) => {
         wx.hideLoading()
-        console.error('获取用户信息失败:', err)
+        console.error('获取老板列表失败:', err)
         wx.showToast({ title: '加载失败', icon: 'none' })
-      }
     })
   },
 
@@ -98,22 +101,10 @@ Page({
     })
   },
 
-  onDurationSelect(e: any) {
-    const value = e.currentTarget.dataset.value
-    const durations = this.data.durations.map(item => ({
-      ...item,
-      selected: item.value === value
-    }))
-    this.setData({ durations })
-  },
-
-  onPlatformSelect(e: any) {
-    const value = e.currentTarget.dataset.value
-    const platforms = this.data.platforms.map(item => ({
-      ...item,
-      selected: item.value === value
-    }))
-    this.setData({ platforms })
+  onDurationInput(e: any) {
+    this.setData({
+      duration: e.detail.value
+    })
   },
 
   onServiceChange(e: any) {
@@ -129,6 +120,12 @@ Page({
     this.setData({
       selectedBossId: selectedBoss._openid,
       selectedBossDisplay: `${selectedBoss.nickname} (ID: ${selectedBoss.userId})`
+    })
+  },
+
+  onAmountInput(e: any) {
+    this.setData({
+      amount: e.detail.value
     })
   },
 
@@ -182,21 +179,52 @@ Page({
       return
     }
 
-    this.setData({ submitting: true })
-    wx.showLoading({ title: '提交中...' })
+    // 防止重复提交
+    if (this.data.submitting) {
+      wx.showToast({
+        title: '正在提交中，请稍候',
+        icon: 'none'
+      })
+      return
+    }
 
-    const selectedDuration = this.data.durations.find(d => d.selected)
-    const selectedPlatform = this.data.platforms.find(p => p.selected)
+    this.setData({ submitting: true })
+
+    // 显示提交中状态，不显示loading（避免用户认为卡住了）
+    wx.showToast({
+      title: '提交中...',
+      icon: 'loading',
+      duration: 30000 // 30秒超时
+    })
+
     const selectedServices = this.data.services.filter(s => s.checked).map(s => s.value)
+
+    // 调试信息
+    console.log('提交报备数据:', {
+      bossId: this.data.selectedBossId,
+      game: this.data.selectedGame,
+      duration: this.data.duration,
+      durationParsed: parseFloat(this.data.duration) || 0,
+      amount: this.data.amount,
+      amountType: typeof this.data.amount,
+      amountParsed: parseFloat(this.data.amount),
+      date: this.data.date,
+      services: selectedServices,
+      remark: this.data.remark,
+      imagesCount: this.data.images.length
+    })
+
+    // 确保amount是有效的数字
+    const amountValue = this.data.amount && this.data.amount.trim() !== '' ? parseFloat(this.data.amount) : 0
 
     wx.cloud.callFunction({
       name: 'submitReport',
       data: {
         bossId: this.data.selectedBossId,
         game: this.data.selectedGame,
-        duration: selectedDuration?.value || 3,
+        duration: parseFloat(this.data.duration) || 0,
+        amount: amountValue,
         date: this.data.date,
-        platform: selectedPlatform?.value || '',
         services: selectedServices,
         remark: this.data.remark,
         images: this.data.images
@@ -206,15 +234,25 @@ Page({
         this.setData({ submitting: false })
 
         if (res.result && res.result.success) {
+          wx.hideToast() // 隐藏提交中的提示
+
           wx.showToast({
             title: '报备提交成功',
             icon: 'success',
-            duration: 2000
+            duration: 1500
           })
-          // 返回上一页
+
+          // 立即返回上一页
           setTimeout(() => {
-            wx.navigateBack()
-          }, 2000)
+            wx.navigateBack({
+              fail: () => {
+                // 如果返回失败，尝试切换到上一页
+                wx.switchTab({
+                  url: '/pages/staff/home/index'
+                })
+              }
+            })
+          }, 1500)
         } else {
           wx.showToast({
             title: res.result?.error || '提交失败',
@@ -242,6 +280,28 @@ Page({
     }
     if (!this.data.date) {
       wx.showToast({ title: '请选择接单日期', icon: 'none' })
+      return false
+    }
+    if (!this.data.duration || this.data.duration.trim() === '') {
+      wx.showToast({ title: '请输入服务时长', icon: 'none' })
+      return false
+    }
+    const duration = parseFloat(this.data.duration)
+    if (isNaN(duration) || duration <= 0) {
+      wx.showToast({ title: '请输入有效的服务时长', icon: 'none' })
+      return false
+    }
+    if (!this.data.amount || this.data.amount.trim() === '') {
+      wx.showToast({ title: '请输入订单金额', icon: 'none' })
+      return false
+    }
+    const amount = parseFloat(this.data.amount)
+    if (isNaN(amount) || amount <= 0) {
+      wx.showToast({ title: '请输入有效的订单金额', icon: 'none' })
+      return false
+    }
+    if (amount > 10000) {
+      wx.showToast({ title: '订单金额不能超过10000元', icon: 'none' })
       return false
     }
     const selectedServices = this.data.services.filter(s => s.checked)

@@ -12,6 +12,7 @@ Page({
         avatar?: string;
       };
       orderCount: number;
+      totalRevenue: number;
       totalDuration: number;
       rating: number;
       ratingRounded: number;
@@ -51,6 +52,9 @@ Page({
       tabBar.syncRole && tabBar.syncRole('Staff');
       tabBar.setSelected && tabBar.setSelected(pagePath);
     }
+    
+    // 每次显示时刷新排行榜数据
+    this.loadRankings()
   },
 
   // 加载排行榜
@@ -64,10 +68,26 @@ Page({
       success: (res: any) => {
         wx.hideLoading()
         if (res.result && res.result.success) {
-          const rankings = res.result.data.rankings.map((item: any) => ({
-            ...item,
-            ratingRounded: Math.round(item.rating)
-          }))
+          const rankings = res.result.data.rankings.map((item: any) => {
+            // 确保 totalRevenue 是数字类型
+            const totalRevenue = typeof item.totalRevenue === 'number' ? item.totalRevenue : (Number(item.totalRevenue) || 0)
+            
+            console.log('排行榜项:', {
+              员工: item.userInfo?.nickname,
+              个人流水: totalRevenue,
+              流水类型: typeof totalRevenue
+            })
+            
+            return {
+              ...item,
+              totalRevenue: totalRevenue, // 确保是数字类型
+              totalRevenueDisplay: totalRevenue.toFixed(2), // 格式化显示，保留两位小数
+              ratingRounded: Math.round(item.rating || 95)
+            }
+          })
+          
+          console.log('处理后的排行榜数据:', rankings)
+          
           this.setData({
             rankings: rankings,
             loading: false

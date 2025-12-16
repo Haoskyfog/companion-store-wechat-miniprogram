@@ -17,20 +17,20 @@ page {
 }
 
 .surface {
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  box-shadow: 0 12px 40px rgba(2, 6, 23, 0.12);
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
-  border-radius: 18rpx;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.06);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.05);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-radius: 20rpx;
 }
 
 .surface-strong {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  box-shadow: 0 18px 70px rgba(2, 6, 23, 0.16);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(139, 92, 246, 0.08);
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.06);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-radius: 24rpx;
 }
 

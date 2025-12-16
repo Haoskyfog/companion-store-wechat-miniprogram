@@ -10,7 +10,7 @@
   <!-- 说明提示 -->
   <view class="tip-box">
     <text class="tip-icon">ℹ️</text>
-    <text class="tip-text">只能为管理员绑定的老板创建订单，订单无金额，仅用于服务记录</text>
+    <text class="tip-text">只能为管理员绑定的老板创建订单，订单提交后老板会收到通知并可选择支付</text>
   </view>
 
   <scroll-view scroll-y="{{true}}" class="scroll-content">

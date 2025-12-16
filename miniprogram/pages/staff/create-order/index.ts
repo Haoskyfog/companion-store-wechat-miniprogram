@@ -62,16 +62,19 @@ Page({
               if (bindingRes.data && bindingRes.data.length > 0) {
                 // 获取老板信息
                 const bossPromises = bindingRes.data.map((binding: any) =>
-                  wx.cloud.database().collection('users').doc(binding.bossId).get()
+                  wx.cloud.database().collection('users')
+                    .where({ _openid: binding.bossId })
+                    .get()
                 )
 
                 Promise.all(bossPromises).then((bossResults: any[]) => {
                   const bossList = bossResults
-                    .filter(result => result.data)
-                    .map(result => result.data)
+                    .filter(result => result.data && result.data.length > 0)
+                    .map(result => result.data[0])
                   this.setData({
                     bossList,
-                    selectedBossId: bossList.length > 0 ? bossList[0]._openid : ''
+                    selectedBossId: bossList.length > 0 ? bossList[0]._openid : '',
+                    selectedBossDisplay: bossList.length > 0 ? `${bossList[0].nickname} (ID: ${bossList[0].userId})` : ''
                   })
                 })
               } else {
@@ -140,6 +143,14 @@ Page({
     })
   },
 
+  onAmountInput(e: any) {
+    const value = e.detail.value
+    console.log('金额输入:', value, '类型:', typeof value)
+    this.setData({
+      amount: value
+    })
+  },
+
   // 提交订单
   onSubmit() {
     if (!this.validateForm()) {
@@ -152,6 +163,9 @@ Page({
     const selectedDuration = this.data.durations.find(d => d.selected)
     const selectedPosition = this.data.positions.find(p => p.selected)
     const selectedServices = this.data.services.filter(s => s.checked).map(s => s.value)
+    const amount = parseFloat(this.data.amount)
+
+    console.log('提交订单 - 金额:', amount, '类型:', typeof amount)
 
     wx.cloud.callFunction({
       name: 'createOrder',
@@ -163,7 +177,7 @@ Page({
         position: selectedPosition?.value || '',
         services: selectedServices,
         remark: this.data.remark,
-        amount: parseFloat(this.data.amount) || 0
+        amount: amount
       },
       success: (res: any) => {
         wx.hideLoading()
@@ -204,10 +218,19 @@ Page({
       wx.showToast({ title: '请选择老板', icon: 'none' })
       return false
     }
-    if (!this.data.amount || parseFloat(this.data.amount) <= 0) {
-      wx.showToast({ title: '请输入有效的服务金额', icon: 'none' })
+    
+    const amount = parseFloat(this.data.amount)
+    console.log('验证金额 - 原始值:', this.data.amount, '转换后:', amount)
+    
+    if (!this.data.amount || isNaN(amount) || amount <= 0) {
+      wx.showToast({ 
+        title: `请输入有效的服务金额（当前：${this.data.amount}）`, 
+        icon: 'none',
+        duration: 3000 
+      })
       return false
     }
+    
     if (!this.data.date) {
       wx.showToast({ title: '请选择服务日期', icon: 'none' })
       return false

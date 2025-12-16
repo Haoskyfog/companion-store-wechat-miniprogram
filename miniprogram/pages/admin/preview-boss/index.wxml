@@ -1,0 +1,95 @@
+<!-- 管理员 - 老板端首页预览 -->
+<view class="page">
+  <!-- 顶部导航 - 亚克力玻璃效果 -->
+  <view class="header">
+    <view class="header-bg">
+      <view class="header-blur"></view>
+      <view class="header-shine"></view>
+    </view>
+    <view class="header-content">
+      <view class="header-title">
+        <text class="title-text">✨ 预览推荐页</text>
+        <text class="title-subtitle">员工推荐页面预览</text>
+      </view>
+      <view class="header-actions">
+        <view class="preview-tag">预览</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 搜索栏 -->
+  <view class="search-section">
+    <view class="search-container">
+    <view class="search-input">
+      <text class="search-icon">🔍</text>
+        <input placeholder="搜索员工昵称或ID..." placeholder-class="search-placeholder" value="{{searchKeyword}}" bindinput="onSearchInput" />
+      </view>
+    </view>
+  </view>
+
+  <scroll-view scroll-y="{{true}}" class="scroll-content">
+    <!-- 今日推荐 -->
+    <view class="section">
+      <view class="section-header">
+      <view class="section-title">
+        <text class="title-icon">⭐</text>
+        <text class="title-text">今日推荐</text>
+        </view>
+        <view class="section-tag">精选</view>
+      </view>
+      
+      <view class="staff-list">
+        <view class="staff-card" wx:for="{{todayStaffs}}" wx:key="_openid" data-staff="{{item}}" bindtap="viewStaffDetail">
+          <view class="staff-info">
+            <view class="staff-avatar">
+              <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image" />
+              <view wx:else class="avatar-placeholder" style="background: linear-gradient(135deg, {{item.color1}}, {{item.color2}});">
+                <text class="avatar-emoji">👧</text>
+              </view>
+            </view>
+            <view class="staff-details">
+              <view class="staff-header">
+                <view class="staff-name-row">
+                  <text class="staff-name">{{item.nickname}}</text>
+                  <view class="status-badge status-online">在线</view>
+                </view>
+                <text class="staff-id">ID: {{item.userId}}</text>
+              </view>
+              <view class="staff-tags">
+                <text class="tag" wx:for="{{item.tags}}" wx:key="*this">{{item}}</text>
+              </view>
+              <text class="staff-intro">{{item.intro}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 员工列表 -->
+    <view class="section">
+      <view class="section-header">
+      <view class="section-title">
+        <text class="title-icon">👥</text>
+          <text class="title-text">全部员工</text>
+        </view>
+        <text class="section-count">{{filteredStaffList.length}}位</text>
+      </view>
+      
+      <view class="staff-grid">
+        <view class="staff-item" wx:for="{{filteredStaffList}}" wx:key="_openid" data-staff="{{item}}" bindtap="viewStaffDetail">
+          <view class="staff-avatar-wrapper">
+            <view class="staff-avatar-circle">
+              <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image-circle" />
+              <view wx:else class="avatar-placeholder-circle" style="background: linear-gradient(135deg, {{item.color1}}, {{item.color2}});">
+                <text class="avatar-emoji-circle">👧</text>
+              </view>
+            </view>
+            <text class="staff-id-text">{{item.nickname}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+</view>

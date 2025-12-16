@@ -2,32 +2,33 @@ type Role = 'Boss' | 'Staff' | 'Admin' | 'SuperAdmin'
 
 const roleTabs: Record<Role, Array<{ pagePath: string; text: string; icon: string; selectedIcon: string; emoji: string }>> = {
   Boss: [
-    { pagePath: 'pages/boss/home/index', text: '首页', icon: '/assets/tab/home.png', selectedIcon: '/assets/tab/home-active.png', emoji: '🏠' },
-    { pagePath: 'pages/boss/recommend/index', text: '推荐', icon: '/assets/tab/recommend.png', selectedIcon: '/assets/tab/recommend-active.png', emoji: '⭐' },
-    { pagePath: 'pages/boss/profile/index', text: '我的', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '👤' },
+    { pagePath: 'pages/boss/home/index', text: '首页', icon: '/assets/tab/home.png', selectedIcon: '/assets/tab/home-active.png', emoji: '🏢' },
+    { pagePath: 'pages/boss/recommend/index', text: '推荐', icon: '/assets/tab/recommend.png', selectedIcon: '/assets/tab/recommend-active.png', emoji: '💎' },
+    { pagePath: 'pages/boss/profile/index', text: '我的', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '👑' },
   ],
   Staff: [
-    { pagePath: 'pages/staff/index/index', text: '首页', icon: '/assets/tab/home.png', selectedIcon: '/assets/tab/home-active.png', emoji: '🏠' },
-    { pagePath: 'pages/staff/recommend/index', text: '推荐', icon: '/assets/tab/recommend.png', selectedIcon: '/assets/tab/recommend-active.png', emoji: '⭐' },
-    { pagePath: 'pages/staff/home/index', text: '我的', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '👤' },
+    { pagePath: 'pages/staff/index/index', text: '首页', icon: '/assets/tab/home.png', selectedIcon: '/assets/tab/home-active.png', emoji: '🎮' },
+    { pagePath: 'pages/staff/recommend/index', text: '推荐', icon: '/assets/tab/recommend.png', selectedIcon: '/assets/tab/recommend-active.png', emoji: '🎯' },
+    { pagePath: 'pages/staff/home/index', text: '我的', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '🎪' },
   ],
   Admin: [
-    { pagePath: 'pages/admin/dashboard/index', text: '仪表', icon: '/assets/tab/home.png', selectedIcon: '/assets/tab/home-active.png', emoji: '📊' },
-    { pagePath: 'pages/admin/content/index', text: '内容', icon: '/assets/tab/recommend.png', selectedIcon: '/assets/tab/recommend-active.png', emoji: '📝' },
+    { pagePath: 'pages/admin/dashboard/index', text: '仪表', icon: '/assets/tab/home.png', selectedIcon: '/assets/tab/home-active.png', emoji: '📈' },
+    { pagePath: 'pages/admin/content/index', text: '内容', icon: '/assets/tab/recommend.png', selectedIcon: '/assets/tab/recommend-active.png', emoji: '✨' },
     { pagePath: 'pages/admin/users/index', text: '用户', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '👥' },
-    { pagePath: 'pages/admin/audit/index', text: '审核', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '✅' },
+    { pagePath: 'pages/admin/audit/index', text: '审核', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '🔍' },
   ],
   SuperAdmin: [
     { pagePath: 'pages/admin/dashboard/index', text: '仪表', icon: '/assets/tab/home.png', selectedIcon: '/assets/tab/home-active.png', emoji: '📊' },
-    { pagePath: 'pages/admin/content/index', text: '内容', icon: '/assets/tab/recommend.png', selectedIcon: '/assets/tab/recommend-active.png', emoji: '📝' },
-    { pagePath: 'pages/admin/users/index', text: '用户', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '👥' },
-    { pagePath: 'pages/admin/audit/index', text: '审核', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '✅' },
+    { pagePath: 'pages/admin/content/index', text: '内容', icon: '/assets/tab/recommend.png', selectedIcon: '/assets/tab/recommend-active.png', emoji: '🎨' },
+    { pagePath: 'pages/admin/users/index', text: '用户', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '👑' },
+    { pagePath: 'pages/admin/audit/index', text: '审核', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '⚡' },
   ],
 }
 
 Component({
   data: {
     role: 'Boss' as Role,
+    roleClass: 'role-boss',
     list: roleTabs.Boss.map(item => ({ ...item, iconLoaded: true })),
     selected: 0,
   },
@@ -40,7 +41,8 @@ Component({
     syncRole(role?: Role) {
       const stored = (role || (wx.getStorageSync('role') as Role) || 'Boss') as Role
       const list = (roleTabs[stored] || roleTabs.Boss).map(item => ({ ...item, iconLoaded: true }))
-      this.setData({ role: stored, list })
+      const roleClass = `role-${stored.toLowerCase()}`
+      this.setData({ role: stored, roleClass, list })
     },
     setSelected(pagePath: string) {
       const index = this.data.list.findIndex((item) => item.pagePath === pagePath)

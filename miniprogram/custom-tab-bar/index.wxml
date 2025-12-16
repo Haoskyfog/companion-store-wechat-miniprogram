@@ -1,4 +1,4 @@
-<view class="custom-tab-bar surface">
+<view class="custom-tab-bar surface {{roleClass}}">
   <block wx:for="{{list}}" wx:key="pagePath">
     <view
       class="tab-item {{selected === index ? 'active' : ''}}"

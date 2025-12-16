@@ -1,5 +1,6 @@
 {
-  "navigationBarTitleText": "员工我的",
+  "navigationBarTitleText": "",
+  "navigationStyle": "custom",
   "usingComponents": {
     "custom-tab-bar": "/custom-tab-bar/index"
   }

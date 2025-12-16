@@ -4,7 +4,8 @@ App<IAppOption>({
     userInfo: null,
     role: 'Boss' as 'Boss' | 'Staff' | 'Admin' | 'SuperAdmin',
     cloudEnv: 'cloud1-7g62s1bob33a0a2c',
-    staffDetailData: null as any
+    staffDetailData: null as any,
+    userInfoLoading: false // 防止重复调用getUserInfo
   },
   onLaunch() {
     // 初始化云开发
@@ -33,19 +34,33 @@ App<IAppOption>({
 
   // 获取用户信息
   getUserInfo() {
+    // 防止重复调用
+    if (this.globalData.userInfoLoading) {
+      console.log('getUserInfo正在执行中，跳过重复调用')
+      return
+    }
+
+    this.globalData.userInfoLoading = true
+
     wx.cloud.callFunction({
       name: 'getUserInfo',
       success: (res: any) => {
+        this.globalData.userInfoLoading = false
+
         if (res.result && res.result.success) {
           this.globalData.userInfo = res.result.data
           if (res.result.data.role) {
             this.globalData.role = res.result.data.role
             wx.setStorageSync('role', res.result.data.role)
           }
+          console.log('用户信息加载成功:', res.result.data._openid)
+        } else {
+          console.error('获取用户信息失败:', res.result?.error)
         }
       },
       fail: (err) => {
-        console.error('获取用户信息失败:', err)
+        this.globalData.userInfoLoading = false
+        console.error('获取用户信息网络失败:', err)
       }
     })
   },
@@ -56,17 +71,34 @@ App<IAppOption>({
     wx.setStorageSync('role', role)
   },
 
-  // 用户资料更新回调
-  onUserProfileUpdate: null as ((userInfo: any) => void) | null,
+  // 用户资料更新回调数组
+  userProfileUpdateCallbacks: [] as Array<(userInfo: any) => void>,
 
-  // 设置用户资料更新回调
-  setUserProfileUpdateCallback(callback: (userInfo: any) => void) {
-    this.onUserProfileUpdate = callback
+  // 注册用户资料更新回调
+  registerUserProfileUpdateCallback(callback: (userInfo: any) => void) {
+    // 避免重复注册
+    if (!this.userProfileUpdateCallbacks.includes(callback)) {
+      this.userProfileUpdateCallbacks.push(callback)
+    }
   },
 
-  // 清除用户资料更新回调
-  clearUserProfileUpdateCallback() {
-    this.onUserProfileUpdate = null
+  // 注销用户资料更新回调
+  unregisterUserProfileUpdateCallback(callback: (userInfo: any) => void) {
+    const index = this.userProfileUpdateCallbacks.indexOf(callback)
+    if (index > -1) {
+      this.userProfileUpdateCallbacks.splice(index, 1)
+    }
+  },
+
+  // 触发用户资料更新回调
+  triggerUserProfileUpdate(userInfo: any) {
+    this.userProfileUpdateCallbacks.forEach(callback => {
+      try {
+        callback(userInfo)
+      } catch (error) {
+        console.error('用户资料更新回调执行失败:', error)
+      }
+    })
   },
 
   // 设置员工详情数据

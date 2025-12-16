@@ -8,6 +8,7 @@
     </view>
     <view class="header-actions">
       <view class="admin-badge">Admin</view>
+      <view class="refresh-btn" bindtap="onRefresh">🔄</view>
       <text class="icon-btn">🔔</text>
     </view>
   </view>
@@ -73,34 +74,6 @@
     </view>
 
 
-    <!-- 最新报备 -->
-    <view class="reports-section" wx:if="{{recentReports.length > 0}}">
-      <view class="section-header">
-        <text class="section-title">最新报备</text>
-        <text class="section-more" bindtap="onViewMoreReports">查看全部</text>
-      </view>
-      <view class="reports-list">
-        <view class="report-item" wx:for="{{recentReports}}" wx:key="_id">
-          <view class="report-header">
-            <view class="report-user">
-              <view class="report-avatar" style="background: linear-gradient(135deg, #93c5fd, #67e8f9);">
-                <text class="report-emoji">🎮</text>
-              </view>
-              <view class="report-user-info">
-                <text class="report-name">{{item.staffInfo.nickname}}</text>
-                <text class="report-time">{{item.createTime}}</text>
-              </view>
-            </view>
-            <view class="report-status {{item.status === 'pending' ? 'status-pending' : item.status === 'approved' ? 'status-approved' : 'status-rejected'}}">
-              {{item.status === 'pending' ? '待审核' : item.status === 'approved' ? '已通过' : '已驳回'}}
-            </view>
-          </view>
-          <text class="report-detail">{{item.game}} {{item.duration}}小时</text>
-        </view>
-      </view>
-    </view>
-
-
     <!-- 核心数据 -->
     <view class="core-stats">
       <text class="section-title">核心数据</text>
@@ -111,9 +84,9 @@
           <text class="stat-trend">📊 实时统计</text>
         </view>
         <view class="stat-box">
-          <text class="stat-big-value green">¥{{statistics.revenue.total || 0}}</text>
+          <text class="stat-big-value green">¥{{statistics.revenue.totalDisplay}}</text>
           <text class="stat-big-label">总流水</text>
-          <text class="stat-trend">💰 累计收入</text>
+          <text class="stat-trend">💰 已支付订单真实金额总和</text>
         </view>
       </view>
     </view>

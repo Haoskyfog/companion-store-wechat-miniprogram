@@ -7,6 +7,7 @@ Page({
       date: string;
       game: string;
       duration: number;
+      amount: number;
       platform: string;
       services: string[];
       remark: string;
@@ -65,6 +66,13 @@ Page({
       },
       success: (res: any) => {
         if (res.result && res.result.success) {
+          console.log('收到报备数据:', res.result.data.reports)
+
+          // 检查每个报备的amount字段
+          res.result.data.reports.forEach((report: any, index: number) => {
+            console.log(`报备${index + 1}的amount:`, report.amount, '类型:', typeof report.amount)
+          })
+
           const reports = res.result.data.reports.map((report: any) => ({
             ...report,
             createTime: this.formatTime(report.createTime),

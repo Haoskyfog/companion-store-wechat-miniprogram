@@ -25,18 +25,21 @@
 
     <!-- 报备项 -->
     <block wx:elif="{{reports.length > 0}}">
-      <view class="audit-item" wx:for="{{reports}}" wx:key="_id">
+      <view class="audit-item" wx:for="{{reports}}" wx:for-item="report" wx:key="_id">
       <view class="audit-header">
         <view class="staff-info">
-          <view class="staff-avatar">🎮</view>
+          <view class="staff-avatar">
+            <image wx:if="{{report.staffInfo.avatar}}" src="{{report.staffInfo.avatar}}" mode="aspectFill" class="avatar-image" />
+            <text wx:else>🎮</text>
+          </view>
           <view class="staff-details">
-            <text class="staff-name">{{item.staffInfo.nickname}}</text>
-            <text class="staff-id">ID: {{item.staffInfo.userId}}</text>
+            <text class="staff-name">{{report.staffInfo.nickname}}</text>
+            <text class="staff-id">ID: {{report.staffInfo.userId}}</text>
           </view>
         </view>
         <view class="boss-info">
           <text class="boss-label">关联老板:</text>
-          <text class="boss-name">{{item.bossInfo.nickname}} (ID: {{item.bossInfo.userId}})</text>
+          <text class="boss-name">{{report.bossInfo.nickname}} (ID: {{report.bossInfo.userId}})</text>
         </view>
       </view>
 
@@ -44,54 +47,67 @@
         <view class="audit-info">
           <view class="info-row">
             <text class="info-label">接单日期:</text>
-            <text class="info-value">{{item.date}}</text>
+            <text class="info-value">{{report.date}}</text>
           </view>
           <view class="info-row">
             <text class="info-label">游戏类型:</text>
-            <text class="info-value">{{item.game}}</text>
+            <text class="info-value">{{report.game}}</text>
           </view>
           <view class="info-row">
             <text class="info-label">服务时长:</text>
-            <text class="info-value">{{item.duration}}小时</text>
+            <text class="info-value">{{report.duration}}小时</text>
           </view>
-          <view class="info-row" wx:if="{{item.platform}}">
+          <view class="info-row">
+            <text class="info-label">订单金额:</text>
+            <text class="info-value">¥{{report.amount || 0}}</text>
+          </view>
+          <view class="info-row" wx:if="{{report.platform}}">
             <text class="info-label">接单平台:</text>
-            <text class="info-value">{{item.platform}}</text>
+            <text class="info-value">{{report.platform}}</text>
           </view>
-          <view class="info-row" wx:if="{{item.services && item.services.length > 0}}">
+          <view class="info-row" wx:if="{{report.services && report.services.length > 0}}">
             <text class="info-label">服务内容:</text>
-            <text class="info-value">{{item.services.join('、')}}</text>
+            <text class="info-value">{{report.services.join('、')}}</text>
           </view>
-          <view class="info-row" wx:if="{{item.remark}}">
+          <view class="info-row" wx:if="{{report.remark}}">
             <text class="info-label">备注:</text>
-            <text class="info-value">{{item.remark}}</text>
+            <text class="info-value">{{report.remark}}</text>
           </view>
         </view>
 
         <!-- 截图预览 -->
-        <view class="image-preview" wx:if="{{item.images && item.images.length > 0}}">
+        <view class="image-preview" wx:if="{{report.images && report.images.length > 0}}">
+          <text class="preview-label">订单截图:</text>
           <view class="image-list">
-            <image class="preview-image" wx:for="{{item.images}}" wx:key="*this"
-                   src="{{item}}" mode="aspectFill"
-                   bindtap="onPreviewImage" data-images="{{item.images}}" data-index="{{index}}" />
+            <image class="preview-image" 
+                   wx:for="{{report.images}}" 
+                   wx:key="*this"
+                   src="{{item}}"
+                   mode="aspectFill"
+                   show-menu-by-longpress="{{true}}"
+                   bindload="onImageLoad"
+                   binderror="onImageError"
+                   bindtap="onPreviewImage" 
+                   data-report-images="{{report.images}}" 
+                   data-index="{{index}}" />
           </view>
         </view>
       </view>
 
       <view class="audit-time">
-        <text>{{item.createTime}} 提交</text>
+        <text>{{report.createTime}} 提交</text>
       </view>
 
       <!-- 审核操作 -->
       <view class="audit-actions">
         <button class="action-btn reject-btn"
-                data-report-id="{{item._id}}"
+                data-report-id="{{report._id}}"
                 data-action="reject"
                 bindtap="onAuditReport">
           驳回
         </button>
         <button class="action-btn approve-btn"
-                data-report-id="{{item._id}}"
+                data-report-id="{{report._id}}"
                 data-action="approve"
                 bindtap="onAuditReport">
           通过

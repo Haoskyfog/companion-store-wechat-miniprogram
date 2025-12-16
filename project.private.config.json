@@ -24,11 +24,18 @@
     "miniprogram": {
       "list": [
         {
-          "name": "pages/staff/home/index",
-          "pathName": "pages/staff/profile/index",
+          "name": "开发者模式",
+          "pathName": "pages/staff/index/index",
           "query": "",
           "scene": null,
           "launchMode": "default"
+        },
+        {
+          "name": "pages/staff/home/index",
+          "pathName": "pages/staff/profile/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
         },
         {
           "name": "boss",

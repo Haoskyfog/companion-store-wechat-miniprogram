@@ -50,6 +50,17 @@
   font-size: 44rpx;
 }
 
+.refresh-btn {
+  font-size: 44rpx;
+  padding: 8rpx;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.refresh-btn:active {
+  transform: rotate(180deg);
+}
+
 /* 快速统计 */
 .stats-grid {
   display: grid;

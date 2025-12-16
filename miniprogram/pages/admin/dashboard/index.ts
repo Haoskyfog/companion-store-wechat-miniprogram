@@ -26,7 +26,8 @@ Page({
         pending: 0
       },
       revenue: {
-        total: 0
+        total: 0,
+        totalDisplay: '0.00'
       }
     },
     recentReports: [] as Array<{
@@ -47,6 +48,14 @@ Page({
       },
       {
         id: 2,
+        icon: '💰',
+        label: '老板充值',
+        desc: '钱包充值',
+        bgColor: '#dcfce7',
+        action: 'recharge'
+      },
+      {
+        id: 3,
         icon: '🔗',
         label: '绑定关系',
         desc: '老板员工绑定',
@@ -54,7 +63,7 @@ Page({
         action: 'bindings'
       },
       {
-        id: 3,
+        id: 4,
         icon: '✅',
         label: '审核中心',
         desc: '报备审核',
@@ -62,7 +71,7 @@ Page({
         action: 'audit'
       },
       {
-        id: 4,
+        id: 5,
         icon: '📝',
         label: '内容管理',
         desc: '轮播图管理',
@@ -70,7 +79,7 @@ Page({
         action: 'content'
       },
       {
-        id: 5,
+        id: 6,
         icon: '📋',
         label: '订单列表',
         desc: '订单管理',
@@ -78,15 +87,48 @@ Page({
         action: 'orders'
       },
       {
-        id: 6,
+        id: 7,
         icon: '📊',
         label: '数据统计',
         desc: '运营数据',
         bgColor: '#fef3c7',
         action: 'statistics'
+      },
+      {
+        id: 8,
+        icon: '🏠',
+        label: '预览首页端',
+        desc: '员工端首页预览',
+        bgColor: '#e0e7ff',
+        action: 'previewStaff'
+      },
+      {
+        id: 9,
+        icon: '👔',
+        label: '预览推荐页',
+        desc: '老板端推荐预览',
+        bgColor: '#fef3c7',
+        action: 'previewBoss'
+      },
+      {
+        id: 10,
+        icon: '📄',
+        label: '最新报备',
+        desc: '查看报备记录',
+        bgColor: '#fce7f3',
+        action: 'recentReports'
+      },
+      {
+        id: 11,
+        icon: '🔧',
+        label: '清理重复数据',
+        desc: '修复重复用户',
+        bgColor: '#fee2e2',
+        action: 'cleanupDuplicates'
       }
     ],
-    loading: true
+    loading: true,
+    refreshing: false // 防止重复刷新
   },
 
   onLoad() {
@@ -96,6 +138,17 @@ Page({
   onShow() {
     const tabBar = this.getTabBar && this.getTabBar();
     tabBar && tabBar.setSelected && tabBar.setSelected(pagePath);
+    // 不在onShow中自动刷新，避免卡住
+  },
+
+  // 刷新按钮点击
+  onRefresh() {
+    if (this.data.refreshing) {
+      return // 如果正在刷新，直接返回
+    }
+    this.setData({ refreshing: true })
+    wx.showLoading({ title: '刷新中...' })
+    this.loadDashboardData(true)
   },
 
   onPullDownRefresh() {
@@ -112,46 +165,39 @@ Page({
     wx.cloud.callFunction({
       name: 'getStatistics',
       success: (res: any) => {
+        wx.hideLoading() // 确保隐藏loading
         if (res.result && res.result.success) {
+          const data = res.result.data
+          // 格式化总流水显示
+          if (data.revenue && typeof data.revenue.total === 'number') {
+            data.revenue.totalDisplay = data.revenue.total.toFixed(2)
+          } else {
+            data.revenue = data.revenue || {}
+            data.revenue.totalDisplay = '0.00'
+          }
+          
           this.setData({
-            statistics: res.result.data,
-            loading: false
+            statistics: data,
+            loading: false,
+            refreshing: false // 重置刷新状态
           })
+        } else {
+          this.setData({ loading: false, refreshing: false })
         }
       },
       fail: (err: any) => {
+        wx.hideLoading() // 确保隐藏loading
         console.error('获取统计数据失败:', err)
-        this.setData({ loading: false })
-      }
-    })
-
-    // 加载最近报备
-    wx.cloud.callFunction({
-      name: 'getReports',
-      data: {
-        page: 1,
-        pageSize: 5
+        this.setData({ loading: false, refreshing: false })
       },
-      success: (res: any) => {
-        if (res.result && res.result.success) {
-          const reports = res.result.data.reports.map((report: any) => ({
-            ...report,
-            createTime: this.formatTime(report.createTime)
-          }))
-          this.setData({
-            recentReports: reports
-          })
+      complete: () => {
+        if (refresh) {
+          wx.stopPullDownRefresh()
         }
-      },
-      fail: (err: any) => {
-        console.error('获取最近报备失败:', err)
       }
     })
-
-    if (refresh) {
-      wx.stopPullDownRefresh()
-    }
   },
+
 
   // 功能按钮点击
   onFunctionTap(e: any) {
@@ -160,6 +206,9 @@ Page({
       case 'users':
         wx.navigateTo({ url: '/pages/admin/users/index' })
         break
+      case 'recharge':
+        wx.navigateTo({ url: '/pages/admin/recharge/index' })
+        break
       case 'audit':
         wx.navigateTo({ url: '/pages/admin/audit/index' })
         break
@@ -167,7 +216,7 @@ Page({
         wx.navigateTo({ url: '/pages/admin/content/index' })
         break
       case 'orders':
-        wx.showToast({ title: '订单管理功能开发中', icon: 'none' })
+        wx.navigateTo({ url: '/pages/admin/orders/index' })
         break
       case 'statistics':
         wx.navigateTo({ url: '/pages/admin/statistics/index' })
@@ -175,14 +224,79 @@ Page({
       case 'bindings':
         wx.navigateTo({ url: '/pages/admin/bindings/index' })
         break
+      case 'previewStaff':
+        wx.navigateTo({ url: '/pages/admin/preview-staff/index' })
+        break
+      case 'previewBoss':
+        wx.navigateTo({ url: '/pages/admin/preview-boss/index' })
+        break
+      case 'recentReports':
+        wx.navigateTo({ url: '/pages/admin/recent-reports/index' })
+        break
+      case 'cleanupDuplicates':
+        this.cleanupDuplicateUsers()
+        break
       default:
         wx.showToast({ title: '功能开发中', icon: 'none' })
     }
   },
 
-  // 查看更多报备
-  onViewMoreReports() {
-    wx.navigateTo({ url: '/pages/admin/audit/index' })
+
+  // 清理重复用户
+  cleanupDuplicateUsers() {
+    wx.showModal({
+      title: '清理重复用户',
+      content: '自动检测并清理重复的用户记录\n\n系统会保留角色最高/信息最完整的记录\n\n是否继续？',
+      confirmText: '开始清理',
+      success: (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '检测中...' })
+
+          wx.cloud.callFunction({
+            name: 'cleanupDuplicateUsers',
+            success: (res: any) => {
+              wx.hideLoading()
+
+              if (res.result && res.result.success) {
+                const { deleted, duplicateCount } = res.result
+                
+                if (deleted === 0) {
+                  wx.showToast({
+                    title: '没有发现重复记录',
+                    icon: 'success'
+                  })
+                } else {
+                  wx.showModal({
+                    title: '清理完成',
+                    content: `✅ 成功清理！\n\n发现 ${duplicateCount} 个用户有重复\n删除了 ${deleted} 条重复记录`,
+                    showCancel: false,
+                    confirmText: '知道了',
+                    success: () => {
+                      // 刷新仪表板
+                      this.loadDashboardData(true)
+                    }
+                  })
+                }
+              } else {
+                wx.showModal({
+                  title: '清理失败',
+                  content: res.result?.error || '未知错误',
+                  showCancel: false
+                })
+              }
+            },
+            fail: (err: any) => {
+              wx.hideLoading()
+              console.error('清理失败:', err)
+              wx.showToast({
+                title: '网络错误',
+                icon: 'none'
+              })
+            }
+          })
+        }
+      }
+    })
   },
 
   // 格式化时间

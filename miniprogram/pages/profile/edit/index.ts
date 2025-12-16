@@ -27,6 +27,11 @@ Page({
     this.loadUserInfo()
   },
 
+  // 返回上一页
+  goBack() {
+    wx.navigateBack()
+  },
+
   // 加载用户信息
   loadUserInfo() {
     wx.showLoading({ title: '加载中...' })
@@ -209,9 +214,7 @@ Page({
           }
 
           // 发送全局事件通知其他页面用户资料已更新
-          if (app.onUserProfileUpdate) {
-            app.onUserProfileUpdate(this.data.userInfo)
-          }
+          app.triggerUserProfileUpdate(this.data.userInfo)
 
           // 返回上一页
           setTimeout(() => {

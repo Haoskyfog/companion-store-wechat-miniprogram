@@ -76,6 +76,67 @@ exports.main = async (event, context) => {
       }
     })
 
+    // 处理绑定关系的清理
+    const targetUserOpenid = targetUserResult.data._openid
+
+    // 如果用户从Boss变为非Boss，删除所有以他为Boss的绑定关系
+    if (targetUserRole === 'Boss' && event.newRole !== 'Boss') {
+      await db.collection('bindings').where({
+        bossId: targetUserOpenid,
+        status: 'active'
+      }).update({
+        data: {
+          status: 'inactive',
+          updateTime: db.serverDate(),
+          updateReason: '用户角色变更'
+        }
+      })
+    }
+
+    // 如果用户从Staff变为非Staff，删除所有以他为Staff的绑定关系
+    if (targetUserRole === 'Staff' && event.newRole !== 'Staff') {
+      await db.collection('bindings').where({
+        staffId: targetUserOpenid,
+        status: 'active'
+      }).update({
+        data: {
+          status: 'inactive',
+          updateTime: db.serverDate(),
+          updateReason: '用户角色变更'
+        }
+      })
+    }
+
+    // 如果用户从Staff变为Boss，需要处理可能的绑定关系冲突
+    if (targetUserRole === 'Staff' && event.newRole === 'Boss') {
+      // 检查是否存在以该用户为Staff的绑定关系，如果存在则删除
+      await db.collection('bindings').where({
+        staffId: targetUserOpenid,
+        status: 'active'
+      }).update({
+        data: {
+          status: 'inactive',
+          updateTime: db.serverDate(),
+          updateReason: '用户角色变更为Boss'
+        }
+      })
+    }
+
+    // 如果用户从Boss变为Staff，需要处理可能的绑定关系冲突
+    if (targetUserRole === 'Boss' && event.newRole === 'Staff') {
+      // 检查是否存在以该用户为Boss的绑定关系，如果存在则删除
+      await db.collection('bindings').where({
+        bossId: targetUserOpenid,
+        status: 'active'
+      }).update({
+        data: {
+          status: 'inactive',
+          updateTime: db.serverDate(),
+          updateReason: '用户角色变更为Staff'
+        }
+      })
+    }
+
     return {
       success: true
     }

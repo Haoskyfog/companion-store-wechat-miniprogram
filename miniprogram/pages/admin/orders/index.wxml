@@ -1,0 +1,94 @@
+<!-- 管理员端 - 订单管理 -->
+<view class="page">
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <!-- 支付状态筛选 -->
+    <view class="filter-section">
+      <text class="filter-label">订单状态:</text>
+      <scroll-view scroll-x="{{true}}" class="filter-scroll">
+        <view class="filter-btn {{!paymentFilter ? 'active' : ''}}" bindtap="onPaymentFilter" data-payment="">全部</view>
+        <view class="filter-btn {{paymentFilter === 'paid' ? 'active' : ''}}" bindtap="onPaymentFilter" data-payment="paid">已支付</view>
+        <view class="filter-btn {{paymentFilter === 'cancelled' ? 'active' : ''}}" bindtap="onPaymentFilter" data-payment="cancelled">已取消</view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 订单列表 -->
+  <view class="order-list" wx:if="{{!loading}}">
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{orders.length === 0}}">
+      <view class="empty-icon">📋</view>
+      <view class="empty-text">暂无订单记录</view>
+    </view>
+
+    <!-- 订单项 -->
+    <view class="order-item" wx:for="{{orders}}" wx:key="_id">
+      <view class="order-header">
+        <view class="user-info">
+          <view class="user-details">
+            <text class="user-name">老板: {{item.bossInfo.nickname}} | 员工: {{item.staffInfo.nickname}}</text>
+            <text class="user-ids">ID: {{item.bossInfo.userId}} | {{item.staffInfo.userId}}</text>
+          </view>
+        </view>
+        <view class="order-badges">
+          <view class="status-badge {{getStatusClass(item.status)}}">
+            {{getStatusText(item.status)}}
+          </view>
+          <view class="payment-badge {{getPaymentStatusClass(item.paymentStatus)}}">
+            {{getPaymentStatusText(item.paymentStatus)}}
+          </view>
+          <view class="complaint-badge {{getComplaintStatusClass(item.complaintStatus)}}" wx:if="{{item.complaintStatus !== 'none'}}">
+            {{getComplaintStatusText(item.complaintStatus)}}
+          </view>
+        </view>
+      </view>
+
+      <view class="order-content">
+        <view class="order-info">
+          <view class="info-row">
+            <text class="info-label">游戏:</text>
+            <text class="info-value">{{item.game}}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">时长:</text>
+            <text class="info-value">{{item.duration}}小时</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">金额:</text>
+            <text class="info-value amount-value">¥{{item.amount}}</text>
+          </view>
+          <view class="info-row">
+            <text class="info-label">日期:</text>
+            <text class="info-value">{{item.date}}</text>
+          </view>
+          <view class="info-row" wx:if="{{item.remark}}">
+            <text class="info-label">备注:</text>
+            <text class="info-value">{{item.remark}}</text>
+          </view>
+          <view class="info-row" wx:if="{{item.complaintReason}}">
+            <text class="info-label">客诉原因:</text>
+            <text class="info-value complaint-reason">{{item.complaintReason}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="order-time">
+        <text>{{item.createTime}}</text>
+      </view>
+
+      <!-- 客诉处理按钮 -->
+      <view class="order-actions" wx:if="{{item.complaintStatus === 'processing'}}">
+        <button class="action-btn resolve-btn"
+                data-order-id="{{item._id}}"
+                bindtap="onHandleComplaint">
+          处理客诉
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-text">加载中...</view>
+  </view>
+</view>

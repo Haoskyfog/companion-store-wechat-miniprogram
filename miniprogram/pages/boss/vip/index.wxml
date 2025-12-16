@@ -1,0 +1,105 @@
+<!-- 老板端 - 缪斯会员等级 -->
+<view class="page">
+  <!-- 文艺复兴风格装饰元素 -->
+  <view class="decoration-elements">
+    <view class="decoration-star">✦</view>
+    <view class="decoration-sparkle-1">✦</view>
+    <view class="decoration-sparkle-2">✦</view>
+    <view class="decoration-flower">❀</view>
+  </view>
+
+  <!-- 会员标题 -->
+  <view class="vip-header">
+    <view class="header-content">
+      <view class="renaissance-title">𝓥𝓘𝓟 𝓜𝓔𝓜𝓑𝓔𝓡𝓢𝓗𝓘𝓟</view>
+      <view class="renaissance-subtitle">ℛℯ𝓃𝒶𝒾𝓈𝓈𝒶𝓃𝒸ℯ 𝑜𝒻 ℒ𝓊𝓍𝓊𝓇𝓎</view>
+      <view class="renaissance-quote">"Excellence is never an accident"</view>
+    </view>
+
+    <!-- 说明书按钮 -->
+    <view class="guide-btn" bindtap="showGuide">
+      <view class="guide-icon">📚</view>
+      <view class="guide-text">权益说明</view>
+    </view>
+  </view>
+
+  <!-- 会员介绍 -->
+  <view class="intro-section">
+    <view class="intro-card">
+      <view class="intro-title">🎭 VIP会员等级体系</view>
+      <view class="intro-content">
+        通过累积充值解锁VIP等级，每个等级都有专属权益和浪漫故事。每一次升级都是一次心灵的旅程，每一个故事都诉说着我们的情缘。
+      </view>
+      <view class="intro-tips">
+        💰 累积消费升级VIP等级<br/>
+        🎁 解锁专属虚拟/实体礼物<br/>
+        📖 点击等级了解权益和故事<br/>
+        🌟 等级越高，权益越丰富
+      </view>
+    </view>
+  </view>
+
+  <!-- 当前等级和进度 -->
+  <view class="level-section">
+    <view class="level-card">
+      <view class="level-header">
+        <view class="current-level">
+          <view class="level-icon">{{getLevelIcon(currentLevel)}}</view>
+          <view class="level-name">{{levels[currentLevel].title}}</view>
+        </view>
+        <view class="level-number">等级 {{currentLevel + 1}}</view>
+      </view>
+
+      <view class="progress-section">
+        <view class="progress-info">
+          <view class="progress-text">累计消费：¥{{totalRecharge}}</view>
+          <view class="next-level-text" wx:if="{{currentLevel < levels.length - 1}}">
+            距离下一等级还需 ¥{{nextLevelAmount - totalRecharge}}
+          </view>
+        </view>
+
+        <view class="progress-bar">
+          <view class="progress-fill" style="width: {{progressPercent}}%"></view>
+        </view>
+
+        <view class="progress-labels">
+          <view class="progress-label">{{levels[currentLevel].title}}</view>
+          <view class="progress-label" wx:if="{{currentLevel < levels.length - 1}}">{{levels[currentLevel + 1].title}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 等级列表 -->
+  <view class="levels-section">
+    <view class="section-title">🎭 会员等级</view>
+
+    <view class="chapter-title">VIP等级体系</view>
+    <view class="levels-grid">
+      <view class="level-item {{item.unlocked ? 'unlocked' : 'locked'}}"
+            wx:for="{{levels}}"
+            wx:key="id"
+            data-level-id="{{item.id}}"
+            bindtap="showLevelStory">
+        <view class="level-icon">{{getLevelIcon(item.id)}}</view>
+        <view class="level-content">
+          <view class="level-title">{{item.name}} - {{item.title}}</view>
+          <view class="level-desc">{{item.desc}}</view>
+          <view class="level-amount" wx:if="{{item.amount > 0}}">消费 ¥{{item.amount}}</view>
+          <view class="level-amount" wx:else>初始等级</view>
+          <view class="level-rewards" wx:if="{{item.rewards.length > 0}}">
+            <view class="reward-item" wx:for="{{item.rewards}}" wx:key="index">{{item}}</view>
+          </view>
+        </view>
+        <view class="story-hint" wx:if="{{item.unlocked}}">点击查看故事</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 文艺复兴风格底部装饰 -->
+  <view class="bottom-decoration">
+    <view class="muse-quote">
+      "Art is never finished, only abandoned." - Leonardo da Vinci
+    </view>
+  </view>
+</view>

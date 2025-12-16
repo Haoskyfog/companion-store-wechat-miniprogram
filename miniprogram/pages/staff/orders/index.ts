@@ -21,9 +21,7 @@ Page({
     statusFilter: '', // 状态筛选：空字符串表示全部
     statusOptions: [
       { label: '全部', value: '' },
-      { label: '待确认', value: 'pending' },
       { label: '已确认', value: 'confirmed' },
-      { label: '已完成', value: 'completed' },
       { label: '已取消', value: 'cancelled' }
     ]
   },

@@ -1,0 +1,10 @@
+{
+  "name": "cleanupDuplicateUsers",
+  "version": "1.0.0",
+  "description": "清理重复用户记录",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3"
+  }
+}
+

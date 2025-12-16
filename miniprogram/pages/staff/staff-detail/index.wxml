@@ -1,0 +1,91 @@
+<!-- 员工端 - 员工详情页 -->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="nav-back" bindtap="goBack">←</view>
+    <view class="header-title">员工详情</view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <!-- 员工信息 -->
+  <view class="staff-detail" wx:elif="{{staff}}">
+    <!-- 头像区域 -->
+    <view class="avatar-section">
+      <view class="avatar-container">
+        <image wx:if="{{staff.avatar}}" src="{{staff.avatar}}" mode="aspectFill" class="avatar-image" />
+        <view wx:else class="avatar-placeholder">
+          <text class="avatar-emoji">👧</text>
+        </view>
+      </view>
+      <view class="staff-basic-info">
+        <text class="staff-name">{{staff.nickname}}</text>
+        <text class="staff-id">ID: {{staff.userId}}</text>
+      </view>
+    </view>
+
+    <!-- 音频播放区域 -->
+    <view class="audio-section" wx:if="{{staff.audioUrl}}">
+      <view class="audio-player">
+        <text class="audio-icon">🎵</text>
+        <view class="audio-info">
+          <text class="audio-text">语音介绍</text>
+          <text class="audio-time">{{formatTimeDisplay(currentTime)}} / {{formatTimeDisplay(duration)}}</text>
+        </view>
+        <button class="play-btn {{isPlaying ? 'playing' : ''}} {{audioLoading ? 'loading' : ''}}"
+                bindtap="playAudioIntro"
+                disabled="{{audioLoading}}">
+          <text wx:if="{{audioLoading}}">加载中...</text>
+          <text wx:elif="{{isPlaying}}">⏸️ 暂停</text>
+          <text wx:else>▶️ 播放</text>
+        </button>
+      </view>
+
+      <!-- 进度条 -->
+      <view class="progress-container" wx:if="{{duration > 0}}">
+        <slider class="progress-slider"
+                min="0"
+                max="100"
+                value="{{progress}}"
+                step="0.1"
+                bindchange="onProgressChange"
+                backgroundColor="#f3f4f6"
+                activeColor="#7c3aed"
+                block-color="#7c3aed"
+                block-size="16" />
+      </view>
+    </view>
+
+    <!-- 自我介绍图片 -->
+    <view class="intro-image-section" wx:if="{{staff.introImage}}">
+      <text class="section-title">自我介绍图片</text>
+      <image src="{{staff.introImage}}" mode="aspectFill" class="intro-image" bindtap="previewIntroImage" />
+    </view>
+
+    <!-- 详细信息 -->
+    <view class="info-section">
+      <view class="info-item">
+        <text class="info-label">音色类型:</text>
+        <text class="info-value">{{staff.voiceType}}音色</text>
+      </view>
+
+      <view class="info-item" wx:if="{{staff.lane}}">
+        <text class="info-label">分路位置:</text>
+        <text class="info-value">{{staff.lane}}</text>
+      </view>
+
+      <view class="info-item">
+        <text class="info-label">主玩游戏:</text>
+        <text class="info-value">{{staff.game}}</text>
+      </view>
+
+      <view class="info-item">
+        <text class="info-label">自我介绍:</text>
+        <text class="info-value">{{staff.introduction}}</text>
+      </view>
+    </view>
+  </view>
+</view>

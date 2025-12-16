@@ -48,30 +48,89 @@ Page({
 
   onLoad() {
     this.loadContent()
+    // 如果默认标签是推荐，加载员工列表
+    if (this.data.activeTab === 'recommend') {
     this.loadStaffList()
+    }
   },
 
   // 加载员工列表（用于推荐功能）
   loadStaffList() {
+    wx.showLoading({ title: '加载员工列表...' })
     wx.cloud.callFunction({
       name: 'getUsers',
       data: {
         role: 'Staff',
         page: 1,
-        pageSize: 50 // 获取足够多的员工
+        pageSize: 100 // 获取足够多的员工
       },
-      success: (res: any) => {
+      success: async (res: any) => {
+        wx.hideLoading()
+        console.log('加载员工列表响应:', res)
         if (res.result && res.result.success) {
-          this.setData({
-            staffList: res.result.data.users.map((user: any) => ({
+          let users = res.result.data.users || []
+          console.log('员工数量:', users.length)
+
+          // 转换头像URL（cloud:// → 临时URL）
+          const cloudAvatars = users
+            .map((u: any) => u.avatar)
+            .filter((avatar: string) => avatar && avatar.startsWith('cloud://'))
+
+          if (cloudAvatars.length > 0) {
+            try {
+              const tempRes = await wx.cloud.getTempFileURL({
+                fileList: cloudAvatars
+              })
+
+              const urlMap = new Map()
+              tempRes.fileList.forEach((f: any) => {
+                if (f.status === 0 && f.tempFileURL) {
+                  urlMap.set(f.fileID, f.tempFileURL)
+                }
+              })
+
+              // 替换头像URL
+              users = users.map((user: any) => ({
+                ...user,
+                avatar: user.avatar && user.avatar.startsWith('cloud://')
+                  ? urlMap.get(user.avatar) || user.avatar
+                  : user.avatar,
+                createTime: this.formatTime(user.createTime)
+              }))
+            } catch (err) {
+              console.error('转换头像URL失败:', err)
+              users = users.map((user: any) => ({
+                ...user,
+                createTime: this.formatTime(user.createTime)
+              }))
+            }
+          } else {
+            users = users.map((user: any) => ({
               ...user,
               createTime: this.formatTime(user.createTime)
             }))
+          }
+
+          this.setData({
+            staffList: users
+          })
+        } else {
+          console.error('加载员工列表失败:', res.result)
+          wx.showToast({
+            title: res.result?.error || '加载员工列表失败',
+            icon: 'none',
+            duration: 3000
           })
         }
       },
       fail: (err: any) => {
+        wx.hideLoading()
         console.error('加载员工列表失败:', err)
+        wx.showToast({
+          title: '网络错误，请重试',
+          icon: 'none',
+          duration: 3000
+        })
       }
     })
   },
@@ -93,12 +152,17 @@ Page({
       loading: true
     })
     this.loadContent()
+    // 如果切换到推荐标签，确保加载员工列表
+    if (tab === 'recommend') {
+      this.loadStaffList()
+    }
   },
 
   // 加载内容列表
   loadContent(refresh = false) {
     if (!refresh) {
       this.setData({ loading: true })
+      wx.showLoading({ title: '加载中...' })
     }
 
     wx.cloud.callFunction({
@@ -107,7 +171,9 @@ Page({
         type: this.data.activeTab
       },
       success: async (res: any) => {
+        if (!refresh) {
         wx.hideLoading()
+        }
         if (res.result && res.result.success) {
           // getContent 现在返回对象结构，从中提取指定类型的内容数组
           const data = res.result.data || {}
@@ -121,10 +187,19 @@ Page({
           // 转换图片 URL（cloud:// → 临时 URL）
           const fileIDs: string[] = []
           contentList.forEach((item: any) => {
+            // 收集内容图片
             if (item.images && Array.isArray(item.images)) {
               item.images.forEach((img: string) => {
                 if (img && img.startsWith('cloud://')) {
                   fileIDs.push(img)
+                }
+              })
+            }
+            // 收集推荐内容中员工头像
+            if (item.type === 'recommend' && item.staffList && Array.isArray(item.staffList)) {
+              item.staffList.forEach((staff: any) => {
+                if (staff.avatar && staff.avatar.startsWith('cloud://')) {
+                  fileIDs.push(staff.avatar)
                 }
               })
             }
@@ -146,15 +221,26 @@ Page({
 
               // 替换图片 URL
               contentList = contentList.map((item: any) => {
+                const updatedItem: any = { ...item }
+
+                // 替换内容图片
                 if (item.images && Array.isArray(item.images)) {
-                  return {
-                    ...item,
-                    images: item.images.map((img: string) =>
+                  updatedItem.images = item.images.map((img: string) =>
                       img.startsWith('cloud://') ? urlMap.get(img) || img : img
                     )
                   }
+
+                // 替换推荐内容中员工头像
+                if (item.type === 'recommend' && item.staffList && Array.isArray(item.staffList)) {
+                  updatedItem.staffList = item.staffList.map((staff: any) => ({
+                    ...staff,
+                    avatar: staff.avatar && staff.avatar.startsWith('cloud://')
+                      ? urlMap.get(staff.avatar) || staff.avatar
+                      : staff.avatar
+                  }))
                 }
-                return item
+
+                return updatedItem
               })
             } catch (e) {
               console.error('管理端图片转换失败:', e)
@@ -167,7 +253,13 @@ Page({
           })
         } else {
           this.setData({ loading: false })
-          wx.showToast({ title: '加载失败', icon: 'none' })
+          const errorMsg = res.result?.error || '加载失败'
+          console.error('加载内容失败:', errorMsg)
+          wx.showToast({ 
+            title: errorMsg, 
+            icon: 'none',
+            duration: 3000
+          })
         }
 
         if (refresh) {
@@ -175,10 +267,19 @@ Page({
         }
       },
       fail: (err: any) => {
+        if (!refresh) {
         wx.hideLoading()
+        }
         this.setData({ loading: false })
-        wx.showToast({ title: '网络错误', icon: 'none' })
+        console.error('加载内容网络错误:', err)
+        wx.showToast({ 
+          title: '网络错误，请检查网络连接', 
+          icon: 'none',
+          duration: 3000
+        })
+        if (refresh) {
         wx.stopPullDownRefresh()
+        }
       }
     })
   },
@@ -217,6 +318,10 @@ Page({
     // 如果是推荐内容，加载员工信息
     if (content.type === 'recommend' && content.staffIds) {
       formData.staffIds = content.staffIds
+      // 推荐类型自动设置标题（如果为空）
+      if (!formData.title || formData.title.trim() === '') {
+        formData.title = '今日推荐'
+      }
     }
 
     // 保存原始 fileID 映射（用于保存时还原）
@@ -285,6 +390,7 @@ Page({
     if (this.data.activeTab === 'recommend') {
       return {
         ...baseData,
+        title: '今日推荐', // 自动设置标题
         staffIds: []
       }
     }
@@ -302,7 +408,14 @@ Page({
     console.log('隐藏模态框', new Date().toLocaleTimeString())
 
     // 检查是否有未保存的内容
-    const hasContent = this.data.formData.title || this.data.formData.content || this.data.formData.images.length > 0
+    let hasContent = false
+    
+    // 推荐类型只检查员工选择
+    if (this.data.activeTab === 'recommend') {
+      hasContent = (this.data.formData.staffIds || []).length > 0
+    } else {
+      hasContent = this.data.formData.title || this.data.formData.content || this.data.formData.images.length > 0
+    }
 
     if (hasContent) {
       wx.showModal({
@@ -499,12 +612,16 @@ Page({
       data.images = []
     }
 
-    // 如果是推荐内容，验证至少选择了一个员工
+    // 如果是推荐内容，设置默认值
     if (this.data.activeTab === 'recommend') {
       if (!data.staffIds || data.staffIds.length === 0) {
         wx.showToast({ title: '请至少选择一个推荐员工', icon: 'none' })
         return
       }
+      // 自动设置标题和默认值
+      data.title = data.title || '今日推荐'
+      data.content = data.content || ''
+      data.images = []
     }
 
     const callData: any = {
@@ -657,6 +774,26 @@ Page({
 
   // 表单验证
   validateForm() {
+    // 推荐类型只需要验证员工选择
+    if (this.data.activeTab === 'recommend') {
+      if (!this.data.formData.staffIds || this.data.formData.staffIds.length === 0) {
+        wx.showToast({ title: '请至少选择一个推荐员工', icon: 'none' })
+        return false
+      }
+      if (this.data.formData.staffIds.length > 3) {
+        wx.showToast({ title: '最多只能选择3个员工', icon: 'none' })
+        return false
+      }
+      // 推荐类型自动设置标题
+      if (!this.data.formData.title || this.data.formData.title.trim() === '') {
+        this.setData({
+          'formData.title': '今日推荐'
+        })
+      }
+      return true
+    }
+
+    // 其他类型的验证
     const { title } = this.data.formData
 
     // 基础验证
@@ -670,18 +807,6 @@ Page({
       return false
     }
 
-    // 根据内容类型进行额外验证
-    if (this.data.activeTab === 'recommend') {
-      if (!this.data.formData.staffIds || this.data.formData.staffIds.length === 0) {
-        wx.showToast({ title: '请至少选择一个推荐员工', icon: 'none' })
-        return false
-      }
-      if (this.data.formData.staffIds.length > 3) {
-        wx.showToast({ title: '最多只能选择3个员工', icon: 'none' })
-        return false
-      }
-    }
-
     return true
   },
 
@@ -689,5 +814,24 @@ Page({
   formatTime(timeStr: string) {
     const date = new Date(timeStr)
     return date.toLocaleDateString()
+  },
+
+  // 查看员工详情
+  viewStaffDetail(e: any) {
+    const staffId = e.mark?.openid
+    
+    if (!staffId) {
+      wx.showToast({
+        title: '获取员工信息失败',
+        icon: 'none',
+        duration: 2000
+      })
+      return
+    }
+    
+    // 跳转到老板端的员工详情页（管理员也可以查看）
+    wx.navigateTo({
+      url: `/pages/boss/staff-detail/index?staffId=${staffId}`
+    })
   }
 })

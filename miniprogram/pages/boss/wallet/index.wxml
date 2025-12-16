@@ -1,0 +1,48 @@
+<!-- 老板端 - 我的钱包 -->
+<view class="page">
+  <!-- 钱包余额卡片 -->
+  <view class="balance-card" wx:if="{{!loading}}">
+    <view class="balance-header">
+      <text class="balance-label">当前余额</text>
+    </view>
+    <view class="balance-amount">
+      <text class="amount-symbol">¥</text>
+      <text class="amount-value">{{walletBalance}}</text>
+    </view>
+  </view>
+
+  <!-- 支付记录 -->
+  <view class="payment-section">
+    <view class="section-header">
+      <text class="section-title">支付记录</text>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+
+    <!-- 支付记录列表 -->
+    <view class="payment-list" wx:elif="{{paymentHistory.length > 0}}">
+      <view class="payment-item" wx:for="{{paymentHistory}}" wx:key="_id">
+        <view class="payment-left">
+          <view class="payment-game">{{game}}</view>
+          <view class="payment-staff">陪玩：{{staffInfo.nickname}}</view>
+          <view class="payment-time">{{paymentTime}}</view>
+        </view>
+        <view class="payment-right">
+          <view class="payment-amount">-¥{{amount}}</view>
+          <view class="payment-status {{getPaymentStatusClass(paymentStatus)}}">
+            {{getPaymentStatusText(paymentStatus)}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:else>
+      <text class="empty-icon">💳</text>
+      <text class="empty-text">暂无支付记录</text>
+    </view>
+  </view>
+</view>

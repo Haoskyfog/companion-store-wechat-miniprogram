@@ -9,6 +9,7 @@
     <view class="search-actions">
       <button class="diagnostic-btn" bindtap="goToDiagnostic">头像诊断</button>
       <button class="refresh-btn" bindtap="forceRefresh">强制刷新</button>
+      <button class="create-staff-btn" bindtap="onCreateTestStaff">创建员工</button>
     </view>
   </view>
 
@@ -31,29 +32,116 @@
       <view class="empty-text">暂无用户数据</view>
     </view>
 
-    <!-- 用户项 -->
-    <view class="user-item" wx:for="{{users}}" wx:key="_id">
-      <view class="user-header">
+    <!-- 超级管理员区 -->
+    <view class="role-section" wx:if="{{groupedUsers.SuperAdmin.length > 0}}">
+      <view class="section-header">
+        <view class="section-title">超级管理员</view>
+        <view class="section-count">{{groupedUsers.SuperAdmin.length}}人</view>
+      </view>
+      <view class="user-item" wx:for="{{groupedUsers.SuperAdmin}}" wx:key="_id">
         <view class="user-avatar">
           <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image" />
           <text wx:else class="avatar-placeholder">👤</text>
         </view>
         <view class="user-info">
           <view class="user-name-row">
-            <text class="user-name">{{item.nickname || '未设置昵称'}}</text>
-            <view class="role-badge {{getRoleClass(item.role)}}">{{getRoleName(item.role)}}</view>
+            <text class="user-name">{{item.nickname || item.userId || '用户'}}</text>
+            <button wx:if="{{currentUserRole && item.canModify}}" class="action-btn role-btn inline-btn" bindtap="onChangeRole" data-user-id="{{item._id}}" data-current-role="{{item.role}}">
+              修改角色
+            </button>
           </view>
-          <text class="user-id">ID: {{item.userId || '未设置'}} · {{item.createTime}}</text>
+          <view class="role-badge {{getRoleClass(item.role)}}">{{getRoleName(item.role)}}</view>
         </view>
         <view class="user-actions">
-          <button class="action-btn" bindtap="onChangeRole" data-user-id="{{item._id}}" data-current-role="{{item.role}}">
-            修改角色
-          </button>
+          <!-- 额外的操作按钮可以放在这里 -->
         </view>
       </view>
+    </view>
 
-      <!-- 统计信息 -->
+    <!-- 管理员区 -->
+    <view class="role-section" wx:if="{{groupedUsers.Admin.length > 0}}">
+      <view class="section-header">
+        <view class="section-title">管理员</view>
+        <view class="section-count">{{groupedUsers.Admin.length}}人</view>
+      </view>
+      <view class="user-item" wx:for="{{groupedUsers.Admin}}" wx:key="_id">
+        <view class="user-avatar">
+          <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image" />
+          <text wx:else class="avatar-placeholder">👤</text>
+        </view>
+        <view class="user-info">
+          <view class="user-name-row">
+            <text class="user-name">{{item.nickname || item.userId || '用户'}}</text>
+            <button wx:if="{{currentUserRole && item.canModify}}" class="action-btn role-btn inline-btn" bindtap="onChangeRole" data-user-id="{{item._id}}" data-current-role="{{item.role}}">
+              修改角色
+            </button>
+          </view>
+          <view class="role-badge {{getRoleClass(item.role)}}">{{getRoleName(item.role)}}</view>
+        </view>
+        <view class="user-actions">
+          <!-- 额外的操作按钮可以放在这里 -->
+        </view>
+      </view>
+    </view>
+
+    <!-- 老板区 -->
+    <view class="role-section" wx:if="{{groupedUsers.Boss.length > 0}}">
+      <view class="section-header">
+        <view class="section-title">老板</view>
+        <view class="section-count">{{groupedUsers.Boss.length}}人</view>
+      </view>
+      <view class="user-item" wx:for="{{groupedUsers.Boss}}" wx:key="_id">
+        <view class="user-avatar">
+          <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image" />
+          <text wx:else class="avatar-placeholder">👤</text>
+        </view>
+        <view class="user-info">
+          <view class="user-name-row">
+            <text class="user-name">{{item.nickname || item.userId || '用户'}}</text>
+            <button wx:if="{{currentUserRole && item.canModify}}" class="action-btn role-btn inline-btn" bindtap="onChangeRole" data-user-id="{{item._id}}" data-current-role="{{item.role}}">
+              修改角色
+            </button>
+          </view>
+          <view class="role-badge {{getRoleClass(item.role)}}">{{getRoleName(item.role)}}</view>
+        </view>
+        <view class="user-actions">
+          <!-- 额外的操作按钮可以放在这里 -->
+        </view>
+      </view>
+    </view>
+
+    <!-- 员工区 -->
+    <view class="role-section" wx:if="{{groupedUsers.Staff.length > 0}}">
+      <view class="section-header">
+        <view class="section-title">员工</view>
+        <view class="section-count">{{groupedUsers.Staff.length}}人</view>
+      </view>
+      <view class="user-item" wx:for="{{groupedUsers.Staff}}" wx:key="_id">
+        <view class="user-avatar">
+          <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image" />
+          <text wx:else class="avatar-placeholder">👤</text>
+        </view>
+        <view class="user-info">
+          <view class="user-name-row">
+            <text class="user-name">{{item.nickname || item.userId || '用户'}}</text>
+            <button wx:if="{{currentUserRole && item.canModify}}" class="action-btn role-btn inline-btn" bindtap="onChangeRole" data-user-id="{{item._id}}" data-current-role="{{item.role}}">
+              修改角色
+            </button>
+          </view>
+          <view class="role-badge {{getRoleClass(item.role)}}">{{getRoleName(item.role)}}</view>
+        </view>
+        <view class="user-actions">
+          <!-- 额外的操作按钮可以放在这里 -->
+        </view>
+      </view>
+    </view>
+
+    <!-- 统计信息 -->
       <view class="user-stats">
+        <view class="stat-item" wx:if="{{item.role === 'Boss'}}">
+          <text class="stat-value">¥{{item.walletBalance || 0}}</text>
+          <text class="stat-label">钱包余额</text>
+        </view>
         <view class="stat-item" wx:if="{{item.role === 'Boss'}}">
           <text class="stat-value">{{item.staffCount || 0}}</text>
           <text class="stat-label">直属员工</text>
@@ -79,11 +167,10 @@
           <text class="stat-label">系统权限</text>
         </view>
       </view>
-    </view>
-  </view>
 
   <!-- 加载状态 -->
   <view class="loading-state" wx:if="{{loading}}">
     <view class="loading-text">加载中...</view>
   </view>
+</view>
 </view>

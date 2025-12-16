@@ -27,11 +27,27 @@
       </view>
     </view>
 
+    <!-- 自我介绍图片 -->
+    <view class="intro-image-section" wx:if="{{staff.introImage}}">
+      <text class="section-title">自我介绍图片</text>
+      <image src="{{staff.introImage}}" mode="aspectFill" class="intro-image" bindtap="previewIntroImage" />
+    </view>
+
     <!-- 详细信息 -->
     <view class="info-section">
       <view class="info-item">
         <text class="info-label">音色类型:</text>
-        <text class="info-value">{{staff.voiceType === 'normal' ? '普通音色' : staff.voiceType === 'cute' ? '可爱音色' : staff.voiceType === 'cool' ? '酷炫音色' : '成熟音色'}}</text>
+        <text class="info-value">{{staff.voiceType}}音色</text>
+      </view>
+
+      <view class="info-item" wx:if="{{staff.lane}}">
+        <text class="info-label">分路位置:</text>
+        <text class="info-value">{{staff.lane}}</text>
+      </view>
+
+      <view class="info-item">
+        <text class="info-label">主玩游戏:</text>
+        <text class="info-value">{{staff.game}}</text>
       </view>
 
       <view class="info-item">
@@ -44,14 +60,37 @@
     <view class="audio-section" wx:if="{{staff.audioUrl}}">
       <view class="audio-player">
         <text class="audio-icon">🎵</text>
-        <text class="audio-text">语音介绍</text>
-        <button class="play-btn" bindtap="playAudioIntro">播放</button>
+        <view class="audio-info">
+          <text class="audio-text">语音介绍</text>
+          <text class="audio-time">{{formatTimeDisplay(currentTime)}} / {{formatTimeDisplay(duration)}}</text>
+        </view>
+        <button class="play-btn {{isPlaying ? 'playing' : ''}} {{audioLoading ? 'loading' : ''}}"
+                bindtap="playAudioIntro"
+                disabled="{{audioLoading}}">
+          <text wx:if="{{audioLoading}}">加载中...</text>
+          <text wx:elif="{{isPlaying}}">⏸️ 暂停</text>
+          <text wx:else>▶️ 播放</text>
+        </button>
+      </view>
+
+      <!-- 进度条 -->
+      <view class="progress-container" wx:if="{{duration > 0}}">
+        <slider class="progress-slider"
+                min="0"
+                max="100"
+                value="{{progress}}"
+                step="0.1"
+                bindchange="onProgressChange"
+                backgroundColor="#f3f4f6"
+                activeColor="#7c3aed"
+                block-color="#7c3aed"
+                block-size="16" />
       </view>
     </view>
 
     <!-- 操作按钮 -->
     <view class="action-section">
-      <button class="primary-btn" bindtap="createOrder">创建订单</button>
+      <button class="primary-btn" bindtap="viewOrders">查看订单</button>
     </view>
   </view>
 </view>

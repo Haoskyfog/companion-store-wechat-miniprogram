@@ -17,7 +17,8 @@ const collections = [
   'bindings',
   'roleChangeRequests',
   'content',
-  'rankings'
+  'rankings',
+  'recharge_records'
 ]
 
 async function initDatabase() {
@@ -62,6 +63,9 @@ async function initDatabase() {
 
     // 初始化一些示例内容
     await initSampleContent()
+
+    // 为所有现有用户添加钱包余额字段
+    await initUserWalletBalances()
 
     console.log('数据库初始化完成！')
 
@@ -108,6 +112,40 @@ async function initSampleContent() {
     } catch (error) {
       console.log(`示例内容 "${content.title}" 可能已存在`)
     }
+  }
+}
+
+// 初始化用户钱包余额
+async function initUserWalletBalances() {
+  try {
+    // 获取所有用户
+    const usersResult = await db.collection('users').get()
+    const users = usersResult.data
+
+    console.log(`找到 ${users.length} 个用户，开始初始化钱包余额...`)
+
+    for (const user of users) {
+      try {
+        // 检查用户是否已有钱包余额字段
+        if (user.walletBalance === undefined) {
+          await db.collection('users').doc(user._id).update({
+            data: {
+              walletBalance: 0, // 默认余额为0
+              updateTime: db.serverDate()
+            }
+          })
+          console.log(`用户 ${user.nickname || user.userId} 钱包余额初始化成功`)
+        } else {
+          console.log(`用户 ${user.nickname || user.userId} 钱包余额已存在`)
+        }
+      } catch (error) {
+        console.error(`初始化用户 ${user.nickname || user.userId} 钱包余额失败:`, error)
+      }
+    }
+
+    console.log('用户钱包余额初始化完成')
+  } catch (error) {
+    console.error('初始化用户钱包余额失败:', error)
   }
 }
 

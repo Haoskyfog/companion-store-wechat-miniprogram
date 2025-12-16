@@ -79,14 +79,46 @@
       </view>
 
       <scroll-view scroll-y="{{true}}" class="modal-body">
+        <!-- 推荐类型：只显示员工选择 -->
+        <view wx:if="{{activeTab === 'recommend'}}">
+          <!-- 员工选择（仅推荐功能） -->
+          <view class="form-group">
+            <text class="form-label">选择推荐员工 * (最多3个)</text>
+            <view class="staff-selection">
+              <view class="selected-count">已选择 {{selectedStaffCount}}/3 个员工</view>
+              <view class="staff-list">
+                <view class="staff-item {{isStaffSelected(item._openid) ? 'selected' : ''}}"
+                      wx:for="{{staffList}}"
+                      wx:key="_openid"
+                      data-staff-id="{{item._openid}}"
+                      bindtap="toggleStaffSelection">
+                  <view class="staff-avatar">
+                    <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" />
+                    <text wx:else>👤</text>
+                  </view>
+                  <view class="staff-info">
+                    <text class="staff-name">{{item.nickname}}</text>
+                    <text class="staff-id">ID: {{item.userId}}</text>
+                  </view>
+                  <view class="select-indicator" wx:if="{{isStaffSelected(item._openid)}}">
+                    <text>✓</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 其他类型：显示完整表单 -->
+        <view wx:else>
         <!-- 标题 -->
         <view class="form-group">
           <text class="form-label">标题 *</text>
           <input class="form-input" placeholder="请输入标题" value="{{formData.title}}" data-field="title" bindinput="onInputChange" maxlength="50" />
         </view>
 
-        <!-- 内容（公告和推荐需要） -->
-        <view class="form-group" wx:if="{{activeTab === 'notice' || activeTab === 'recommend'}}">
+          <!-- 内容（公告需要） -->
+          <view class="form-group" wx:if="{{activeTab === 'notice'}}">
           <text class="form-label">内容</text>
           <textarea class="form-textarea" placeholder="请输入内容" value="{{formData.content}}" data-field="content" bindinput="onInputChange" maxlength="500" />
         </view>
@@ -120,32 +152,6 @@
               <view class="upload-btn" wx:if="{{formData.images.length < 9}}" bindtap="uploadImages">
                 <text class="upload-icon">+</text>
                 <text class="upload-text">上传</text>
-              </view>
-            </view>
-          </view>
-        </view>
-
-        <!-- 员工选择（仅推荐功能） -->
-        <view class="form-group" wx:if="{{activeTab === 'recommend'}}">
-          <text class="form-label">选择推荐员工 * (最多3个)</text>
-          <view class="staff-selection">
-            <view class="selected-count">已选择 {{selectedStaffCount}}/3 个员工</view>
-            <view class="staff-list">
-              <view class="staff-item {{isStaffSelected(item._openid) ? 'selected' : ''}}"
-                    wx:for="{{staffList}}"
-                    wx:key="_openid"
-                    data-staff-id="{{item._openid}}"
-                    bindtap="toggleStaffSelection">
-                <view class="staff-avatar">
-                  <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" />
-                  <text wx:else>👤</text>
-                </view>
-                <view class="staff-info">
-                  <text class="staff-name">{{item.nickname}}</text>
-                  <text class="staff-id">ID: {{item.userId}}</text>
-                </view>
-                <view class="select-indicator" wx:if="{{isStaffSelected(item._openid)}}">
-                  <text>✓</text>
                 </view>
               </view>
             </view>

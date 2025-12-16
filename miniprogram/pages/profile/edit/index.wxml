@@ -1,5 +1,11 @@
 <!-- 编辑用户资料 -->
 <view class="page">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="nav-back" bindtap="goBack">←</view>
+    <view class="header-title">编辑资料</view>
+  </view>
+
   <scroll-view scroll-y="{{true}}" class="scroll-content">
     <view class="form-container">
 

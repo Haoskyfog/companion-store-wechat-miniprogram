@@ -1,46 +1,91 @@
 /* 老板端 - 我的 */
 .page {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f5f5f5;
-}
-
-/* 顶部背景 */
-.top-bg {
-  height: 384rpx;
-  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  background: linear-gradient(135deg, #FDF7FF 0%, #F6F2FF 50%, #F9FAFF 100%);
   position: relative;
 }
 
+/* 高级设计感背景装饰 */
+.page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.04) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.03) 0%, transparent 45%),
+    radial-gradient(circle at 50% 10%, rgba(196, 181, 253, 0.02) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
 .settings-btn {
-  position: absolute;
+  position: fixed;
   top: 32rpx;
   right: 32rpx;
   width: 48rpx;
   height: 48rpx;
   font-size: 48rpx;
-  color: #fff;
+  color: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1rpx solid rgba(139, 92, 246, 0.08);
+}
+
+/* 刷新按钮 */
+.refresh-btn {
+  position: fixed;
+  top: 32rpx;
+  right: 100rpx;
+  width: 48rpx;
+  height: 48rpx;
+  font-size: 48rpx;
+  color: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1rpx solid rgba(139, 92, 246, 0.08);
+  transition: all 0.3s ease;
+}
+
+.refresh-btn:active {
+  transform: scale(0.9);
+  background: rgba(139, 92, 246, 0.1);
 }
 
 /* 滚动区域 */
 .scroll-content {
   flex: 1;
-  margin-top: -320rpx;
+  position: relative;
+  z-index: 1;
+  padding-top: 80rpx;
 }
 
-/* 用户信息卡片 */
-.user-card {
-  margin: 0 32rpx 32rpx;
-  background: #fff;
-  border-radius: 32rpx;
-  padding: 48rpx;
-  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.1);
-}
-
-.user-header {
+/* 用户头部区域 */
+.user-header-section {
+  padding: 60rpx 40rpx 40rpx;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  position: relative;
+}
+
+.user-avatar-container {
   margin-bottom: 32rpx;
 }
 
@@ -48,15 +93,16 @@
   width: 160rpx;
   height: 160rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, #fde047 0%, #fb923c 100%);
+  background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 50%, #ddd6fe 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 80rpx;
-  border: 8rpx solid #fff;
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
-  margin-right: 32rpx;
+  border: 6rpx solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4rpx 16rpx rgba(139, 92, 246, 0.1);
   overflow: hidden;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .avatar-image {
@@ -65,13 +111,14 @@
   border-radius: 50%;
 }
 
-.user-info {
-  flex: 1;
+.user-info-container {
+  text-align: center;
 }
 
 .user-name-row {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12rpx;
   margin-bottom: 8rpx;
 }
@@ -80,30 +127,85 @@
   font-size: 40rpx;
   font-weight: bold;
   color: #1f2937;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
 }
 
 .vip-badge {
   padding: 4rpx 16rpx;
-  background: #fef3c7;
-  color: #d97706;
+  background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%);
+  color: #fff;
   border-radius: 24rpx;
   font-size: 24rpx;
   font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(139, 92, 246, 0.12);
 }
 
 .user-id {
   font-size: 28rpx;
-  color: #9ca3af;
+  color: #64748b;
+}
+
+
+/* VIP信息卡片 */
+/* 钱包信息卡片 */
+.wallet-info-card {
+  margin: 0 32rpx 16rpx;
+}
+
+/* 钱包信息 */
+.wallet-info {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 32rpx 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 20px rgba(34, 197, 94, 0.08);
+  border: 1rpx solid rgba(34, 197, 94, 0.1);
+}
+
+.wallet-content {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.wallet-icon {
+  font-size: 48rpx;
+}
+
+.wallet-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.wallet-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #22c55e;
+  margin-bottom: 8rpx;
+}
+
+.wallet-balance {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #16a34a;
+}
+
+.vip-info-card {
+  margin: 0 32rpx 24rpx;
 }
 
 /* VIP信息 */
 .vip-info {
-  background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
-  border-radius: 24rpx;
-  padding: 24rpx;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 32rpx 24rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-radius: 24rpx;
+  box-shadow: 0 4rpx 20px rgba(139, 92, 246, 0.08);
 }
 
 .vip-content {
@@ -129,7 +231,8 @@
 
 .vip-desc {
   font-size: 24rpx;
-  color: #6b7280;
+  color: #7c3aed;
+  font-weight: 600;
 }
 
 .arrow {
@@ -140,11 +243,9 @@
 
 /* 我的员工 */
 .staff-section {
-  margin: 0 32rpx 32rpx;
-  background: #fff;
-  border-radius: 32rpx;
+  margin: 0 32rpx 24rpx;
+  border-radius: 24rpx;
   padding: 32rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
 }
 
 .section-header {
@@ -184,6 +285,14 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 8rpx;
+  background: linear-gradient(135deg, #93c5fd, #67e8f9);
+  overflow: hidden;
+}
+
+.avatar-image-small {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
 }
 
 .staff-emoji-small {
@@ -195,13 +304,38 @@
   color: #6b7280;
 }
 
+/* 主线故事 */
+.story-section {
+  margin: 0 32rpx 24rpx;
+  padding: 32rpx;
+}
+
+.story-content {
+  text-align: center;
+}
+
+.story-text {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #64748b;
+  margin-bottom: 20rpx;
+  text-align: justify;
+}
+
+.story-level {
+  font-size: 24rpx;
+  color: #7c3aed;
+  font-weight: 600;
+  background: rgba(124, 58, 237, 0.1);
+  padding: 8rpx 16rpx;
+  border-radius: 16rpx;
+  display: inline-block;
+}
+
 /* 菜单列表 */
 .menu-section {
-  margin: 0 32rpx 32rpx;
-  background: #fff;
-  border-radius: 32rpx;
+  margin: 0 32rpx 24rpx;
   overflow: hidden;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
 }
 
 .menu-item {
@@ -245,6 +379,67 @@
   color: #9ca3af;
 }
 
+/* 高级设计感装饰元素 */
+.profile-decoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.profile-sparkle-1 {
+  position: absolute;
+  top: 150rpx;
+  right: 100rpx;
+  font-size: 24rpx;
+  animation: subtle-twinkle 4s ease-in-out infinite;
+  color: rgba(139, 92, 246, 0.15);
+}
+
+.profile-sparkle-2 {
+  position: absolute;
+  bottom: 200rpx;
+  left: 80rpx;
+  font-size: 20rpx;
+  animation: subtle-twinkle 3s ease-in-out infinite 1.5s;
+  color: rgba(168, 85, 247, 0.12);
+}
+
+.profile-dot-1 {
+  position: absolute;
+  top: 300rpx;
+  left: 60rpx;
+  width: 4rpx;
+  height: 4rpx;
+  background: rgba(196, 181, 253, 0.3);
+  border-radius: 50%;
+  animation: subtle-pulse 5s ease-in-out infinite;
+}
+
+.profile-dot-2 {
+  position: absolute;
+  bottom: 350rpx;
+  right: 90rpx;
+  width: 3rpx;
+  height: 3rpx;
+  background: rgba(139, 92, 246, 0.25);
+  border-radius: 50%;
+  animation: subtle-pulse 4s ease-in-out infinite 2s;
+}
+
+@keyframes subtle-twinkle {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50% { opacity: 0.25; transform: scale(1.05); }
+}
+
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.2); }
+}
+
 .bottom-spacer {
-  height: calc(env(safe-area-inset-bottom) + 120rpx);
+  height: calc(env(safe-area-inset-bottom) + 160rpx);
 }

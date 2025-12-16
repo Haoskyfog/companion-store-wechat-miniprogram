@@ -97,11 +97,107 @@
   gap: 24rpx;
 }
 
+/* 员工网格布局 */
+.staff-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32rpx;
+  padding: 16rpx 0;
+}
+
+.staff-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16rpx;
+  background: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.staff-item:active {
+  transform: scale(0.95);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.staff-avatar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  width: 100%;
+}
+
+.staff-avatar-circle {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4rpx solid #fff;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-image-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.avatar-placeholder-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-emoji-circle {
+  font-size: 48rpx;
+}
+
+.staff-id-text {
+  font-size: 24rpx;
+  color: #6b7280;
+  font-weight: 500;
+  text-align: center;
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-width: 100%;
+  margin-top: 8rpx;
+}
+
 .staff-card {
   background: #fff;
   border-radius: 24rpx;
   padding: 32rpx;
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.staff-card.complete {
+  border: 2rpx solid #10b981;
+  box-shadow: 0 8rpx 24rpx rgba(16, 185, 129, 0.15);
+}
+
+.staff-card.incomplete {
+  border: 1rpx solid #e5e7eb;
+}
+
+.staff-card:active {
+  transform: scale(0.98);
 }
 
 .staff-info {
@@ -111,14 +207,35 @@
 }
 
 .staff-avatar {
-  width: 160rpx;
-  height: 160rpx;
-  border-radius: 24rpx;
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
+  border: 6rpx solid #fff;
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.complete-badge {
+  position: absolute;
+  top: -6rpx;
+  right: -6rpx;
+  width: 48rpx;
+  height: 48rpx;
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24rpx;
+  font-weight: bold;
+  border: 4rpx solid #fff;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
 }
 
 .avatar-image {
@@ -173,14 +290,24 @@
   color: #ec4899;
 }
 
+.status-complete {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+}
+
 .status-new {
   background: #fef3c7;
   color: #f59e0b;
 }
 
 .staff-id {
-  font-size: 24rpx;
-  color: #9ca3af;
+  font-size: 26rpx;
+  color: #6b7280;
+  font-weight: 500;
+  background: rgba(139, 92, 246, 0.1);
+  padding: 6rpx 16rpx;
+  border-radius: 20rpx;
+  display: inline-block;
 }
 
 .staff-tags {
@@ -197,6 +324,19 @@
   border-radius: 24rpx;
   font-size: 24rpx;
   font-weight: 500;
+  margin-right: 8rpx;
+  margin-bottom: 4rpx;
+  display: inline-block;
+}
+
+.staff-card.complete .tag:first-child {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+}
+
+.staff-card.incomplete .tag:first-child {
+  background: #fef3c7;
+  color: #f59e0b;
 }
 
 .staff-intro {

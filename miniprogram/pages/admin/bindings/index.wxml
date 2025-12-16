@@ -1,22 +1,109 @@
 <view class="container">
   <!-- 页面标题 -->
   <view class="header">
+    <view class="title-section">
     <view class="title">绑定关系管理</view>
-    <button class="create-btn" bindtap="showCreateModal">创建绑定</button>
+      <view class="subtitle">管理老板与员工的绑定关系</view>
+    </view>
+    <button class="create-btn" bindtap="showCreateModal">
+      <text class="create-icon">+</text>
+      创建绑定
+    </button>
+  </view>
+
+  <!-- 统计信息 -->
+  <view class="stats-section" wx:if="{{!loading}}">
+    <view class="stat-item">
+      <text class="stat-value">{{statistics.total}}</text>
+      <text class="stat-label">总绑定数</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">{{statistics.active}}</text>
+      <text class="stat-label">有效绑定</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">{{statistics.bosses}}</text>
+      <text class="stat-label">老板数量</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">{{statistics.staffs}}</text>
+      <text class="stat-label">员工数量</text>
+    </view>
+  </view>
+
+  <!-- 搜索和筛选 -->
+  <view class="search-section">
+    <view class="search-bar">
+      <input class="search-input"
+             placeholder="搜索老板或员工昵称/ID"
+             value="{{searchKeyword}}"
+             bindinput="onSearchInput" />
+      <text class="search-icon">🔍</text>
+    </view>
+    <view class="filter-tabs">
+      <view class="filter-tab {{filterType === 'all' ? 'active' : ''}}"
+            bindtap="setFilterType"
+            data-type="all">全部</view>
+      <view class="filter-tab {{filterType === 'boss' ? 'active' : ''}}"
+            bindtap="setFilterType"
+            data-type="boss">按老板</view>
+      <view class="filter-tab {{filterType === 'staff' ? 'active' : ''}}"
+            bindtap="setFilterType"
+            data-type="staff">按员工</view>
+    </view>
   </view>
 
   <!-- 绑定关系列表 -->
   <view class="content" wx:if="{{!loading}}">
-    <view class="binding-list" wx:if="{{bindings.length > 0}}">
-      <view class="binding-item" wx:for="{{bindings}}" wx:key="_id">
-        <view class="binding-info">
-          <view class="binding-main">
-            <text class="boss-name">{{item.bossInfo.nickname}} ({{item.bossInfo.userId}})</text>
-            <text class="arrow">→</text>
-            <text class="staff-name">{{item.staffInfo.nickname}} ({{item.staffInfo.userId}})</text>
+    <view class="binding-list" wx:if="{{filteredBindings.length > 0}}">
+      <view class="binding-item" wx:for="{{filteredBindings}}" wx:key="_id">
+        <!-- 老板信息 -->
+        <view class="user-section boss-section">
+          <view class="user-avatar">
+            <image wx:if="{{item.bossInfo.avatar}}" src="{{item.bossInfo.avatar}}" mode="aspectFill" class="avatar-image" />
+            <text wx:else class="avatar-emoji">👔</text>
           </view>
-          <view class="binding-time">创建时间：{{item.createTime}}</view>
+          <view class="user-info">
+            <text class="user-name">{{item.bossInfo.nickname}}</text>
+            <text class="user-id">{{item.bossInfo.userId}}</text>
+            <text class="user-role">老板</text>
+          </view>
         </view>
+
+        <!-- 绑定关系 -->
+        <view class="binding-connector">
+          <view class="connector-line"></view>
+          <text class="connector-text">绑定</text>
+          <view class="connector-dot"></view>
+        </view>
+
+        <!-- 员工信息 -->
+        <view class="user-section staff-section">
+          <view class="user-avatar">
+            <image wx:if="{{item.staffInfo.avatar}}" src="{{item.staffInfo.avatar}}" mode="aspectFill" class="avatar-image" />
+            <text wx:else class="avatar-emoji">🎮</text>
+          </view>
+          <view class="user-info">
+            <text class="user-name">{{item.staffInfo.nickname}}</text>
+            <text class="user-id">{{item.staffInfo.userId}}</text>
+            <text class="user-role">员工</text>
+          </view>
+        </view>
+
+        <!-- 操作按钮 -->
+        <view class="binding-actions">
+          <view class="binding-status">
+            <text class="status-text {{item.status === 'active' ? 'active' : 'inactive'}}">
+              {{item.status === 'active' ? '有效' : '已解绑'}}
+            </text>
+          </view>
+          <view class="binding-time">{{item.createTime}}</view>
+          <view class="action-buttons">
+            <button class="view-btn"
+                    data-binding="{{item}}"
+                    bindtap="viewBindingDetail">
+              查看
+            </button>
         <button class="delete-btn"
                 data-binding-id="{{item._id}}"
                 data-boss-nickname="{{item.bossInfo.nickname}}"
@@ -24,11 +111,18 @@
                 bindtap="deleteBinding">
           解绑
         </button>
+          </view>
+        </view>
       </view>
     </view>
 
-    <view class="empty" wx:else>
-      <text>暂无绑定关系</text>
+    <view class="empty-state" wx:else>
+      <view class="empty-icon">🔗</view>
+      <view class="empty-title">暂无绑定关系</view>
+      <view class="empty-desc">{{searchKeyword ? '没有找到匹配的绑定关系' : '点击右上角创建第一个绑定关系'}}</view>
+      <button class="empty-action" wx:if="{{!searchKeyword}}" bindtap="showCreateModal">
+        创建绑定关系
+      </button>
     </view>
   </view>
 
@@ -39,39 +133,130 @@
 </view>
 
 <!-- 创建绑定模态框 -->
-<view class="modal-overlay {{showCreateModal ? 'visible' : ''}}" bindtap="hideModal">
-  <view class="modal-content" catchtap="">
+<view class="modal-overlay {{showCreateModal ? 'visible' : ''}}" bindtap="hideModal" catchtouchmove="preventMove">
+  <view class="modal-content create-modal" catchtap="preventTap" catchtouchmove="preventMove">
     <view class="modal-header">
       <text class="modal-title">创建绑定关系</text>
+      <text class="modal-subtitle">选择老板和员工建立绑定关系</text>
     </view>
 
-    <scroll-view scroll-y="{{true}}" class="modal-body">
-      <view class="form-item">
-        <text class="form-label">选择老板：</text>
-        <picker mode="selector"
-                range="{{bossList}}"
-                range-key="nickname"
-                value="{{selectedBossIndex}}"
-                bindchange="onBossChange">
-          <view class="picker">{{selectedBossId ? '老板已选择' : '请选择老板'}}</view>
-        </picker>
+    <view class="modal-body">
+      <!-- 老板选择 -->
+      <view class="form-section">
+        <view class="section-title">选择老板</view>
+        <view class="user-selector" bindtap="showBossSelector">
+          <view class="selector-content" wx:if="{{!selectedBoss}}">
+            <text class="selector-placeholder">点击选择老板</text>
+            <text class="selector-arrow">▼</text>
+          </view>
+          <view class="selected-user" wx:else>
+            <view class="user-avatar">
+              <image wx:if="{{selectedBoss.avatar}}" src="{{selectedBoss.avatar}}" mode="aspectFill" class="avatar-image" />
+              <text wx:else class="avatar-emoji">👔</text>
+            </view>
+            <view class="user-info">
+              <text class="user-name">{{selectedBoss.nickname}}</text>
+              <text class="user-id">{{selectedBoss.userId}}</text>
+            </view>
+            <text class="change-text" catchtap="clearBossSelection">更换</text>
+          </view>
+        </view>
       </view>
 
-      <view class="form-item">
-        <text class="form-label">选择员工：</text>
-        <picker mode="selector"
-                range="{{staffList}}"
-                range-key="nickname"
-                value="{{selectedStaffIndex}}"
-                bindchange="onStaffChange">
-          <view class="picker">{{selectedStaffId ? '员工已选择' : '请选择员工'}}</view>
-        </picker>
+      <!-- 员工选择 -->
+      <view class="form-section">
+        <view class="section-title">选择员工</view>
+        <view class="user-selector" bindtap="showStaffSelector">
+          <view class="selector-content" wx:if="{{!selectedStaff}}">
+            <text class="selector-placeholder">点击选择员工</text>
+            <text class="selector-arrow">▼</text>
+          </view>
+          <view class="selected-user" wx:else>
+            <view class="user-avatar">
+              <image wx:if="{{selectedStaff.avatar}}" src="{{selectedStaff.avatar}}" mode="aspectFill" class="avatar-image" />
+              <text wx:else class="avatar-emoji">🎮</text>
+            </view>
+            <view class="user-info">
+              <text class="user-name">{{selectedStaff.nickname}}</text>
+              <text class="user-id">{{selectedStaff.userId}}</text>
+            </view>
+            <text class="change-text" catchtap="clearStaffSelection">更换</text>
+          </view>
+        </view>
       </view>
-    </scroll-view>
+
+      <!-- 绑定说明 -->
+      <view class="binding-info" wx:if="{{selectedBoss && selectedStaff}}">
+        <view class="info-item">
+          <text class="info-icon">📋</text>
+          <text class="info-text">绑定后，{{selectedStaff.nickname}}可以为{{selectedBoss.nickname}}创建订单</text>
+        </view>
+        <view class="info-item">
+          <text class="info-icon">🔗</text>
+          <text class="info-text">老板可以查看和管理该员工的订单</text>
+        </view>
+      </view>
+    </view>
 
     <view class="modal-footer">
       <button class="cancel-btn" bindtap="hideModal">取消</button>
-      <button class="confirm-btn" bindtap="createBinding">创建</button>
+      <button class="confirm-btn {{selectedBoss && selectedStaff ? 'active' : 'disabled'}}"
+              bindtap="createBinding"
+              disabled="{{!selectedBoss || !selectedStaff}}">
+        创建绑定
+      </button>
     </view>
+  </view>
+</view>
+
+<!-- 老板选择器 -->
+<view class="selector-modal {{showBossSelector ? 'visible' : ''}}" bindtap="hideBossSelector">
+  <view class="selector-content" catchtap="preventTap">
+    <view class="selector-header">
+      <text class="selector-title">选择老板</text>
+    </view>
+    <scroll-view scroll-y="{{true}}" class="selector-list">
+      <view class="user-item"
+            wx:for="{{bossList}}"
+            wx:key="_openid"
+            data-user="{{item}}"
+            catchtap="selectBoss">
+        <view class="user-avatar">
+          <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image" />
+          <text wx:else class="avatar-emoji">👔</text>
+        </view>
+        <view class="user-info">
+          <text class="user-name">{{item.nickname}}</text>
+          <text class="user-id">{{item.userId}}</text>
+        </view>
+        <text class="select-icon" wx:if="{{selectedBoss && selectedBoss._openid === item._openid}}">✓</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- 员工选择器 -->
+<view class="selector-modal {{showStaffSelector ? 'visible' : ''}}" bindtap="hideStaffSelector">
+  <view class="selector-content" catchtap="preventTap">
+    <view class="selector-header">
+      <text class="selector-title">选择员工</text>
+    </view>
+    <scroll-view scroll-y="{{true}}" class="selector-list">
+      <view class="user-item"
+            wx:for="{{staffList}}"
+            wx:key="_openid"
+            data-user="{{item}}"
+            catchtap="selectStaff">
+        <view class="user-avatar">
+          <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image" />
+          <text wx:else class="avatar-emoji">🎮</text>
+        </view>
+        <view class="user-info">
+          <text class="user-name">{{item.nickname}}</text>
+          <text class="user-id">{{item.userId}}</text>
+        </view>
+        <text class="select-icon" wx:if="{{selectedStaff && selectedStaff._openid === item._openid}}">✓</text>
+      </view>
+    </scroll-view>
   </view>
 </view>

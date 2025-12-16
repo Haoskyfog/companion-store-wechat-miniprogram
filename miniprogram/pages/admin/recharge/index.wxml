@@ -1,0 +1,70 @@
+<!-- 管理员端 - 老板充值管理 -->
+<view class="page">
+  <!-- 顶部导航 -->
+  <view class="header">
+    <view class="nav-back" bindtap="goBack">←</view>
+    <view class="header-title">老板充值管理</view>
+  </view>
+
+  <!-- 统计信息 -->
+  <view class="stats-bar" wx:if="{{!loading}}">
+    <view class="stat-item">
+      <text class="stat-value">{{bossList.length}}</text>
+      <text class="stat-label">老板数量</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">¥{{totalBalance.toFixed(2)}}</text>
+      <text class="stat-label">总余额</text>
+    </view>
+    <view class="stat-item">
+      <text class="stat-value">{{todayRecharges}}</text>
+      <text class="stat-label">今日充值</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <view class="loading-text">加载中...</view>
+  </view>
+
+  <!-- 老板列表 -->
+  <view class="boss-list" wx:elif="{{bossList.length > 0}}">
+    <view class="boss-item" wx:for="{{bossList}}" wx:key="_id">
+      <view class="boss-avatar">
+        <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image" />
+        <view wx:else class="avatar-placeholder">
+          <text class="avatar-emoji">👔</text>
+        </view>
+      </view>
+
+      <view class="boss-info">
+        <view class="boss-header">
+          <text class="boss-name">{{item.nickname}}</text>
+          <text class="boss-id">ID: {{item.userId}}</text>
+        </view>
+
+        <view class="boss-balance">
+          <text class="balance-label">当前余额:</text>
+          <text class="balance-value">¥{{item.walletBalance || 0}}</text>
+        </view>
+
+        <view class="boss-stats" wx:if="{{item.staffCount !== undefined}}">
+          <text class="stat-text">直属员工: {{item.staffCount}}人</text>
+        </view>
+      </view>
+
+      <view class="boss-actions">
+        <button class="recharge-btn" bindtap="onRechargeTap" data-boss="{{item}}">
+          充值
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:elif="{{!loading}}">
+    <view class="empty-icon">👥</view>
+    <view class="empty-text">暂无老板用户</view>
+    <view class="empty-desc">需要先添加老板用户才能进行充值操作</view>
+  </view>
+</view>

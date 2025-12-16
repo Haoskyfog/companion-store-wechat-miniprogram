@@ -15,78 +15,44 @@ exports.main = async (event, context) => {
 
     // 不再需要测试模式，直接查询真实数据
 
-    // 强制重新计算排行榜，不使用缓存数据（确保只包含当前员工角色的用户）
-    let rankings = await calculateRankings(period, periodValue)
+    // 简化版：直接计算排行榜，不保存到数据库
+    let rankings = await calculateRankingsSimple(period, periodValue)
 
-    // 获取用户信息，并过滤掉非员工角色的用户
-    const originalCount = rankings.length
-    const validRankings = []
-    for (const ranking of rankings) {
-      const userResult = await db.collection('users').where({
-        _openid: ranking.staffId
-      }).get()
-      if (userResult.data && userResult.data.length > 0) {
-        const userData = userResult.data[0]
-        // 只保留role为'Staff'的用户
-        if (userData.role === 'Staff') {
-        ranking.userInfo = {
-            nickname: userData.nickname || '未知用户',
-            userId: userData.userId || ranking.staffId.substring(0, 8),
-            avatar: userData.avatar
+    // 获取所有员工用户信息（一次性查询，避免多次查询）
+    const allStaffUsers = await db.collection('users')
+      .where({
+        role: 'Staff'
+      })
+      .get()
+
+    // 创建员工信息的映射表
+    const staffInfoMap = {}
+    allStaffUsers.data.forEach(user => {
+      staffInfoMap[user._openid] = {
+        nickname: user.nickname || '未知用户',
+        userId: user.userId || user._openid.substring(0, 8),
+        avatar: user.avatar
           }
-          validRankings.push(ranking)
-        } else {
-          // 记录被过滤掉的非员工用户
-          console.log(`过滤掉非员工用户: ${userData.nickname || ranking.staffId}, 角色: ${userData.role}`)
-        }
-      } else {
-        // 用户不存在，也过滤掉
-        console.log(`过滤掉不存在的用户: ${ranking.staffId}`)
-      }
-    }
-    // 更新rankings为有效的排行榜数据，并重新计算排名
-    rankings = validRankings.map((item, index) => ({
-      ...item,
-      rank: index + 1
-    }))
-    console.log(`排行榜过滤完成: 原始${originalCount}个, 有效${rankings.length}个员工用户`)
-
-    // 收集所有 cloud:// 格式的头像文件ID（去重）
-    const cloudFileIds = []
-    const cloudFileIdsSet = new Set()
-    rankings.forEach(ranking => {
-      if (ranking.userInfo && ranking.userInfo.avatar && ranking.userInfo.avatar.startsWith('cloud://')) {
-        cloudFileIdsSet.add(ranking.userInfo.avatar)
-      }
     })
-    cloudFileIds.push(...Array.from(cloudFileIdsSet))
 
-    // 批量转换 cloud:// 为 https://
-    if (cloudFileIds.length > 0) {
-      const tempFileURLs = await cloud.getTempFileURL({
-        fileList: cloudFileIds
-      })
-
-      // 创建 fileID 到 tempFileURL 的映射
-      const fileIdToUrlMap = {}
-      if (tempFileURLs && tempFileURLs.fileList) {
-        tempFileURLs.fileList.forEach(item => {
-          if (item.status === 0 && item.tempFileURL) {
-            fileIdToUrlMap[item.fileID] = item.tempFileURL
-          }
-        })
+    // 过滤只保留有效员工的排行榜数据
+    const validRankings = rankings.filter(ranking => {
+      const exists = staffInfoMap[ranking.staffId]
+      if (!exists) {
+        console.log(`过滤掉不存在的员工: ${ranking.staffId}`)
       }
+      return exists
+    })
 
-      // 更新排行榜中的头像URL
-      rankings.forEach(ranking => {
-        if (ranking.userInfo && ranking.userInfo.avatar && ranking.userInfo.avatar.startsWith('cloud://')) {
-          const newUrl = fileIdToUrlMap[ranking.userInfo.avatar]
-          if (newUrl) {
-            ranking.userInfo.avatar = newUrl
-        }
-      }
-      })
-    }
+    // 为有效排行榜添加用户信息
+    rankings = validRankings.map((ranking, index) => ({
+      ...ranking,
+      rank: index + 1,
+      userInfo: staffInfoMap[ranking.staffId]
+    }))
+    console.log(`排行榜计算完成: ${rankings.length}个员工用户`)
+
+    // 移除头像URL转换，由前端处理以提升性能
 
     return {
       success: true,
@@ -105,8 +71,8 @@ exports.main = async (event, context) => {
   }
 }
 
-// 计算排行榜数据
-async function calculateRankings(period, periodValue) {
+// 简化版计算排行榜数据（不保存到数据库）
+async function calculateRankingsSimple(period, periodValue) {
   const db = cloud.database()
   const _ = db.command
 
@@ -153,54 +119,79 @@ async function calculateRankings(period, periodValue) {
     .get()
   }
 
-  // 初始化所有员工的统计数据（报备通过数为0）
+  // 初始化所有员工的统计数据（个人流水为0）
   const staffStats = {}
   for (const staffId of staffIds) {
       staffStats[staffId] = {
         staffId,
-      orderCount: 0, // 这里其实是报备通过数
+        orderCount: 0, // 保持兼容，但现在主要按totalRevenue排序
+        totalRevenue: 0, // 个人流水（通过报备的总金额）
         totalDuration: 0
       }
     }
 
-  // 按员工统计报备通过数量
+  // 按员工统计报备通过的金额总和
+  console.log('=== 排行榜金额计算调试 ===')
+  console.log('通过报备总数:', approvedReports.data.length)
+  
   for (const report of approvedReports.data) {
     const staffId = report.staffId
     // 只有在员工列表中的才统计（额外安全检查）
     if (staffStats[staffId]) {
-      staffStats[staffId].orderCount++ // 报备通过数
+      staffStats[staffId].orderCount++ // 报备通过数（保持兼容）
+      
+      // 确保金额是数字类型并累加
+      let amount = 0
+      if (report.amount !== undefined && report.amount !== null) {
+        if (typeof report.amount === 'number') {
+          amount = report.amount
+        } else if (typeof report.amount === 'string') {
+          amount = parseFloat(report.amount) || 0
+        } else {
+          amount = Number(report.amount) || 0
+        }
+      }
+      
+      staffStats[staffId].totalRevenue += amount // 累计个人流水
+      
+      console.log(`员工 ${staffId} 报备金额: ${amount}, 累计流水: ${staffStats[staffId].totalRevenue}`)
       // 可以选择是否统计时长，这里先保持为0或者从订单中获取
     }
   }
+  
+  console.log('=== 排行榜金额计算完成 ===')
 
-  // 转换为数组并按报备通过数量排序
+  // 转换为数组并按个人流水排序
   const rankings = Object.values(staffStats)
-    .sort((a, b) => b.orderCount - a.orderCount) // 按报备通过数量排序
+    .map((item) => {
+      // 确保 totalRevenue 是数字类型
+      const totalRevenue = typeof item.totalRevenue === 'number' ? item.totalRevenue : (Number(item.totalRevenue) || 0)
+      return {
+        ...item,
+        totalRevenue: totalRevenue // 确保是数字类型
+      }
+    })
+    .sort((a, b) => b.totalRevenue - a.totalRevenue) // 按个人流水排序
     .map((item, index) => ({
       ...item,
       rank: index + 1,
-      rating: 95 + Math.random() * 5 // 模拟好评率
+      rating: 95 + Math.random() * 5, // 模拟好评率
+      totalRevenue: Number(item.totalRevenue) || 0 // 再次确保是数字类型
     }))
-
-  // 先删除旧的排行榜数据
-  await db.collection('rankings').where({
-    period: period,
-    periodValue: periodValue
-  }).remove()
-
-  // 保存新的排行榜数据
-  for (const ranking of rankings) {
-    await db.collection('rankings').add({
-      data: {
-        ...ranking,
-        period,
-        periodValue,
-        createTime: db.serverDate(),
-        updateTime: db.serverDate()
-      }
+  
+  // 调试：输出排行榜数据
+  console.log('=== 排行榜数据调试 ===')
+  rankings.forEach((ranking, index) => {
+    console.log(`排名${index + 1}:`, {
+      员工ID: ranking.staffId,
+      个人流水: ranking.totalRevenue,
+      流水类型: typeof ranking.totalRevenue,
+      报备通过数: ranking.orderCount
     })
-  }
+  })
+  console.log('=== 调试结束 ===')
 
+  // 简化版：直接返回计算结果，不保存到数据库
   return rankings
 }
 

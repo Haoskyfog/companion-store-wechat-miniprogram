@@ -1,0 +1,68 @@
+<!-- 管理员 - 最新报备列表 -->
+<view class="page">
+  <!-- 顶部提示 -->
+  <view class="header-tip">
+    <text class="tip-icon">📄</text>
+    <text class="tip-text">显示所有报备记录，按时间倒序排列</text>
+  </view>
+
+  <!-- 报备列表 -->
+  <scroll-view scroll-y="{{true}}" class="scroll-content">
+    <view class="reports-list" wx:if="{{reports.length > 0}}">
+      <view class="report-card" wx:for="{{reports}}" wx:key="_id" data-id="{{item._id}}" bindtap="onReportTap">
+        <view class="report-header">
+          <view class="report-user">
+            <view class="report-avatar" style="background: linear-gradient(135deg, #93c5fd, #67e8f9);">
+              <text class="report-emoji">🎮</text>
+            </view>
+            <view class="report-user-info">
+              <view class="user-name-row">
+                <text class="report-name">{{item.staffInfo.nickname}}</text>
+                <text class="user-id">ID: {{item.staffInfo.userId}}</text>
+              </view>
+              <view class="report-meta">
+                <text class="report-time">{{item.createTime}}</text>
+                <text wx:if="{{item.bossInfo}}" class="report-boss">→ {{item.bossInfo.nickname}}</text>
+              </view>
+            </view>
+          </view>
+          <view class="report-status {{item.status === 'pending' ? 'status-pending' : item.status === 'approved' ? 'status-approved' : 'status-rejected'}}">
+            {{item.status === 'pending' ? '待审核' : item.status === 'approved' ? '已通过' : '已驳回'}}
+          </view>
+        </view>
+        <view class="report-content">
+          <view class="report-game">
+            <text class="game-icon">🎯</text>
+            <text class="game-name">{{item.game}}</text>
+          </view>
+          <view class="report-duration">
+            <text class="duration-icon">⏱️</text>
+            <text class="duration-text">{{item.duration}}小时</text>
+          </view>
+          <view class="report-amount" wx:if="{{item.amount}}">
+            <text class="amount-icon">💰</text>
+            <text class="amount-text">¥{{item.amount}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{!loading && reports.length === 0}}">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无报备记录</text>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <text class="loading-text">加载中...</text>
+    </view>
+
+    <!-- 底部提示 -->
+    <view class="bottom-tip" wx:if="{{!loading && reports.length > 0}}">
+      <text class="tip-text">{{hasMore ? '上拉加载更多' : '已加载全部'}}</text>
+    </view>
+
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+</view>

@@ -2,17 +2,22 @@
 const pagePath = 'pages/staff/profile/index';
 
 Page({
+  // 回调函数引用，用于正确注销
+  userProfileUpdateCallback: null as ((userInfo: any) => void) | null,
+
   data: {
     userInfo: null as any,
     stats: {
       totalOrders: 0,
-      totalDuration: 0,
-      rating: 0
+      personalRevenue: 0
     },
     voiceSettings: {
-      voiceType: 'normal', // normal, cute, cool, mature
-      audioUrl: '', // 录制的音频文件URL
-      introduction: '' // 自我介绍文本
+      voiceType: '青年', // 青年，青叔，温青，少女，御姐，少御，萝莉
+      game: '王者荣耀', // 主玩游戏
+      lane: '', // 分路标签：对抗路，中路，发育路，打野，游走
+      introduction: '', // 自我介绍文本
+      introImage: '', // 自我介绍图片URL
+      audioUrl: '' // 语音介绍音频URL
     },
     quickActions: [
       { id: 1, icon: '📝', label: '创建订单', bgColor: '#ddd6fe', action: 'createOrder' },
@@ -23,10 +28,9 @@ Page({
     profileMenu: [
       { id: 1, icon: '🎮', label: '主玩游戏 / 分路标签', action: 'games' },
       { id: 2, icon: '🖼️', label: '上传自介图', action: 'introImage' },
-      { id: 3, icon: '🎙️', label: '录制语音介绍', action: 'voiceIntro' },
-      { id: 4, icon: '🎤', label: '音色选择', action: 'voiceSettings' },
-      { id: 5, icon: '📝', label: '编辑自我介绍', action: 'editIntro' },
-      { id: 6, icon: '🎵', label: '添加音频', action: 'addAudio' }
+      { id: 3, icon: '🎤', label: '音色选择', action: 'voiceSettings' },
+      { id: 4, icon: '🎵', label: '上传语音介绍', action: 'uploadAudio' },
+      { id: 5, icon: '📝', label: '编辑自我介绍', action: 'editIntro' }
     ],
     otherMenu: [
       {
@@ -97,13 +101,24 @@ Page({
 
     // 注册用户资料更新回调
     const appInstance = getApp<IAppOption>()
-    appInstance.setUserProfileUpdateCallback(this.onUserProfileUpdated.bind(this))
+    if (!this.userProfileUpdateCallback) {
+      this.userProfileUpdateCallback = this.onUserProfileUpdated.bind(this)
+    }
+    appInstance.registerUserProfileUpdateCallback(this.userProfileUpdateCallback)
+    
+    // 每次显示时刷新统计数据（包括个人流水），但不显示loading
+    // 只在用户信息已加载完成时刷新统计数据
+    if (this.data.userInfo && !this.data.loading) {
+      this.loadStats(false)
+    }
   },
 
   onHide() {
-    // 清除用户资料更新回调
+    // 注销用户资料更新回调
     const app = getApp<IAppOption>()
-    app.clearUserProfileUpdateCallback()
+    if (this.userProfileUpdateCallback) {
+      app.unregisterUserProfileUpdateCallback(this.userProfileUpdateCallback)
+    }
   },
 
   // 用户资料更新事件处理
@@ -123,13 +138,28 @@ Page({
     wx.cloud.callFunction({
       name: 'getUserInfo',
       success: (userRes: any) => {
+        wx.hideLoading() // 确保隐藏loading
         if (userRes.result && userRes.result.success) {
+          const userInfo = userRes.result.data
+          const voiceSettings = userInfo.voiceSettings || {}
+          
+          // 更新voiceSettings，确保包含所有字段
           this.setData({
-            userInfo: userRes.result.data,
+            userInfo: userInfo,
+            'voiceSettings.voiceType': voiceSettings.voiceType || '青年',
+            'voiceSettings.game': voiceSettings.game || '王者荣耀',
+            'voiceSettings.lane': voiceSettings.lane || '',
+            'voiceSettings.introduction': voiceSettings.introduction || '',
+            'voiceSettings.introImage': voiceSettings.introImage || '',
+            'voiceSettings.audioUrl': voiceSettings.audioUrl || '',
             loading: false
           })
-          // 加载统计数据
-          this.loadStats()
+          // 加载统计数据（不显示loading，因为已经在loadUserData中显示了）
+          this.loadStats(false)
+        } else {
+          console.error('获取用户信息失败:', userRes.result)
+          wx.showToast({ title: '加载失败', icon: 'none' })
+          this.setData({ loading: false })
         }
       },
       fail: (err: any) => {
@@ -142,25 +172,49 @@ Page({
   },
 
   // 加载统计数据
-  loadStats() {
+  loadStats(showLoading = false) {
+    if (showLoading) {
+      wx.showLoading({ title: '加载中...' })
+    }
+    
     wx.cloud.callFunction({
       name: 'getStatistics',
       success: (res: any) => {
-        wx.hideLoading()
+        if (showLoading) {
+          wx.hideLoading()
+        }
         if (res.result && res.result.success) {
           const stats = res.result.data
+          console.log('员工个人资料 - 收到的统计数据:', stats)
+          console.log('个人流水 (totalRevenue):', stats.reports?.totalRevenue, '类型:', typeof stats.reports?.totalRevenue)
+          
+          const personalRevenue = Number(stats.reports?.totalRevenue) || 0
+          
           this.setData({
             stats: {
               totalOrders: stats.orders?.total || 0,
-              totalDuration: stats.orders?.totalDuration || 0,
-              rating: 95 // 模拟好评率
+              personalRevenue: personalRevenue
+            }
+          })
+          
+          console.log('设置后的个人流水:', this.data.stats.personalRevenue)
+        } else {
+          console.error('获取统计数据失败:', res.result)
+          // 即使失败也设置默认值，避免显示异常
+          this.setData({
+            stats: {
+              totalOrders: this.data.stats.totalOrders || 0,
+              personalRevenue: this.data.stats.personalRevenue || 0
             }
           })
         }
       },
       fail: (err: any) => {
-        wx.hideLoading()
+        if (showLoading) {
+          wx.hideLoading()
+        }
         console.error('加载统计失败:', err)
+        // 即使失败也保持当前数据，避免清空
       }
     })
   },
@@ -207,14 +261,20 @@ Page({
       case 'editProfile':
         wx.navigateTo({ url: '/pages/profile/edit/index' })
         break
+      case 'games':
+        this.showGameSelector()
+        break
       case 'voiceSettings':
         this.showVoiceSettings()
         break
+      case 'introImage':
+        this.uploadIntroImage()
+        break
+      case 'uploadAudio':
+        this.uploadAudioFile()
+        break
       case 'editIntro':
         this.showIntroEditor()
-        break
-      case 'addAudio':
-        this.showAudioRecorder()
         break
       case 'settings':
         this.showSettings()
@@ -224,19 +284,68 @@ Page({
     }
   },
 
+  // 游戏选择
+  showGameSelector() {
+    const lanes = [
+      { key: '对抗路', label: '对抗路', emoji: '⚔️' },
+      { key: '中路', label: '中路', emoji: '🧙‍♂️' },
+      { key: '发育路', label: '发育路', emoji: '🏹' },
+      { key: '打野', label: '打野', emoji: '🐺' },
+      { key: '游走', label: '游走', emoji: '🏃‍♂️' }
+    ]
+
+    const itemList = lanes.map(l => `${l.emoji} ${l.label}`)
+
+    wx.showActionSheet({
+      itemList: itemList,
+      success: (res) => {
+        console.log('分路选择结果:', res)
+        const selectedLane = lanes[res.tapIndex]
+        console.log('选择的分路:', selectedLane)
+
+        this.setData({
+          'voiceSettings.lane': selectedLane.key
+        })
+
+        // 保存到云端
+        this.saveVoiceSettings()
+
+        wx.showToast({
+          title: `已选择${selectedLane.label}`,
+          icon: 'success'
+        })
+      },
+      fail: (err) => {
+        console.error('分路选择失败:', err)
+        wx.showToast({
+          title: '操作取消',
+          icon: 'none'
+        })
+      }
+    })
+  },
+
   // 音色选择
   showVoiceSettings() {
     const voiceTypes = [
-      { key: 'normal', label: '普通音色', emoji: '🎤' },
-      { key: 'cute', label: '可爱音色', emoji: '🎀' },
-      { key: 'cool', label: '酷炫音色', emoji: '😎' },
-      { key: 'mature', label: '成熟音色', emoji: '👩' }
+      { key: '青年', label: '青年', emoji: '👨' },
+      { key: '青叔', label: '青叔', emoji: '👨‍🦳' },
+      { key: '温青', label: '温青', emoji: '👨‍💼' },
+      { key: '少女', label: '少女', emoji: '👩' },
+      { key: '御姐', label: '御姐', emoji: '👩‍💼' },
+      { key: '少御', label: '少御', emoji: '👩‍🎓' }
     ]
 
+    // ActionSheet最多支持6项，先显示6个主要选项
+    const itemList = voiceTypes.map(v => `${v.emoji} ${v.label}`)
+
     wx.showActionSheet({
-      itemList: voiceTypes.map(v => `${v.emoji} ${v.label}`),
+      itemList: itemList,
       success: (res) => {
+        console.log('音色选择结果:', res)
         const selectedVoice = voiceTypes[res.tapIndex]
+        console.log('选择的音色:', selectedVoice)
+
         this.setData({
           'voiceSettings.voiceType': selectedVoice.key
         })
@@ -247,6 +356,13 @@ Page({
         wx.showToast({
           title: `已选择${selectedVoice.label}`,
           icon: 'success'
+        })
+      },
+      fail: (err) => {
+        console.error('音色选择失败:', err)
+        wx.showToast({
+          title: '操作取消',
+          icon: 'none'
         })
       }
     })
@@ -276,15 +392,44 @@ Page({
     })
   },
 
-  // 音频录制
-  showAudioRecorder() {
+
+  // 上传自我介绍图片
+  uploadIntroImage() {
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['compressed'],
+      sourceType: ['album', 'camera'],
+      success: (res) => {
+        const tempFilePath = res.tempFilePaths[0]
+        this.uploadImageToCloud(tempFilePath)
+      }
+    })
+  },
+
+  // 上传音频文件
+  uploadAudioFile() {
     wx.showActionSheet({
-      itemList: ['录制新音频', '选择本地音频'],
+      itemList: ['选择本地音频', '录制新音频'],
       success: (res) => {
         if (res.tapIndex === 0) {
+          // 选择本地音频
+          wx.chooseMessageFile({
+            count: 1,
+            type: 'file',
+            extension: ['mp3', 'm4a', 'wav', 'aac'],
+            success: (fileRes) => {
+              if (fileRes.tempFiles && fileRes.tempFiles[0]) {
+                this.uploadAudioToCloud(fileRes.tempFiles[0].path)
+              }
+            },
+            fail: (err) => {
+              console.error('选择音频失败:', err)
+              wx.showToast({ title: '选择音频失败', icon: 'none' })
+            }
+          })
+        } else if (res.tapIndex === 1) {
+          // 录制新音频
           this.startAudioRecording()
-        } else {
-          this.selectLocalAudio()
         }
       }
     })
@@ -293,19 +438,29 @@ Page({
   // 开始录音
   startAudioRecording() {
     const recorderManager = wx.getRecorderManager()
+    let recording = false
 
     recorderManager.onStart(() => {
-      wx.showToast({ title: '开始录音', icon: 'none' })
+      recording = true
+      wx.showToast({ 
+        title: '开始录音，点击确定停止', 
+        icon: 'none', 
+        duration: 2000 
+      })
     })
 
     recorderManager.onStop((res) => {
+      recording = false
       console.log('录音完成:', res)
       if (res.tempFilePath) {
-        this.uploadAudioFile(res.tempFilePath)
+        this.uploadAudioToCloud(res.tempFilePath)
+      } else {
+        wx.showToast({ title: '录音失败', icon: 'none' })
       }
     })
 
     recorderManager.onError((err) => {
+      recording = false
       console.error('录音失败:', err)
       wx.showToast({ title: '录音失败', icon: 'none' })
     })
@@ -319,31 +474,26 @@ Page({
       format: 'mp3'
     })
 
-    // 10秒后自动停止
-    setTimeout(() => {
+    // 显示停止录音提示
+    wx.showModal({
+      title: '正在录音',
+      content: '最长可录制60秒，点击确定停止录音',
+      showCancel: true,
+      cancelText: '取消',
+      confirmText: '停止录音',
+      success: (modalRes) => {
+        if (recording) {
       recorderManager.stop()
-    }, 10000)
-  },
-
-  // 选择本地音频
-  selectLocalAudio() {
-    wx.chooseMessageFile({
-      count: 1,
-      type: 'file',
-      extension: ['mp3', 'm4a', 'wav'],
-      success: (res) => {
-        if (res.tempFiles && res.tempFiles[0]) {
-          this.uploadAudioFile(res.tempFiles[0].path)
         }
       }
     })
   },
 
-  // 上传音频文件
-  uploadAudioFile(filePath: string) {
+  // 上传音频到云存储
+  uploadAudioToCloud(filePath: string) {
     wx.showLoading({ title: '上传中...' })
 
-    const fileName = `voice_${Date.now()}_${Math.random().toString(36).substr(2, 9)}.mp3`
+    const fileName = `audio_${Date.now()}_${Math.random().toString(36).substr(2, 9)}.mp3`
 
     wx.cloud.uploadFile({
       cloudPath: `voices/${fileName}`,
@@ -375,6 +525,42 @@ Page({
     })
   },
 
+  // 上传图片到云存储
+  uploadImageToCloud(filePath: string) {
+    wx.showLoading({ title: '上传中...' })
+
+    const fileName = `intro_${Date.now()}_${Math.random().toString(36).substr(2, 9)}.jpg`
+
+    wx.cloud.uploadFile({
+      cloudPath: `intro_images/${fileName}`,
+      filePath: filePath,
+      success: (res) => {
+        wx.hideLoading()
+        console.log('图片上传成功:', res.fileID)
+
+        this.setData({
+          'voiceSettings.introImage': res.fileID
+        })
+
+        // 保存到云端
+        this.saveVoiceSettings()
+
+        wx.showToast({
+          title: '图片上传成功',
+          icon: 'success'
+        })
+      },
+      fail: (err) => {
+        wx.hideLoading()
+        console.error('图片上传失败:', err)
+        wx.showToast({
+          title: '上传失败',
+          icon: 'none'
+        })
+      }
+    })
+  },
+
   // 保存语音设置到云端
   saveVoiceSettings() {
     wx.cloud.callFunction({
@@ -391,6 +577,12 @@ Page({
         console.error('语音设置保存失败:', err)
       }
     })
+  },
+
+  // 刷新数据
+  onRefresh() {
+    // loadUserData 内部会调用 loadStats，所以只需要调用 loadUserData
+    this.loadUserData()
   },
 
   // 返回上一页

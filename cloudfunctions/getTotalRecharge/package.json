@@ -1,0 +1,9 @@
+{
+  "name": "getTotalRecharge",
+  "version": "1.0.0",
+  "description": "获取用户累计充值金额云函数",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "latest"
+  }
+}

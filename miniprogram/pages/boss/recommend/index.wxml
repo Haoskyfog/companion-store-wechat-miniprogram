@@ -1,29 +1,45 @@
 <!-- 老板端 - 推荐页 -->
 <view class="page">
-  <!-- 顶部导航 -->
+  <!-- 顶部导航 - 亚克力玻璃效果 -->
   <view class="header">
-    <view class="header-title">推荐员工</view>
+    <view class="header-bg">
+      <view class="header-blur"></view>
+      <view class="header-shine"></view>
+    </view>
+    <view class="header-content">
+      <view class="header-title">
+        <text class="title-text">✨ 优质员工推荐</text>
+        <text class="title-subtitle">为您精选最佳陪玩</text>
+      </view>
+      <view class="header-actions">
+        <view class="icon-btn">🔔</view>
+      </view>
+    </view>
   </view>
 
-  <!-- 搜索和筛选 -->
-  <view class="search-bar">
+  <!-- 搜索栏 -->
+  <view class="search-section">
+    <view class="search-container">
     <view class="search-input">
       <text class="search-icon">🔍</text>
-      <input placeholder="搜索员工..." placeholder-class="search-placeholder" />
+        <input placeholder="搜索员工昵称或ID..." placeholder-class="search-placeholder" value="{{searchKeyword}}" bindinput="onSearchInput" />
+      </view>
     </view>
-    <view class="filter-btn">⚙️</view>
   </view>
 
   <scroll-view scroll-y="{{true}}" class="scroll-content">
     <!-- 今日推荐 -->
     <view class="section">
+      <view class="section-header">
       <view class="section-title">
         <text class="title-icon">⭐</text>
         <text class="title-text">今日推荐</text>
+        </view>
+        <view class="section-tag">精选</view>
       </view>
       
       <view class="staff-list">
-        <view class="staff-card" wx:for="{{todayStaffs}}" wx:key="_openid" data-staff="{{item}}">
+        <view class="staff-card" wx:for="{{todayStaffs}}" wx:key="_openid" data-staff="{{item}}" bindtap="viewStaffDetail">
           <view class="staff-info">
             <view class="staff-avatar">
               <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image" />
@@ -45,49 +61,30 @@
               <text class="staff-intro">{{item.intro}}</text>
             </view>
           </view>
-          <view class="staff-actions">
-            <view class="btn-primary" bindtap="viewStaffDetail">查看详情</view>
-            <view class="btn-secondary" wx:if="{{item.audioUrl}}" bindtap="playStaffAudio" data-audio="{{item.audioUrl}}">🎵</view>
-            <view class="btn-secondary-disabled" wx:else>🎵</view>
-          </view>
         </view>
       </view>
     </view>
 
-    <!-- 新人推荐 -->
+    <!-- 员工列表 -->
     <view class="section">
+      <view class="section-header">
       <view class="section-title">
-        <text class="title-icon">🌟</text>
-        <text class="title-text">新人推荐</text>
+        <text class="title-icon">👥</text>
+          <text class="title-text">全部员工</text>
+        </view>
+        <text class="section-count">{{filteredStaffList.length}}位</text>
       </view>
       
-      <view class="staff-list">
-        <view class="staff-card" wx:for="{{newStaffs}}" wx:key="_openid" data-staff="{{item}}">
-          <view class="staff-info">
-            <view class="staff-avatar">
-              <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image" />
-              <view wx:else class="avatar-placeholder" style="background: linear-gradient(135deg, {{item.color1}}, {{item.color2}});">
-                <text class="avatar-emoji">👧</text>
+      <view class="staff-grid">
+        <view class="staff-item" wx:for="{{filteredStaffList}}" wx:key="_openid" data-staff="{{item}}" bindtap="viewStaffDetail">
+          <view class="staff-avatar-wrapper">
+            <view class="staff-avatar-circle">
+              <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image-circle" />
+              <view wx:else class="avatar-placeholder-circle" style="background: linear-gradient(135deg, {{item.color1}}, {{item.color2}});">
+                <text class="avatar-emoji-circle">👧</text>
               </view>
             </view>
-            <view class="staff-details">
-              <view class="staff-header">
-                <view class="staff-name-row">
-                  <text class="staff-name">{{item.nickname}}</text>
-                  <view class="status-badge status-new">新人</view>
-                </view>
-                <text class="staff-id">ID: {{item.userId}}</text>
-              </view>
-              <view class="staff-tags">
-                <text class="tag" wx:for="{{item.tags}}" wx:key="*this">{{item}}</text>
-              </view>
-              <text class="staff-intro">{{item.intro}}</text>
-            </view>
-          </view>
-          <view class="staff-actions">
-            <view class="btn-primary" bindtap="viewStaffDetail">查看详情</view>
-            <view class="btn-secondary" wx:if="{{item.audioUrl}}" bindtap="playStaffAudio" data-audio="{{item.audioUrl}}">🎵</view>
-            <view class="btn-secondary-disabled" wx:else>🎵</view>
+            <text class="staff-id-text">{{item.nickname}}</text>
           </view>
         </view>
       </view>
@@ -95,4 +92,7 @@
 
     <view class="bottom-spacer"></view>
   </scroll-view>
+
+  <!-- 自定义TabBar -->
+  <custom-tab-bar />
 </view>

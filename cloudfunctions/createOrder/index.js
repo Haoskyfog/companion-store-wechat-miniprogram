@@ -38,6 +38,20 @@ exports.main = async (event, context) => {
       }
     }
 
+    // 验证并转换金额
+    const amount = parseFloat(event.amount)
+    
+    // 调试日志
+    console.log('接收到的金额:', event.amount, '类型:', typeof event.amount)
+    console.log('转换后的金额:', amount, '类型:', typeof amount)
+    
+    if (isNaN(amount) || amount <= 0) {
+      return {
+        success: false,
+        error: '请输入有效的服务金额'
+      }
+    }
+
     // 创建订单
     const order = {
       _openid: openid,
@@ -49,7 +63,9 @@ exports.main = async (event, context) => {
       position: event.position || '',
       remark: event.remark || '',
       services: event.services || [],
-      amount: event.amount || 0, // 服务金额
+      amount: amount, // 服务金额（已验证为有效数字）
+      paymentStatus: 'unpaid', // 支付状态：unpaid, paid, cancelled
+      complaintStatus: 'none', // 客诉状态：none, processing, resolved
       status: 'pending', // 待老板确认
       createTime: db.serverDate(),
       updateTime: db.serverDate()

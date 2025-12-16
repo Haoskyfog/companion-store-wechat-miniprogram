@@ -20,6 +20,7 @@
 | avatar | String | 头像URL |
 | userId | String | 用户ID（自定义，如：10086） |
 | vipLevel | String | VIP等级（可选，用于老板） |
+| walletBalance | Number | 钱包余额（默认为0） |
 | createTime | Date | 创建时间 |
 | updateTime | Date | 更新时间 |
 
@@ -44,6 +45,11 @@
 | position | String | 游戏位置/角色（可选） |
 | remark | String | 备注信息 |
 | services | Array | 服务内容数组（如：['rank', 'voice']） |
+| amount | Number | 服务金额 |
+| paymentStatus | String | 支付状态：'unpaid'（未支付）、'paid'（已支付）、'cancelled'（已取消） |
+| paymentTime | Date | 支付时间 |
+| complaintReason | String | 客诉原因（管理员填写） |
+| complaintStatus | String | 客诉状态：'none'（无客诉）、'processing'（处理中）、'resolved'（已解决） |
 | status | String | 订单状态：'pending'（待确认）、'confirmed'（已确认）、'completed'（已完成）、'cancelled'（已取消） |
 | createTime | Date | 创建时间 |
 | updateTime | Date | 更新时间 |

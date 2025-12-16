@@ -2,14 +2,46 @@
 .page {
   background: #f6f7fb;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 顶部导航 */
+.header {
+  position: relative;
+  padding: 16rpx 32rpx;
+  padding-top: calc(16rpx + env(safe-area-inset-top));
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12rpx);
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.nav-back {
+  font-size: 32rpx;
+  color: #7c3aed;
+  margin-right: 24rpx;
+  padding: 8rpx;
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #374151;
+  flex: 1;
+  text-align: center;
+  margin-right: 56rpx; /* 抵消返回按钮的宽度 */
 }
 
 .scroll-content {
+  flex: 1;
   padding: 32rpx 0;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 120rpx);
 }
 
 .form-container {
-  padding: 0 32rpx;
+  padding: 0 32rpx 32rpx;
 }
 
 .form-section {

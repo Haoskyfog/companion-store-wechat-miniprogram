@@ -41,6 +41,32 @@ exports.main = async (event, context) => {
     }
     // Admin和SuperAdmin可以看到所有订单
 
+    // 额外的筛选条件
+    if (event.status) {
+      query = query.where({
+        status: event.status
+      })
+    }
+
+    // 按员工ID过滤（老板查看特定员工的订单）
+    if (event.staffId && userRole === 'Boss') {
+      query = query.where({
+        staffId: event.staffId
+      })
+    }
+
+    if (event.paymentStatus) {
+      query = query.where({
+        paymentStatus: event.paymentStatus
+      })
+    }
+
+    if (event.complaintStatus) {
+      query = query.where({
+        complaintStatus: event.complaintStatus
+      })
+    }
+
     // 分页参数
     const page = event.page || 1
     const pageSize = event.pageSize || 20
@@ -54,21 +80,69 @@ exports.main = async (event, context) => {
     // 获取关联的用户信息
     const orders = []
     for (const order of result.data) {
+      let staffInfo = null
+      let bossInfo = null
+
       // 获取员工信息
-      const staffResult = await db.collection('users').doc(order.staffId).get()
+      try {
+        const staffResult = await db.collection('users')
+          .where({ _openid: order.staffId })
+          .get()
+        if (staffResult.data && staffResult.data.length > 0) {
+          staffInfo = {
+            nickname: staffResult.data[0].nickname,
+            userId: staffResult.data[0].userId,
+            avatar: staffResult.data[0].avatar || null
+          }
+        } else {
+          // 用户不存在
+          staffInfo = {
+            nickname: '员工已删除',
+            userId: '未知',
+            avatar: null
+          }
+        }
+      } catch (err) {
+        console.warn('获取员工信息失败:', order.staffId, err.message)
+        staffInfo = {
+          nickname: '员工已删除',
+          userId: '未知',
+          avatar: null
+        }
+      }
+
       // 获取老板信息
-      const bossResult = await db.collection('users').doc(order.bossId).get()
+      try {
+        const bossResult = await db.collection('users')
+          .where({ _openid: order.bossId })
+          .get()
+        if (bossResult.data && bossResult.data.length > 0) {
+          bossInfo = {
+            nickname: bossResult.data[0].nickname,
+            userId: bossResult.data[0].userId,
+            avatar: bossResult.data[0].avatar || null
+          }
+        } else {
+          // 用户不存在
+          bossInfo = {
+            nickname: '老板已删除',
+            userId: '未知',
+            avatar: null
+          }
+        }
+      } catch (err) {
+        console.warn('获取老板信息失败:', order.bossId, err.message)
+        bossInfo = {
+          nickname: '老板已删除',
+          userId: '未知',
+          avatar: null
+        }
+      }
 
       orders.push({
         ...order,
-        staffInfo: staffResult.data ? {
-          nickname: staffResult.data.nickname,
-          userId: staffResult.data.userId
-        } : null,
-        bossInfo: bossResult.data ? {
-          nickname: bossResult.data.nickname,
-          userId: bossResult.data.userId
-        } : null
+        staffInfo,
+        bossInfo
       })
     }
 

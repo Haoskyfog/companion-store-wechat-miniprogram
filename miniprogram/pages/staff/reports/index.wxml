@@ -38,6 +38,10 @@
             <text class="info-value">{{item.duration}}小时</text>
           </view>
           <view class="info-row">
+            <text class="info-label">金额：</text>
+            <text class="info-value">¥{{item.amount || 0}}</text>
+          </view>
+          <view class="info-row">
             <text class="info-label">日期：</text>
             <text class="info-value">{{item.date}}</text>
           </view>

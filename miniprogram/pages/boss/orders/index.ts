@@ -11,16 +11,36 @@ Page({
       services: string[];
       status: string;
       remark: string;
+      amount: number;
+      paymentStatus: string;
       createTime: string;
     }>,
     loading: true,
     refreshing: false,
     page: 1,
     pageSize: 20,
-    hasMore: true
+    hasMore: true,
+    // 员工过滤参数
+    staffId: '',
+    staffName: '',
+    isFilteredByStaff: false
   },
 
-  onLoad() {
+  onLoad(options: any) {
+    const { staffId, staffName } = options || {}
+
+    if (staffId) {
+      this.setData({
+        staffId: staffId,
+        staffName: staffName || '',
+        isFilteredByStaff: true
+      })
+      // 设置页面标题
+      wx.setNavigationBarTitle({
+        title: `${staffName || '员工'}的订单`
+      })
+    }
+
     this.loadOrders()
   },
 
@@ -49,7 +69,8 @@ Page({
       name: 'getOrders',
       data: {
         page: refresh ? 1 : this.data.page,
-        pageSize: this.data.pageSize
+        pageSize: this.data.pageSize,
+        staffId: this.data.staffId || undefined
       },
       success: (res: any) => {
         if (res.result && res.result.success) {
@@ -95,7 +116,8 @@ Page({
       name: 'getOrders',
       data: {
         page: nextPage,
-        pageSize: this.data.pageSize
+        pageSize: this.data.pageSize,
+        staffId: this.data.staffId || undefined
       },
       success: (res: any) => {
         if (res.result && res.result.success) {
@@ -126,8 +148,10 @@ Page({
 
     if (action === 'confirm') {
       wx.showModal({
-        title: '确认订单',
-        content: `确认接受 ${order.staffInfo.nickname} 的订单吗？`,
+        title: '确认订单并支付',
+        content: `确认接受 ${order.staffInfo.nickname} 的订单吗？\n\n服务金额：¥${order.amount.toFixed(2)}\n\n确认后将从您的钱包中扣除该金额`,
+        confirmText: '确认支付',
+        cancelText: '取消',
         success: (res) => {
           if (res.confirm) {
             this.confirmOrder(orderId, 'confirm')
@@ -141,6 +165,26 @@ Page({
         success: (res) => {
           if (res.confirm) {
             this.confirmOrder(orderId, 'reject')
+          }
+        }
+      })
+    } else if (action === 'pay') {
+      wx.showModal({
+        title: '支付订单',
+        content: `确定支付 ¥${order.amount.toFixed(2)} 给 ${order.staffInfo.nickname} 吗？\n\n支付后金额将从您的钱包中扣除。`,
+        success: (res) => {
+          if (res.confirm) {
+            this.confirmOrder(orderId, 'pay')
+          }
+        }
+      })
+    } else if (action === 'cancel_payment') {
+      wx.showModal({
+        title: '取消支付',
+        content: `确定取消支付 ¥${order.amount.toFixed(2)} 给 ${order.staffInfo.nickname} 吗？\n\n取消后此订单将进入客诉流程，管理员可查看处理。`,
+        success: (res) => {
+          if (res.confirm) {
+            this.confirmOrder(orderId, 'cancel_payment')
           }
         }
       })
@@ -159,9 +203,13 @@ Page({
       success: (res: any) => {
         wx.hideLoading()
         if (res.result && res.result.success) {
+          const message = action === 'confirm' 
+            ? `支付成功！已扣除¥${res.result.data?.amount || 0}` 
+            : '已拒绝订单'
           wx.showToast({
-            title: action === 'confirm' ? '已确认订单' : '已拒绝订单',
-            icon: 'success'
+            title: message,
+            icon: 'success',
+            duration: 2000
           })
           // 刷新订单列表
           this.loadOrders(true)
