@@ -1,7 +1,5 @@
 <!-- 老板端 - 主页 -->
 <view class="page">
-  <!-- 全局雪花效果 -->
-  <global-snow></global-snow>
   <!-- 顶部导航 -->
   <view class="header">
     <view class="header-bg">
@@ -285,7 +283,6 @@
   <view class="order-popup-mask" wx:if="{{showOrderPopup}}" bindtap="closeOrderPopup">
     <view class="order-popup" catchtap="">
       <view class="popup-header">
-        <text class="popup-icon">🎉</text>
         <text class="popup-title">新订单提醒</text>
       </view>
       <view class="popup-content" wx:if="{{newOrder}}">
