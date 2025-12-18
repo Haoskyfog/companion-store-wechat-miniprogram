@@ -22,7 +22,7 @@
   z-index: 0;
 }
 
-/* 下雪效果 */
+/* 丰富下雪效果 */
 .page::after {
   content: '';
   position: fixed;
@@ -31,20 +31,52 @@
   right: 0;
   bottom: 0;
   background-image:
-    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
-    radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
-    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
-    radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
-    radial-gradient(circle at 90% 30%, rgba(255, 255, 255, 0.9) 1px, transparent 1px),
-    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
-    radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
-    radial-gradient(circle at 60% 90%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
-    radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.7) 1px, transparent 1px);
-  background-size: 100px 100px, 120px 120px, 80px 80px, 150px 150px, 90px 90px, 110px 110px, 130px 130px, 70px 70px, 140px 140px;
-  animation: snowfall 20s linear infinite;
+    /* 大雪花 */
+    radial-gradient(circle at 5% 10%, rgba(255, 255, 255, 0.9) 2px, transparent 2px),
+    radial-gradient(circle at 15% 25%, rgba(255, 255, 255, 0.8) 1.5px, transparent 1.5px),
+    radial-gradient(circle at 25% 5%, rgba(255, 255, 255, 0.85) 2px, transparent 2px),
+    radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+    radial-gradient(circle at 45% 15%, rgba(255, 255, 255, 0.8) 1.8px, transparent 1.8px),
+    radial-gradient(circle at 55% 30%, rgba(255, 255, 255, 0.75) 1.2px, transparent 1.2px),
+    radial-gradient(circle at 65% 8%, rgba(255, 255, 255, 0.9) 2.5px, transparent 2.5px),
+    radial-gradient(circle at 75% 40%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+    radial-gradient(circle at 85% 20%, rgba(255, 255, 255, 0.85) 1.6px, transparent 1.6px),
+    radial-gradient(circle at 95% 35%, rgba(255, 255, 255, 0.7) 1.3px, transparent 1.3px),
+    /* 中等雪花 */
+    radial-gradient(circle at 8% 45%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+    radial-gradient(circle at 18% 60%, rgba(255, 255, 255, 0.7) 1.2px, transparent 1.2px),
+    radial-gradient(circle at 28% 50%, rgba(255, 255, 255, 0.65) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 38% 70%, rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+    radial-gradient(circle at 48% 55%, rgba(255, 255, 255, 0.75) 1.1px, transparent 1.1px),
+    radial-gradient(circle at 58% 75%, rgba(255, 255, 255, 0.6) 0.9px, transparent 0.9px),
+    radial-gradient(circle at 68% 65%, rgba(255, 255, 255, 0.8) 1.4px, transparent 1.4px),
+    radial-gradient(circle at 78% 80%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+    radial-gradient(circle at 88% 70%, rgba(255, 255, 255, 0.7) 1.2px, transparent 1.2px),
+    radial-gradient(circle at 98% 85%, rgba(255, 255, 255, 0.6) 0.8px, transparent 0.8px),
+    /* 小雪花 */
+    radial-gradient(circle at 12% 85%, rgba(255, 255, 255, 0.4) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 22% 90%, rgba(255, 255, 255, 0.5) 0.7px, transparent 0.7px),
+    radial-gradient(circle at 28% 88%, rgba(255, 255, 255, 0.45) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 42% 95%, rgba(255, 255, 255, 0.35) 0.6px, transparent 0.6px),
+    radial-gradient(circle at 52% 87%, rgba(255, 255, 255, 0.55) 0.8px, transparent 0.8px),
+    radial-gradient(circle at 62% 92%, rgba(255, 255, 255, 0.4) 0.7px, transparent 0.7px),
+    radial-gradient(circle at 72% 89%, rgba(255, 255, 255, 0.6) 0.9px, transparent 0.9px),
+    radial-gradient(circle at 82% 94%, rgba(255, 255, 255, 0.35) 0.5px, transparent 0.5px),
+    radial-gradient(circle at 92% 91%, rgba(255, 255, 255, 0.5) 0.7px, transparent 0.7px);
+  background-size:
+    /* 大雪花尺寸 */
+    120px 120px, 100px 100px, 140px 140px, 80px 80px, 110px 110px,
+    90px 90px, 160px 160px, 70px 70px, 130px 130px, 85px 85px,
+    /* 中等雪花尺寸 */
+    95px 95px, 115px 115px, 75px 75px, 105px 105px, 125px 125px,
+    85px 85px, 145px 145px, 65px 65px, 135px 135px, 78px 78px,
+    /* 小雪花尺寸 */
+    60px 60px, 68px 68px, 55px 55px, 62px 62px, 72px 72px,
+    58px 58px, 76px 76px, 52px 52px, 64px 64px;
+  animation: snowfall 25s linear infinite;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
 /* 下雪效果 */
@@ -578,36 +610,94 @@
 }
 
 /* 高级设计感装饰元素 */
-/* 圣诞装饰 */
-.christmas-decoration {
+/* 圣诞装饰元素 */
+.christmas-decorations {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.top-decoration {
   position: absolute;
+  top: 120rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 60rpx;
+}
+
+.christmas-star {
+  font-size: 48rpx;
+  animation: twinkle 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 8rpx rgba(255, 215, 0, 0.8));
+}
+
+.christmas-bell {
+  font-size: 44rpx;
+  animation: twinkle 1.8s ease-in-out infinite 0.5s;
+}
+
+.left-decoration {
+  position: absolute;
+  left: 32rpx;
   top: 50%;
-  right: 32rpx;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 8rpx;
-  z-index: 2;
-  pointer-events: none;
+  gap: 80rpx;
 }
 
-.snowflake {
-  font-size: 24rpx;
+.christmas-tree {
+  font-size: 56rpx;
   animation: float 3s ease-in-out infinite;
-  opacity: 0.8;
 }
 
-.christmas-light {
-  font-size: 28rpx;
-  animation: twinkle 2s ease-in-out infinite;
+.christmas-gift {
+  font-size: 40rpx;
+  animation: float 2.5s ease-in-out infinite 1s;
 }
 
-.light-1 {
-  animation-delay: 0s;
+.right-decoration {
+  position: absolute;
+  right: 32rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 80rpx;
 }
 
-.light-2 {
-  animation-delay: 1s;
+.christmas-santa {
+  font-size: 52rpx;
+  animation: float 3.5s ease-in-out infinite 0.5s;
+}
+
+.christmas-cookie {
+  font-size: 36rpx;
+  animation: twinkle 2.5s ease-in-out infinite;
+}
+
+.bottom-decoration {
+  position: absolute;
+  bottom: 200rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 80rpx;
+}
+
+.christmas-candle {
+  font-size: 38rpx;
+  animation: float 2.8s ease-in-out infinite;
+}
+
+.christmas-snowman {
+  font-size: 42rpx;
+  animation: twinkle 3s ease-in-out infinite 1.5s;
 }
 
 @keyframes float {
