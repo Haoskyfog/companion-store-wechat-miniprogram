@@ -57,7 +57,7 @@
             <view class="top-avatar">
               <image wx:if="{{rankings[1].userInfo && rankings[1].userInfo.avatar}}" src="{{rankings[1].userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
               <text wx:else class="avatar-emoji">🥈</text>
-              <view class="rank-badge badge-2">2</view>
+              <view class="rank-badge badge-2">🥈</view>
             </view>
             <text class="top-name">{{rankings[1].userInfo.nickname}}</text>
             <text class="top-orders highlight">¥{{rankingType === 'staff' ? (rankings[1].totalRevenueDisplay || '0.00') : (rankings[1].subordinateRevenueDisplay || '0.00')}}</text>
@@ -68,7 +68,7 @@
             <view class="top-avatar top-1-avatar">
               <image wx:if="{{rankings[0].userInfo && rankings[0].userInfo.avatar}}" src="{{rankings[0].userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
               <text wx:else class="avatar-emoji">🥇</text>
-              <view class="rank-badge badge-1">1</view>
+              <view class="rank-badge badge-1">🥇</view>
             </view>
             <text class="top-name">{{rankings[0].userInfo.nickname}}</text>
             <text class="top-orders highlight">¥{{rankingType === 'staff' ? (rankings[0].totalRevenueDisplay || '0.00') : (rankings[0].subordinateRevenueDisplay || '0.00')}}</text>
@@ -79,7 +79,7 @@
             <view class="top-avatar">
               <image wx:if="{{rankings[2].userInfo && rankings[2].userInfo.avatar}}" src="{{rankings[2].userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
               <text wx:else class="avatar-emoji">🥉</text>
-              <view class="rank-badge badge-3">3</view>
+              <view class="rank-badge badge-3">🥉</view>
             </view>
             <text class="top-name">{{rankings[2].userInfo.nickname}}</text>
             <text class="top-orders highlight">¥{{rankingType === 'staff' ? (rankings[2].totalRevenueDisplay || '0.00') : (rankings[2].subordinateRevenueDisplay || '0.00')}}</text>
