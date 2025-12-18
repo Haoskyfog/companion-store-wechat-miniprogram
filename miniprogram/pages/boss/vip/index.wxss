@@ -129,13 +129,13 @@
 
 .guide-icon {
   font-size: 26rpx;
-  color: #7c3aed;
+  color: #dc2626;
   opacity: 0.8;
 }
 
 .guide-text {
   font-size: 22rpx;
-  color: #6b46c1;
+  color: #ea580c;
   font-weight: 500;
   letter-spacing: 0.5rpx;
 }
@@ -229,13 +229,13 @@
 .level-name {
   font-size: 36rpx;
   font-weight: bold;
-  color: #7c3aed;
+  color: #dc2626;
 }
 
 .level-number {
   font-size: 24rpx;
-  color: rgba(139, 92, 246, 0.6);
-  background: rgba(139, 92, 246, 0.1);
+  color: rgba(234, 88, 12, 0.8);
+  background: rgba(234, 88, 12, 0.15);
   padding: 8rpx 16rpx;
   border-radius: 16rpx;
 }
@@ -255,7 +255,7 @@
 .progress-text {
   font-size: 28rpx;
   font-weight: 600;
-  color: #7c3aed;
+  color: #ea580c;
 }
 
 .next-level-text {
@@ -265,7 +265,7 @@
 
 .progress-bar {
   height: 12rpx;
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(234, 88, 12, 0.15);
   border-radius: 6rpx;
   overflow: hidden;
   margin-bottom: 12rpx;
@@ -273,10 +273,10 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #7c3aed 0%, #ec4899 100%);
+  background: linear-gradient(90deg, #dc2626 0%, #f59e0b 100%);
   border-radius: 6rpx;
   transition: width 0.8s ease;
-  box-shadow: 0 0 12rpx rgba(124, 58, 237, 0.4);
+  box-shadow: 0 0 12rpx rgba(220, 38, 38, 0.4);
 }
 
 .progress-labels {
@@ -295,28 +295,26 @@
 
 .section-title {
   font-size: 32rpx;
-  font-weight: 600;
-  font-style: italic;
-  color: #4c1d95;
+  font-weight: bold;
+  background: linear-gradient(135deg, #dc2626 0%, #ea580c 50%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   text-align: center;
   margin-bottom: 40rpx;
-  text-shadow: 0 2rpx 8rpx rgba(76, 29, 149, 0.2);
-  font-family: 'Times New Roman', 'Georgia', serif;
   letter-spacing: 1rpx;
 }
 
 .chapter-title {
   font-size: 26rpx;
   font-weight: 500;
-  font-style: italic;
-  color: rgba(139, 92, 246, 0.85);
+  color: #ea580c;
   margin: 36rpx 0 24rpx;
   text-align: center;
-  background: rgba(139, 92, 246, 0.03);
+  background: rgba(234, 88, 12, 0.08);
   padding: 16rpx 28rpx;
   border-radius: 12rpx;
-  border: 1rpx solid rgba(139, 92, 246, 0.1);
-  font-family: 'Times New Roman', 'Georgia', serif;
+  border: 1rpx solid rgba(234, 88, 12, 0.15);
   letter-spacing: 0.5rpx;
 }
 
@@ -382,13 +380,12 @@
 .level-title {
   font-size: 30rpx;
   font-weight: 600;
-  color: #4c1d95;
+  color: #dc2626;
   display: flex;
   align-items: center;
   gap: 12rpx;
   margin-bottom: 8rpx;
-  text-shadow: 0 1rpx 2rpx rgba(76, 29, 149, 0.2);
-  font-family: 'Times New Roman', 'Georgia', serif;
+  text-shadow: 0 1rpx 2rpx rgba(220, 38, 38, 0.2);
 }
 
 .level-desc {
@@ -403,13 +400,12 @@
 .level-amount {
   font-size: 22rpx;
   font-weight: 500;
-  color: #7c3aed;
+  color: #ea580c;
   align-self: flex-start;
-  background: rgba(139, 92, 246, 0.08);
+  background: rgba(234, 88, 12, 0.12);
   padding: 6rpx 14rpx;
   border-radius: 10rpx;
-  border: 1rpx solid rgba(139, 92, 246, 0.15);
-  font-family: 'Times New Roman', 'Georgia', serif;
+  border: 1rpx solid rgba(234, 88, 12, 0.2);
 }
 
 .level-rewards {
@@ -421,11 +417,11 @@
 
 .reward-item {
   font-size: 22rpx;
-  color: #7c3aed;
-  background: rgba(124, 58, 237, 0.1);
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.12);
   padding: 4rpx 12rpx;
   border-radius: 12rpx;
-  border: 1rpx solid rgba(124, 58, 237, 0.2);
+  border: 1rpx solid rgba(220, 38, 38, 0.2);
 }
 
 /* 装饰元素 */

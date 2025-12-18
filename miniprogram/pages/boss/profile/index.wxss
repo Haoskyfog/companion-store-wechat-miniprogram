@@ -281,7 +281,7 @@
 .wallet-title {
   font-size: 28rpx;
   font-weight: 600;
-  color: #22c55e;
+  color: #dc2626;
   margin-bottom: 8rpx;
 }
 
@@ -523,13 +523,13 @@
 }
 
 .menu-icon {
-  width: 80rpx;
+  width: 0;
   height: 80rpx;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 24rpx;
+  margin-right: 0;
 }
 
 .icon-emoji {
