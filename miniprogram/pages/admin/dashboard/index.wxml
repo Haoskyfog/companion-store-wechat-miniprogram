@@ -86,7 +86,19 @@
         <view class="stat-box">
           <text class="stat-big-value green">¥{{statistics.revenue.totalDisplay}}</text>
           <text class="stat-big-label">总流水</text>
-          <text class="stat-trend">💰 已支付订单真实金额总和</text>
+          <text class="stat-trend">已审核通过报备金额总和</text>
+        </view>
+      </view>
+      <view class="stats-card">
+        <view class="stat-box">
+          <text class="stat-big-value orange">¥{{statistics.revenue.dayTotalDisplay}}</text>
+          <text class="stat-big-label">日流水 ({{todayLabel}})</text>
+          <text class="stat-trend">今日审核通过报备金额</text>
+        </view>
+        <view class="stat-box">
+          <text class="stat-big-value blue">¥{{statistics.revenue.monthTotalDisplay}}</text>
+          <text class="stat-big-label">月流水 ({{monthLabel}})</text>
+          <text class="stat-trend">本月审核通过报备金额</text>
         </view>
       </view>
     </view>
