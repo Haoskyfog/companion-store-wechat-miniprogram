@@ -414,6 +414,13 @@
   margin-bottom: 32rpx;
 }
 
+/* 公告轮播 */
+.notice-swiper {
+  height: 180rpx;
+  border-radius: 32rpx;
+  overflow: hidden;
+}
+
 .glass-card {
   position: relative;
   border-radius: 32rpx;
@@ -446,6 +453,8 @@
 
 .notice-card {
   color: #1f2937;
+  height: 180rpx;
+  box-sizing: border-box;
 }
 
 .notice-header {

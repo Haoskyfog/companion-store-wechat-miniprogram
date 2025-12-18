@@ -150,10 +150,45 @@
       </view>
     </view>
 
-    <!-- 公示信息 -->
+    <!-- 公示信息轮播 -->
     <view class="notice-section">
       <view class="section-container">
-        <view class="glass-card notice-card" wx:if="{{notices.length > 0}}">
+        <!-- 公告轮播 -->
+        <swiper class="notice-swiper"
+                indicator-dots="{{notices.length > 1}}"
+                indicator-color="rgba(239, 68, 68, 0.3)"
+                indicator-active-color="#ef4444"
+                autoplay="{{notices.length > 1}}"
+                circular="{{notices.length > 1}}"
+                interval="5000"
+                duration="600"
+                wx:if="{{notices.length > 0}}">
+          <swiper-item wx:for="{{notices}}" wx:key="_id">
+            <view class="glass-card notice-card">
+              <view class="card-blur"></view>
+              <view class="card-shine"></view>
+              <view class="notice-header">
+                <view class="notice-icon-wrapper">
+                  <text class="notice-icon">🔔</text>
+                  <text class="notice-sparkle">✨</text>
+                </view>
+                <view class="notice-content-wrapper">
+                  <text class="notice-title">{{item.title}}</text>
+                  <text class="notice-time">{{item.createTime}}</text>
+                </view>
+              </view>
+              <view class="notice-body">
+                <text class="notice-content">{{item.content}}</text>
+              </view>
+              <view class="card-decoration">
+                <text class="decoration-star">⭐</text>
+              </view>
+            </view>
+          </swiper-item>
+        </swiper>
+
+        <!-- 单个公告（如果只有一条） -->
+        <view class="glass-card notice-card" wx:elif="{{notices.length === 1}}">
           <view class="card-blur"></view>
           <view class="card-shine"></view>
           <view class="notice-header">
@@ -246,5 +281,37 @@
 
     <view class="bottom-spacer"></view>
   </scroll-view>
+
+  <!-- 新订单弹窗 -->
+  <view class="order-popup-mask" wx:if="{{showOrderPopup}}" bindtap="closeOrderPopup">
+    <view class="order-popup" catchtap="">
+      <view class="popup-header">
+        <text class="popup-icon">🎉</text>
+        <text class="popup-title">新订单提醒</text>
+      </view>
+      <view class="popup-content" wx:if="{{newOrder}}">
+        <view class="popup-info-row">
+          <text class="info-label">游戏：</text>
+          <text class="info-value">{{newOrder.game}}</text>
+        </view>
+        <view class="popup-info-row">
+          <text class="info-label">金额：</text>
+          <text class="info-value highlight">¥{{newOrder.amount}}</text>
+        </view>
+        <view class="popup-info-row">
+          <text class="info-label">时长：</text>
+          <text class="info-value">{{newOrder.duration}}小时</text>
+        </view>
+        <view class="popup-info-row" wx:if="{{newOrder.staffNickname}}">
+          <text class="info-label">员工：</text>
+          <text class="info-value">{{newOrder.staffNickname}}</text>
+        </view>
+      </view>
+      <view class="popup-actions">
+        <view class="popup-btn secondary" bindtap="closeOrderPopup">稍后处理</view>
+        <view class="popup-btn primary" bindtap="viewOrderDetail">立即查看</view>
+      </view>
+    </view>
+  </view>
 </view>
   
