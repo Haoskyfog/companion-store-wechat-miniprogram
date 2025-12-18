@@ -7,8 +7,7 @@
       bindtap="onTap"
     >
       <view class="icon-container">
-        <image class="icon" mode="aspectFit" src="{{selected === index ? item.selectedIcon : item.icon}}" binderror="onIconError" data-emoji="{{item.emoji}}" />
-        <text class="emoji-fallback" wx:if="{{!item.iconLoaded}}">{{item.emoji}}</text>
+        <view class="tab-icon {{item.iconClass}}"></view>
       </view>
       <text class="label">{{item.text}}</text>
     </view>

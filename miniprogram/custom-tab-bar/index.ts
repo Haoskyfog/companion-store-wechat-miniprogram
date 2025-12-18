@@ -1,27 +1,27 @@
 type Role = 'Boss' | 'Staff' | 'Admin' | 'SuperAdmin'
 
-const roleTabs: Record<Role, Array<{ pagePath: string; text: string; icon: string; selectedIcon: string; emoji: string }>> = {
+const roleTabs: Record<Role, Array<{ pagePath: string; text: string; iconClass: string }>> = {
   Boss: [
-    { pagePath: 'pages/boss/home/index', text: '首页', icon: '/assets/tab/home.png', selectedIcon: '/assets/tab/home-active.png', emoji: '🏢' },
-    { pagePath: 'pages/boss/recommend/index', text: '推荐', icon: '/assets/tab/recommend.png', selectedIcon: '/assets/tab/recommend-active.png', emoji: '💎' },
-    { pagePath: 'pages/boss/profile/index', text: '我的', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '👑' },
+    { pagePath: 'pages/boss/home/index', text: '首页', iconClass: 'icon-home' },
+    { pagePath: 'pages/boss/recommend/index', text: '推荐', iconClass: 'icon-star' },
+    { pagePath: 'pages/boss/profile/index', text: '我的', iconClass: 'icon-user' },
   ],
   Staff: [
-    { pagePath: 'pages/staff/index/index', text: '首页', icon: '/assets/tab/home.png', selectedIcon: '/assets/tab/home-active.png', emoji: '🎮' },
-    { pagePath: 'pages/staff/recommend/index', text: '推荐', icon: '/assets/tab/recommend.png', selectedIcon: '/assets/tab/recommend-active.png', emoji: '🎯' },
-    { pagePath: 'pages/staff/home/index', text: '我的', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '🎪' },
+    { pagePath: 'pages/staff/index/index', text: '首页', iconClass: 'icon-home' },
+    { pagePath: 'pages/staff/recommend/index', text: '推荐', iconClass: 'icon-star' },
+    { pagePath: 'pages/staff/home/index', text: '我的', iconClass: 'icon-user' },
   ],
   Admin: [
-    { pagePath: 'pages/admin/dashboard/index', text: '仪表', icon: '/assets/tab/home.png', selectedIcon: '/assets/tab/home-active.png', emoji: '📈' },
-    { pagePath: 'pages/admin/content/index', text: '内容', icon: '/assets/tab/recommend.png', selectedIcon: '/assets/tab/recommend-active.png', emoji: '✨' },
-    { pagePath: 'pages/admin/users/index', text: '用户', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '👥' },
-    { pagePath: 'pages/admin/audit/index', text: '审核', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '🔍' },
+    { pagePath: 'pages/admin/dashboard/index', text: '仪表', iconClass: 'icon-chart' },
+    { pagePath: 'pages/admin/content/index', text: '内容', iconClass: 'icon-edit' },
+    { pagePath: 'pages/admin/users/index', text: '用户', iconClass: 'icon-users' },
+    { pagePath: 'pages/admin/audit/index', text: '审核', iconClass: 'icon-check' },
   ],
   SuperAdmin: [
-    { pagePath: 'pages/admin/dashboard/index', text: '仪表', icon: '/assets/tab/home.png', selectedIcon: '/assets/tab/home-active.png', emoji: '📊' },
-    { pagePath: 'pages/admin/content/index', text: '内容', icon: '/assets/tab/recommend.png', selectedIcon: '/assets/tab/recommend-active.png', emoji: '🎨' },
-    { pagePath: 'pages/admin/users/index', text: '用户', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '👑' },
-    { pagePath: 'pages/admin/audit/index', text: '审核', icon: '/assets/tab/profile.png', selectedIcon: '/assets/tab/profile-active.png', emoji: '⚡' },
+    { pagePath: 'pages/admin/dashboard/index', text: '仪表', iconClass: 'icon-chart' },
+    { pagePath: 'pages/admin/content/index', text: '内容', iconClass: 'icon-edit' },
+    { pagePath: 'pages/admin/users/index', text: '用户', iconClass: 'icon-users' },
+    { pagePath: 'pages/admin/audit/index', text: '审核', iconClass: 'icon-check' },
   ],
 }
 
@@ -74,17 +74,6 @@ Component({
       }
     },
 
-    onIconError(e: WechatMiniprogram.BaseEvent) {
-      const { emoji } = e.currentTarget.dataset as { emoji: string }
-      console.log('TabBar图标加载失败，使用emoji替代:', emoji)
-
-      // 标记图标加载失败，显示emoji
-      const list = this.data.list.map((item: any) => ({
-        ...item,
-        iconLoaded: false
-      }))
-      this.setData({ list })
-    },
   },
 })
 
