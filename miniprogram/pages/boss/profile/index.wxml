@@ -11,11 +11,11 @@
     <text class="notification-arrow">›</text>
   </view>
 
-  <!-- 圣诞装饰 -->
-  <view class="christmas-decoration">
-    <text class="snowflake">❄️</text>
-    <text class="christmas-light light-1">🎄</text>
-    <text class="christmas-light light-2">🎅</text>
+  <!-- 装饰元素 -->
+  <view class="decoration-elements">
+    <view class="decoration-dot dot-1"></view>
+    <view class="decoration-dot dot-2"></view>
+    <view class="decoration-dot dot-3"></view>
   </view>
 
   <scroll-view scroll-y="{{true}}" class="scroll-content">
@@ -24,7 +24,7 @@
       <view class="user-avatar-container" wx:if="{{!loading}}">
         <view class="user-avatar">
           <image wx:if="{{userInfo.avatar}}" src="{{userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
-          <text wx:else>👑</text>
+          <text wx:else class="avatar-text">老板</text>
         </view>
       </view>
       <view class="user-info-container" wx:if="{{!loading}}">
@@ -76,7 +76,7 @@
         <view class="staff-item" wx:for="{{myStaffs}}" wx:key="_openid">
           <view class="staff-avatar-small">
             <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image-small" />
-            <text wx:else class="staff-emoji-small">👤</text>
+            <text wx:else class="staff-text-small">员</text>
           </view>
           <text class="staff-name-small">{{item.nickname}}</text>
         </view>

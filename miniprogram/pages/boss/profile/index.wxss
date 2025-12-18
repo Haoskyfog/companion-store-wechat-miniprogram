@@ -130,16 +130,21 @@
   width: 160rpx;
   height: 160rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 50%, #ddd6fe 100%);
+  background: linear-gradient(135deg, #fef3f2 0%, #fef7ed 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 80rpx;
   border: 6rpx solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 4rpx 16rpx rgba(139, 92, 246, 0.1);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(5rpx);
+  -webkit-backdrop-filter: blur(5rpx);
+}
+
+.avatar-text {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #dc2626;
 }
 
 .avatar-image {
@@ -402,8 +407,10 @@
   border-radius: 50%;
 }
 
-.staff-emoji-small {
-  font-size: 48rpx;
+.staff-text-small {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #6b7280;
 }
 
 .staff-name-small {
@@ -499,46 +506,42 @@
 }
 
 /* 高级设计感装饰元素 */
-/* 圣诞装饰 */
-.christmas-decoration {
+/* 装饰元素 */
+.decoration-elements {
   position: absolute;
   top: 50%;
   right: 32rpx;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 8rpx;
+  gap: 12rpx;
   z-index: 2;
   pointer-events: none;
 }
 
-.snowflake {
-  font-size: 24rpx;
-  animation: float 3s ease-in-out infinite;
-  opacity: 0.8;
+.decoration-dot {
+  width: 8rpx;
+  height: 8rpx;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  animation: subtle-pulse 3s ease-in-out infinite;
 }
 
-.christmas-light {
-  font-size: 28rpx;
-  animation: twinkle 2s ease-in-out infinite;
-}
-
-.light-1 {
+.dot-1 {
   animation-delay: 0s;
 }
 
-.light-2 {
+.dot-2 {
   animation-delay: 1s;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-10rpx) rotate(180deg); }
+.dot-3 {
+  animation-delay: 2s;
 }
 
-@keyframes twinkle {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.2); }
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.2); }
 }
 
 .bottom-spacer {
