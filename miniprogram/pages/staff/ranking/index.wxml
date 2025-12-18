@@ -6,10 +6,27 @@
     <view class="header-title">排行榜</view>
   </view>
 
+  <!-- 排行榜类型切换 - 使用标签页样式 -->
+  <view class="tab-switch">
+    <view class="tab-item {{rankingType === 'staff' ? 'active' : ''}}" data-type="staff" bindtap="switchRankingType">
+      员工排行
+    </view>
+    <view class="tab-item {{rankingType === 'subordinate' ? 'active' : ''}}" data-type="subordinate" bindtap="switchRankingType">
+      直属排行
+    </view>
+  </view>
+
+  <!-- 时间周期选择 -->
+  <view class="period-switch">
+    <view class="period-item {{periodType === 'day' ? 'active' : ''}}" data-period="day" bindtap="switchPeriod">日流水 ({{todayLabel}})</view>
+    <view class="period-item {{periodType === 'month' ? 'active' : ''}}" data-period="month" bindtap="switchPeriod">月流水 ({{monthLabel}})</view>
+    <view class="period-item {{periodType === 'total' ? 'active' : ''}}" data-period="total" bindtap="switchPeriod">总流水</view>
+  </view>
+
   <!-- 标题区域 -->
   <view class="title-section">
-    <text class="title-text">🏆 个人流水排行榜</text>
-    <text class="subtitle">按个人流水排名</text>
+    <text class="title-text">{{rankingType === 'staff' ? '🏆 个人流水排行榜' : '👑 直属流水排行榜'}}</text>
+    <text class="subtitle">{{rankingType === 'staff' ? '按个人流水排名' : '按直属流水排名'}}</text>
   </view>
 
   <scroll-view scroll-y="{{true}}" class="scroll-content">
@@ -28,8 +45,8 @@
     <!-- 排名列表 -->
     <view class="ranking-section" wx:else>
       <view class="section-title">
-        <text class="title-icon">🏆</text>
-        <text class="title-text">个人流水排行榜</text>
+        <text class="title-icon">{{rankingType === 'staff' ? '🏆' : '👑'}}</text>
+        <text class="title-text">{{rankingType === 'staff' ? '个人流水排行榜' : '直属流水排行榜'}}</text>
       </view>
 
       <!-- 前三名特殊展示 -->
@@ -43,7 +60,7 @@
               <view class="rank-badge badge-2">2</view>
             </view>
             <text class="top-name">{{rankings[1].userInfo.nickname}}</text>
-            <text class="top-orders highlight">¥{{rankings[1].totalRevenueDisplay || '0.00'}}</text>
+            <text class="top-orders highlight">¥{{rankingType === 'staff' ? (rankings[1].totalRevenueDisplay || '0.00') : (rankings[1].subordinateRevenueDisplay || '0.00')}}</text>
           </view>
 
           <!-- 第一名 -->
@@ -54,7 +71,7 @@
               <view class="rank-badge badge-1">1</view>
             </view>
             <text class="top-name">{{rankings[0].userInfo.nickname}}</text>
-            <text class="top-orders highlight">¥{{rankings[0].totalRevenueDisplay || '0.00'}}</text>
+            <text class="top-orders highlight">¥{{rankingType === 'staff' ? (rankings[0].totalRevenueDisplay || '0.00') : (rankings[0].subordinateRevenueDisplay || '0.00')}}</text>
           </view>
 
           <!-- 第三名 -->
@@ -65,17 +82,16 @@
               <view class="rank-badge badge-3">3</view>
             </view>
             <text class="top-name">{{rankings[2].userInfo.nickname}}</text>
-            <text class="top-orders highlight">¥{{rankings[2].totalRevenueDisplay || '0.00'}}</text>
+            <text class="top-orders highlight">¥{{rankingType === 'staff' ? (rankings[2].totalRevenueDisplay || '0.00') : (rankings[2].subordinateRevenueDisplay || '0.00')}}</text>
           </view>
         </view>
       </view>
 
       <!-- 完整排名列表 -->
       <view class="ranking-list">
-        <view class="ranking-item {{item.rank <= 3 ? 'top-rank' : ''}}" wx:for="{{rankings}}" wx:key="staffId">
+        <view class="ranking-item {{item.rank <= 3 ? 'top-rank' : ''}}" wx:for="{{rankings}}" wx:key="rank">
           <view class="rank-number {{getRankClass(item.rank)}}">
-            <text wx:if="{{item.rank > 3}}">{{getRankIcon(item.rank)}}</text>
-            <text wx:else>{{getRankIcon(item.rank)}}</text>
+            <text>{{item.rank}}</text>
           </view>
           <view class="staff-avatar">
             <image wx:if="{{item.userInfo && item.userInfo.avatar}}" src="{{item.userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
@@ -88,7 +104,7 @@
             <text class="staff-id">ID: {{item.userInfo.userId}}</text>
           </view>
           <view class="staff-stats">
-            <text class="stat-orders">¥{{item.totalRevenueDisplay || '0.00'}}</text>
+            <text class="stat-orders">¥{{rankingType === 'staff' ? (item.totalRevenueDisplay || '0.00') : (item.subordinateRevenueDisplay || '0.00')}}</text>
           </view>
         </view>
       </view>
