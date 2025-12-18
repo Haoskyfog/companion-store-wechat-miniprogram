@@ -5,23 +5,42 @@ Page({
   data: {
     rankings: [] as Array<{
       rank: number;
-      staffId: string;
+      staffId?: string;
+      bossId?: string;
       userInfo: {
         nickname: string;
         userId: string;
         avatar?: string;
       };
-      orderCount: number;
-      totalRevenue: number;
-      totalDuration: number;
-      rating: number;
-      ratingRounded: number;
+      orderCount?: number;
+      totalRevenue?: number;
+      subordinateRevenue?: number;
+      staffCount?: number;
+      totalDuration?: number;
+      rating?: number;
+      ratingRounded?: number;
     }>,
+    rankingType: 'staff', // 'staff' 或 'subordinate'
+    periodType: 'total', // 'day', 'month', 'total'
+    todayLabel: '',
+    monthLabel: '',
     loading: true
   },
 
   onLoad() {
+    this.updateDateLabels()
     this.loadRankings()
+  },
+
+  // 更新日期标签
+  updateDateLabels() {
+    const now = new Date()
+    const month = now.getMonth() + 1
+    const day = now.getDate()
+    this.setData({
+      todayLabel: `${month}月${day}日`,
+      monthLabel: `${month}月`
+    })
   },
 
   onShow() {
@@ -46,12 +65,12 @@ Page({
     }
     */
 
-    // 设置 TabBar 选中状态
-    const tabBar = this.getTabBar && this.getTabBar();
-    if (tabBar) {
-      tabBar.syncRole && tabBar.syncRole('Staff');
-      tabBar.setSelected && tabBar.setSelected(pagePath);
-    }
+    // 排行榜页面不是TabBar页面，不需要设置选中状态
+    // const tabBar = this.getTabBar && this.getTabBar();
+    // if (tabBar) {
+    //   tabBar.syncRole && tabBar.syncRole('Staff');
+    //   tabBar.setSelected && tabBar.setSelected(pagePath);
+    // }
     
     // 每次显示时刷新排行榜数据
     this.loadRankings()
@@ -63,31 +82,43 @@ Page({
     wx.cloud.callFunction({
       name: 'getRankings',
       data: {
-        // 不传period参数，默认获取总排行
+        type: this.data.rankingType,
+        period: this.data.periodType
       },
       success: (res: any) => {
         wx.hideLoading()
         if (res.result && res.result.success) {
           const rankings = res.result.data.rankings.map((item: any) => {
-            // 确保 totalRevenue 是数字类型
-            const totalRevenue = typeof item.totalRevenue === 'number' ? item.totalRevenue : (Number(item.totalRevenue) || 0)
-            
-            console.log('排行榜项:', {
-              员工: item.userInfo?.nickname,
-              个人流水: totalRevenue,
-              流水类型: typeof totalRevenue
-            })
-            
-            return {
-              ...item,
-              totalRevenue: totalRevenue, // 确保是数字类型
-              totalRevenueDisplay: totalRevenue.toFixed(2), // 格式化显示，保留两位小数
-              ratingRounded: Math.round(item.rating || 95)
+            if (this.data.rankingType === 'subordinate') {
+              // 直属排行榜
+              const subordinateRevenue = typeof item.subordinateRevenue === 'number' ? item.subordinateRevenue : (Number(item.subordinateRevenue) || 0)
+
+              return {
+                ...item,
+                subordinateRevenue: subordinateRevenue,
+                subordinateRevenueDisplay: subordinateRevenue.toFixed(2),
+              }
+            } else {
+              // 员工排行榜
+              const totalRevenue = typeof item.totalRevenue === 'number' ? item.totalRevenue : (Number(item.totalRevenue) || 0)
+
+              console.log('排行榜项:', {
+                员工: item.userInfo?.nickname,
+                个人流水: totalRevenue,
+                流水类型: typeof totalRevenue
+              })
+
+              return {
+                ...item,
+                totalRevenue: totalRevenue,
+                totalRevenueDisplay: totalRevenue.toFixed(2),
+                ratingRounded: Math.round(item.rating || 95)
+              }
             }
           })
-          
+
           console.log('处理后的排行榜数据:', rankings)
-          
+
           this.setData({
             rankings: rankings,
             loading: false
@@ -105,6 +136,30 @@ Page({
         wx.showToast({ title: '网络错误', icon: 'none' })
       }
     })
+  },
+
+  // 切换排行榜类型
+  switchRankingType(e: any) {
+    const type = e.currentTarget.dataset.type
+    if (type === this.data.rankingType) return
+
+    this.setData({
+      rankingType: type,
+      loading: true
+    })
+    this.loadRankings()
+  },
+
+  // 切换时间周期
+  switchPeriod(e: any) {
+    const period = e.currentTarget.dataset.period
+    if (period === this.data.periodType) return
+
+    this.setData({
+      periodType: period,
+      loading: true
+    })
+    this.loadRankings()
   },
 
   // 获取周期值

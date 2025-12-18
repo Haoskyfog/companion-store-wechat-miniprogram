@@ -41,10 +41,10 @@
     radial-gradient(circle at 60% 90%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
     radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.7) 1px, transparent 1px);
   background-size: 100px 100px, 120px 120px, 80px 80px, 150px 150px, 90px 90px, 110px 110px, 130px 130px, 70px 70px, 140px 140px;
-  animation: snowfall 20s linear infinite;
+  animation: snowfall 15s linear infinite;
   pointer-events: none;
-  z-index: 1;
-  opacity: 0.6;
+  z-index: 9999;
+  opacity: 0.8;
 }
 
 /* 新订单提醒 */
@@ -407,6 +407,155 @@
   color: #8b5cf6;
 }
 
+/* 两列布局 */
+.two-column-section {
+  display: flex;
+  gap: 20rpx;
+  padding: 0 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.staff-card-small {
+  flex: 0 0 180rpx;
+  margin: 0 !important;
+  padding: 24rpx;
+}
+
+.benefits-card-large {
+  flex: 1;
+  margin: 0 !important;
+  padding: 24rpx;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(5rpx) saturate(180%);
+  -webkit-backdrop-filter: blur(5rpx) saturate(180%);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+  border-radius: 24rpx;
+}
+
+.staff-card-small .section-header,
+.benefits-card-large .section-header {
+  margin-bottom: 12rpx;
+}
+
+.staff-card-small .section-title,
+.benefits-card-large .section-title {
+  font-size: 26rpx;
+}
+
+/* 权益区域 */
+.benefits-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.benefits-preview {
+  flex: 1;
+  padding: 8rpx 0;
+}
+
+.benefits-text-preview {
+  font-size: 22rpx;
+  color: #374151;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.benefits-empty-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.benefits-hint {
+  font-size: 22rpx;
+  color: #9ca3af;
+}
+
+/* 权益弹窗 */
+.benefits-popup-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.benefits-popup {
+  width: 600rpx;
+  max-height: 70vh;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(5rpx);
+  -webkit-backdrop-filter: blur(5rpx);
+  border-radius: 32rpx;
+  overflow: hidden;
+  animation: popupIn 0.3s ease;
+}
+
+@keyframes popupIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.benefits-popup .popup-header {
+  background: linear-gradient(135deg, #dc2626 0%, #ea580c 50%, #f59e0b 100%);
+  padding: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.benefits-popup .popup-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #fff;
+}
+
+.benefits-popup .popup-close {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.benefits-popup .popup-content {
+  padding: 32rpx;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.benefits-content {
+  font-size: 28rpx;
+  line-height: 1.8;
+  color: #374151;
+  white-space: pre-wrap;
+}
+
+.benefits-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx 0;
+}
+
+.benefits-empty .empty-text {
+  font-size: 28rpx;
+  color: #9ca3af;
+}
+
 .staff-scroll {
   white-space: nowrap;
   padding-bottom: 16rpx;
@@ -638,50 +787,165 @@
   transform: translateX(-50%);
 }
 
+/* 开发者信息卡片 */
+.developer-card {
+  margin: 24rpx 32rpx;
+  padding: 24rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(5rpx);
+  -webkit-backdrop-filter: blur(5rpx);
+  border-radius: 20rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.3);
+}
+
+.dev-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #dc2626, #f59e0b);
+}
+
+.dev-avatar-img {
+  width: 100%;
+  height: 100%;
+}
+
+.dev-info {
+  flex: 1;
+}
+
+.dev-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6rpx;
+}
+
+.dev-contact {
+  font-size: 20rpx;
+  color: #6b7280;
+  margin-top: 4rpx;
+}
+
+.dev-tip-btn {
+  padding: 12rpx 24rpx;
+  background: linear-gradient(135deg, #dc2626, #f59e0b);
+  color: #fff;
+  font-size: 24rpx;
+  border-radius: 24rpx;
+}
+
+.dev-thanks {
+  text-align: center;
+  font-size: 22rpx;
+  color: #9ca3af;
+  margin-top: 16rpx;
+  letter-spacing: 1rpx;
+}
+
+/* 打赏弹窗 */
+.tip-popup-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.tip-popup {
+  width: 500rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 40rpx;
+  text-align: center;
+}
+
+.tip-header {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 32rpx;
+}
+
+.tip-qrcode {
+  width: 360rpx;
+  height: 360rpx;
+  border-radius: 16rpx;
+}
+
+.tip-hint {
+  font-size: 24rpx;
+  color: #9ca3af;
+  margin-top: 24rpx;
+}
+
+.tip-close {
+  margin-top: 32rpx;
+  padding: 16rpx 48rpx;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 28rpx;
+  border-radius: 32rpx;
+  display: inline-block;
+}
+
 .bottom-spacer {
   height: calc(env(safe-area-inset-bottom) + 160rpx);
 }
 
-/* 雪花容器 */
-.snow-container {
+/* 全局雪花层 - 独立fixed层 */
+.global-snow-layer {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
   height: 100vh;
   pointer-events: none;
-  z-index: 2;
+  z-index: 9998;
   overflow: hidden;
 }
 
 .snowflake {
   position: absolute;
-  top: -20rpx;
-  font-size: 16rpx;
-  color: rgba(255, 255, 255, 0.8);
+  top: -30rpx;
+  width: 12rpx;
+  height: 12rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 0 6rpx rgba(255, 255, 255, 0.8);
   animation: snow-fall linear infinite;
-  user-select: none;
 }
 
 @keyframes snow-fall {
   0% {
-    transform: translateY(0) translateX(0) rotate(0deg);
-    opacity: 0.8;
+    transform: translateY(0) translateX(0);
+    opacity: 1;
   }
   25% {
-    transform: translateY(25vh) translateX(10rpx) rotate(90deg);
-    opacity: 0.7;
+    transform: translateY(25vh) translateX(15rpx);
+    opacity: 0.9;
   }
   50% {
-    transform: translateY(50vh) translateX(-5rpx) rotate(180deg);
-    opacity: 0.6;
+    transform: translateY(50vh) translateX(-10rpx);
+    opacity: 0.7;
   }
   75% {
-    transform: translateY(75vh) translateX(8rpx) rotate(270deg);
-    opacity: 0.4;
+    transform: translateY(75vh) translateX(12rpx);
+    opacity: 0.5;
   }
   100% {
-    transform: translateY(100vh) translateX(0) rotate(360deg);
+    transform: translateY(105vh) translateX(0);
     opacity: 0;
   }
 }

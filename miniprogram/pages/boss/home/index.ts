@@ -21,7 +21,11 @@ Page({
       images: string[];
       order: number;
     }>,
-    loading: true
+    loading: true,
+    // 新订单弹窗
+    showOrderPopup: false,
+    newOrder: null as any,
+    lastCheckedOrderId: ''
   },
 
   onLoad() {
@@ -32,6 +36,9 @@ Page({
     // 设置 TabBar 选中状态
     const tabBar = this.getTabBar && this.getTabBar();
     tabBar && tabBar.setSelected && tabBar.setSelected(pagePath);
+    
+    // 检查新订单
+    this.checkNewOrders()
   },
 
   // 加载内容
@@ -103,5 +110,56 @@ Page({
     if (days < 7) return `${days}天前`
 
     return date.toLocaleDateString()
+  },
+
+  // 检查新订单
+  checkNewOrders() {
+    wx.cloud.callFunction({
+      name: 'getOrders',
+      data: {
+        status: 'pending',
+        page: 1,
+        pageSize: 1
+      },
+      success: (res: any) => {
+        if (res.result?.success && res.result.data?.orders?.length > 0) {
+          const latestOrder = res.result.data.orders[0]
+          const lastCheckedId = wx.getStorageSync('lastCheckedOrderId') || ''
+          
+          // 如果有新订单且不是已查看过的
+          if (latestOrder._id !== lastCheckedId) {
+            this.setData({
+              showOrderPopup: true,
+              newOrder: latestOrder
+            })
+          }
+        }
+      }
+    })
+  },
+
+  // 关闭订单弹窗
+  closeOrderPopup() {
+    if (this.data.newOrder) {
+      wx.setStorageSync('lastCheckedOrderId', this.data.newOrder._id)
+    }
+    this.setData({
+      showOrderPopup: false,
+      newOrder: null
+    })
+  },
+
+  // 查看订单详情
+  viewOrderDetail() {
+    if (this.data.newOrder) {
+      wx.setStorageSync('lastCheckedOrderId', this.data.newOrder._id)
+      this.setData({
+        showOrderPopup: false,
+        newOrder: null
+      })
+      wx.navigateTo({
+        url: '/pages/boss/orders/index'
+      })
+    }
   }
 })

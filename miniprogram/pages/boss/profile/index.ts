@@ -29,6 +29,13 @@ Page({
       duration: number;
       delay: number;
     }>,
+    // 权益
+    showBenefitsPopup: false,
+    benefitsContent: '',
+    // 开发者信息
+    developerInfo: null as any,
+    showTipPopup: false,
+    tipQrcodeUrl: 'cloud://cloud1-7g62s1bob33a0a2c.636c-cloud1-7g62s1bob33a0a2c-1389576972/9ea0f021f156714ee25896664e094ca9.jpg',
     menuList: [
       {
         id: 1,
@@ -69,6 +76,30 @@ Page({
   onLoad() {
     this.loadUserInfo()
     this.initSnowflakes()
+    this.loadDeveloperInfo()
+  },
+
+  // 加载开发者信息
+  loadDeveloperInfo() {
+    wx.cloud.callFunction({
+      name: 'getUsers',
+      data: { staffId: 'o1J6A1z69dB9Cp5QcY5zI-ZzW1Qw' },
+      success: (res: any) => {
+        if (res.result && res.result.success && res.result.data.users && res.result.data.users.length > 0) {
+          this.setData({ developerInfo: res.result.data.users[0] })
+        }
+      }
+    })
+  },
+
+  // 显示打赏弹窗
+  showTipQrcode() {
+    this.setData({ showTipPopup: true })
+  },
+
+  // 关闭打赏弹窗
+  closeTipPopup() {
+    this.setData({ showTipPopup: false })
   },
 
   // 初始化雪花
@@ -130,6 +161,39 @@ Page({
     })
   },
 
+  // 显示权益弹窗
+  showBenefits() {
+    this.loadBenefits()
+    this.setData({ showBenefitsPopup: true })
+  },
+
+  // 关闭权益弹窗
+  closeBenefits() {
+    this.setData({ showBenefitsPopup: false })
+  },
+
+  // 加载权益内容
+  loadBenefits() {
+    const userInfo = this.data.userInfo
+    if (!userInfo || !userInfo._openid) return
+
+    wx.cloud.callFunction({
+      name: 'getContent',
+      data: {
+        type: 'benefits',
+        bossId: userInfo._openid
+      },
+      success: (res: any) => {
+        if (res.result && res.result.success && res.result.data.benefits) {
+          const benefits = res.result.data.benefits.find((b: any) => b.bossId === userInfo._openid)
+          if (benefits) {
+            this.setData({ benefitsContent: benefits.content })
+          }
+        }
+      }
+    })
+  },
+
   // 加载用户信息和直属员工
   loadUserInfo() {
     wx.showLoading({ title: '加载中...' })
@@ -148,6 +212,8 @@ Page({
           this.loadSubordinateRevenue()
           // 加载直属员工列表
           this.loadMyStaffs()
+          // 预加载权益内容
+          this.loadBenefits()
         }
       },
       fail: (err) => {

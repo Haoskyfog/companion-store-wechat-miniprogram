@@ -30,27 +30,8 @@
             <text class="stat-label">待确认</text>
           </view>
           <view class="stat-item">
-            <text class="stat-value confirmed">{{statistics.orders.confirmed}}</text>
-            <text class="stat-label">已确认</text>
-          </view>
-          <view class="stat-item">
             <text class="stat-value completed">{{statistics.orders.completed}}</text>
             <text class="stat-label">已完成</text>
-          </view>
-        </view>
-
-        <view class="stat-extra">
-          <view class="extra-item">
-            <text class="extra-label">总服务时长</text>
-            <text class="extra-value">{{formatDuration(statistics.orders.totalDuration)}}</text>
-          </view>
-          <view class="extra-item">
-            <text class="extra-label">完成率</text>
-            <text class="extra-value success">{{getCompletionRate()}}</text>
-          </view>
-          <view class="extra-item">
-            <text class="extra-label">平均时长</text>
-            <text class="extra-value">{{getAverageDuration()}}</text>
           </view>
         </view>
       </view>
@@ -78,28 +59,6 @@
           </view>
         </view>
 
-        <view class="stat-extra">
-          <view class="extra-item">
-            <text class="extra-label">审核通过率</text>
-            <text class="extra-value success">
-              {{statistics.reports.total > 0 ? Math.round((statistics.reports.approved / statistics.reports.total) * 100) + '%' : '0%'}}
-            </text>
-          </view>
-        </view>
-      </view>
-    </view>
-
-    <!-- 进度条 -->
-    <view class="progress-card">
-      <view class="progress-header">
-        <text class="progress-title">本月目标进度</text>
-        <text class="progress-percent">{{getCompletionRate()}}</text>
-      </view>
-      <view class="progress-bar">
-        <view class="progress-fill" style="width: {{getCompletionRate()}};"></view>
-      </view>
-      <view class="progress-desc">
-        <text>已完成 {{statistics.orders.completed}} 个订单</text>
       </view>
     </view>
   </view>

@@ -1,4 +1,13 @@
 <!-- 老板端 - 我的 -->
+
+<!-- 全局雪花层（独立于page，fixed定位） -->
+<view class="global-snow-layer" wx:if="{{showSnow}}">
+  <view wx:for="{{snowflakes}}" wx:key="id"
+        class="snowflake"
+        style="left: {{item.left}}px; animation-duration: {{item.duration}}s; animation-delay: {{item.delay}}s;">
+  </view>
+</view>
+
 <view class="page">
   <!-- 背景装饰 -->
   <view class="bg-decorations">
@@ -22,15 +31,6 @@
       <text class="notification-text">您有 {{pendingOrderCount}} 个新订单待处理</text>
     </view>
     <text class="notification-arrow">›</text>
-  </view>
-
-  <!-- 雪花容器 -->
-  <view class="snow-container" wx:if="{{showSnow}}">
-    <view wx:for="{{snowflakes}}" wx:key="id"
-          class="snowflake"
-          style="left: {{item.left}}px; animation-duration: {{item.duration}}s; animation-delay: {{item.delay}}s;">
-      ❄
-    </view>
   </view>
 
   <scroll-view scroll-y="{{true}}" class="scroll-content">
@@ -82,20 +82,56 @@
       </view>
     </view>
 
-    <!-- 我的直属员工 -->
-    <view class="staff-section surface">
-      <view class="section-header">
-        <text class="section-title">我的直属员工</text>
-      </view>
-      <scroll-view scroll-x="{{true}}" class="staff-scroll">
-        <view class="staff-item" wx:for="{{myStaffs}}" wx:key="_openid">
-          <view class="staff-avatar-small">
-            <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image-small" />
-            <text wx:else class="staff-text-small">员</text>
-          </view>
-          <text class="staff-name-small">{{item.nickname}}</text>
+    <!-- 我的直属员工 & 我的权益 -->
+    <view class="two-column-section">
+      <!-- 我的直属员工 -->
+      <view class="staff-section surface staff-card-small">
+        <view class="section-header">
+          <text class="section-title">我的直属</text>
         </view>
-      </scroll-view>
+        <scroll-view scroll-x="{{true}}" class="staff-scroll">
+          <view class="staff-item" wx:for="{{myStaffs}}" wx:key="_openid">
+            <view class="staff-avatar-small">
+              <image wx:if="{{item.avatar}}" src="{{item.avatar}}" mode="aspectFill" class="avatar-image-small" />
+              <text wx:else class="staff-text-small">员</text>
+            </view>
+            <text class="staff-name-small">{{item.nickname}}</text>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 我的权益 -->
+      <view class="benefits-section surface benefits-card-large" bindtap="showBenefits">
+        <view class="section-header">
+          <text class="section-title">我的权益</text>
+        </view>
+        <view class="benefits-preview">
+          <view class="benefits-text-preview" wx:if="{{benefitsContent}}">
+            <text>{{benefitsContent}}</text>
+          </view>
+          <view class="benefits-empty-preview" wx:else>
+            <text class="benefits-hint">暂无权益</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 权益弹窗 -->
+    <view class="benefits-popup-mask" wx:if="{{showBenefitsPopup}}" bindtap="closeBenefits">
+      <view class="benefits-popup" catchtap="">
+        <view class="popup-header">
+          <text class="popup-title">我的权益</text>
+          <view class="popup-close" bindtap="closeBenefits">×</view>
+        </view>
+        <view class="popup-content">
+          <view class="benefits-content" wx:if="{{benefitsContent}}">
+            <text>{{benefitsContent}}</text>
+          </view>
+          <view class="benefits-empty" wx:else>
+            <text class="empty-text">暂无权益内容</text>
+          </view>
+        </view>
+      </view>
     </view>
 
     <!-- 主线故事 -->
@@ -120,6 +156,30 @@
           <view class="menu-desc">{{item.desc}}</view>
         </view>
         <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 开发者信息 -->
+    <view class="developer-card" wx:if="{{developerInfo}}">
+      <view class="dev-avatar">
+        <image wx:if="{{developerInfo.avatar}}" src="{{developerInfo.avatar}}" mode="aspectFill" class="dev-avatar-img" />
+      </view>
+      <view class="dev-info">
+        <view class="dev-title">开发者：{{developerInfo.nickname || developerInfo.userId}}</view>
+        <view class="dev-contact">微信号：foggy_dream77</view>
+        <view class="dev-contact">邮箱：lostinskyfog.dev@gmail.com</view>
+      </view>
+      <view class="dev-tip-btn" bindtap="showTipQrcode">打赏</view>
+    </view>
+    <view class="dev-thanks">制作不易，感谢支持 ♥</view>
+
+    <!-- 打赏弹窗 -->
+    <view class="tip-popup-mask" wx:if="{{showTipPopup}}" bindtap="closeTipPopup">
+      <view class="tip-popup" catchtap="">
+        <view class="tip-header">感谢支持</view>
+        <image class="tip-qrcode" src="{{tipQrcodeUrl}}" mode="aspectFit" />
+        <view class="tip-hint">长按识别二维码打赏</view>
+        <view class="tip-close" bindtap="closeTipPopup">关闭</view>
       </view>
     </view>
 

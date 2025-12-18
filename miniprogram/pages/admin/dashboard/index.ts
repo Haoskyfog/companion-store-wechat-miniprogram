@@ -27,9 +27,15 @@ Page({
       },
       revenue: {
         total: 0,
-        totalDisplay: '0.00'
+        totalDisplay: '0.00',
+        dayTotal: 0,
+        dayTotalDisplay: '0.00',
+        monthTotal: 0,
+        monthTotalDisplay: '0.00'
       }
     },
+    todayLabel: '',
+    monthLabel: '',
     recentReports: [] as Array<{
       _id: string;
       staffInfo: { nickname: string; userId: string };
@@ -87,6 +93,14 @@ Page({
         action: 'orders'
       },
       {
+        id: 12,
+        icon: '🎁',
+        label: '权益编辑',
+        desc: '老板权益管理',
+        bgColor: '#fef3c7',
+        action: 'benefits'
+      },
+      {
         id: 7,
         icon: '📊',
         label: '数据统计',
@@ -128,11 +142,49 @@ Page({
       }
     ],
     loading: true,
-    refreshing: false // 防止重复刷新
+    refreshing: false, // 防止重复刷新
+    developerInfo: null as any,
+    showTipPopup: false,
+    tipQrcodeUrl: 'cloud://cloud1-7g62s1bob33a0a2c.636c-cloud1-7g62s1bob33a0a2c-1389576972/9ea0f021f156714ee25896664e094ca9.jpg'
   },
 
   onLoad() {
+    this.updateDateLabels()
     this.loadDashboardData()
+    this.loadDeveloperInfo()
+  },
+
+  // 加载开发者信息
+  loadDeveloperInfo() {
+    wx.cloud.callFunction({
+      name: 'getUsers',
+      data: { staffId: 'o1J6A1z69dB9Cp5QcY5zI-ZzW1Qw' },
+      success: (res: any) => {
+        if (res.result && res.result.success && res.result.data.users && res.result.data.users.length > 0) {
+          this.setData({ developerInfo: res.result.data.users[0] })
+        }
+      }
+    })
+  },
+
+  // 显示打赏弹窗
+  showTipQrcode() {
+    this.setData({ showTipPopup: true })
+  },
+
+  // 关闭打赏弹窗
+  closeTipPopup() {
+    this.setData({ showTipPopup: false })
+  },
+
+  updateDateLabels() {
+    const now = new Date()
+    const month = now.getMonth() + 1
+    const day = now.getDate()
+    this.setData({
+      todayLabel: `${month}月${day}日`,
+      monthLabel: `${month}月`
+    })
   },
 
   onShow() {
@@ -168,13 +220,11 @@ Page({
         wx.hideLoading() // 确保隐藏loading
         if (res.result && res.result.success) {
           const data = res.result.data
-          // 格式化总流水显示
-          if (data.revenue && typeof data.revenue.total === 'number') {
-            data.revenue.totalDisplay = data.revenue.total.toFixed(2)
-          } else {
-            data.revenue = data.revenue || {}
-            data.revenue.totalDisplay = '0.00'
-          }
+          // 格式化流水显示
+          data.revenue = data.revenue || {}
+          data.revenue.totalDisplay = (typeof data.revenue.total === 'number') ? data.revenue.total.toFixed(2) : '0.00'
+          data.revenue.dayTotalDisplay = (typeof data.revenue.dayTotal === 'number') ? data.revenue.dayTotal.toFixed(2) : '0.00'
+          data.revenue.monthTotalDisplay = (typeof data.revenue.monthTotal === 'number') ? data.revenue.monthTotal.toFixed(2) : '0.00'
           
           this.setData({
             statistics: data,
@@ -232,6 +282,9 @@ Page({
         break
       case 'recentReports':
         wx.navigateTo({ url: '/pages/admin/recent-reports/index' })
+        break
+      case 'benefits':
+        wx.navigateTo({ url: '/pages/admin/benefits/index' })
         break
       case 'cleanupDuplicates':
         this.cleanupDuplicateUsers()

@@ -207,8 +207,7 @@ Page({
 
   // 获取等级图标
   getLevelIcon(levelId) {
-    const icons = ['🌹', '🎼', '🎵', '🌙', '🎨', '⭐', '🎭', '🌸', '💫', '👑', '🌟']
-    return icons[levelId] || '✨'
+    return ''
   },
 
   // 获取等级颜色
@@ -224,7 +223,7 @@ Page({
   showGuide() {
     wx.showModal({
       title: 'VIP会员权益说明',
-      content: '👑 VIP会员系统基于累计消费解锁等级特权\n\n💰 消费金额累积升级，等级自动解锁\n\n🎁 每个VIP等级都有专属虚拟/实体礼物\n\n📖 点击等级卡片可查看详细权益和故事\n\n🌟 VIP等级越高，享受的特权越丰富',
+      content: 'VIP会员系统基于累计消费解锁等级特权\n\n消费金额累积升级，等级自动解锁\n\n每个VIP等级都有专属虚拟/实体礼物\n\n点击等级卡片可查看详细权益和故事\n\nVIP等级越高，享受的特权越丰富',
       showCancel: false,
       confirmText: '知道了',
       confirmColor: '#7c3aed'

@@ -12,7 +12,7 @@ exports.main = async (event, context) => {
   const openid = wxContext.OPENID
 
   try {
-    // 验证用户角色（必须是员工）
+    // 验证用户角色（必须是员工或管理员）
     const userResult = await db.collection('users').where({
       _openid: openid
     }).get()
@@ -20,11 +20,31 @@ exports.main = async (event, context) => {
     if (userResult.data.length === 0 || !['Staff', 'Admin', 'SuperAdmin'].includes(userResult.data[0].role)) {
       return {
         success: false,
-        error: '只有员工可以创建订单'
+        error: '只有员工或管理员可以创建订单'
       }
     }
 
-    // 验证绑定关系
+    const currentUser = userResult.data[0]
+    const actualStaffId = event.actualStaffId || openid
+
+    // 验证实际服务员工是否存在且为员工角色
+    if (actualStaffId !== openid) {
+      // 验证实际服务员工是否存在
+      const actualStaffResult = await db.collection('users').where({
+        _openid: actualStaffId,
+        role: 'Staff'
+      }).get()
+
+      if (actualStaffResult.data.length === 0) {
+        return {
+          success: false,
+          error: '选择的员工不存在或角色不正确'
+        }
+      }
+    }
+
+    // 验证绑定关系（创建订单的人与老板的绑定关系）
+    // 服务员工可以选任何员工，但创建订单的人需要与老板有绑定关系
     const bindingResult = await db.collection('bindings').where({
       staffId: openid,
       bossId: event.bossId,
@@ -34,7 +54,7 @@ exports.main = async (event, context) => {
     if (bindingResult.data.length === 0) {
       return {
         success: false,
-        error: '该老板未与您绑定'
+        error: '您未与该老板绑定，无法为其创建订单'
       }
     }
 
@@ -54,8 +74,9 @@ exports.main = async (event, context) => {
 
     // 创建订单
     const order = {
-      _openid: openid,
-      staffId: openid,
+      _openid: openid, // 创建订单的用户ID
+      staffId: openid, // 订单归属员工（创建订单的人，用于统计）
+      displayStaffId: actualStaffId, // 显示给老板看的服务员工
       bossId: event.bossId,
       game: event.game,
       duration: event.duration,

@@ -1,7 +1,5 @@
 <!-- 老板端 - 缪斯会员等级 -->
 <view class="page">
-  <!-- 全局雪花效果 -->
-  <global-snow></global-snow>
   <!-- 圣诞装饰 -->
   <view class="christmas-decoration">
     <text class="snowflake">❄️</text>

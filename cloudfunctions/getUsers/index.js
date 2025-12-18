@@ -41,6 +41,9 @@ exports.main = async (event, context) => {
     } else if (event.staffId) {
       // 如果是查询特定员工，允许相关权限的用户访问
       canAccess = isAdmin || isBoss || isStaff
+    } else if (!event.role && isAdmin) {
+      // 如果没有指定role参数，但用户是管理员，也允许访问（用于绑定页面等场景）
+      canAccess = true
     }
 
     if (!canAccess) {

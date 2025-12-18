@@ -26,9 +26,13 @@ Page({
     amount: '',
     bossList: [] as Array<{ _openid: string; nickname: string; userId: string }>,
     selectedBossId: '',
+    staffList: [] as Array<{ _openid: string; nickname: string; userId: string }>,
+    selectedStaffId: '',
     loading: false,
     submitting: false,
-    selectedBossDisplay: ''
+    selectedBossDisplay: '',
+    selectedStaffDisplay: '',
+    isForOtherStaff: false
   },
 
   onLoad() {
@@ -40,6 +44,8 @@ Page({
 
     // 获取可选择的绑定老板列表
     this.getBossList()
+    // 获取可选择的员工列表
+    this.getStaffList()
   },
 
   // 获取绑定老板列表
@@ -91,6 +97,75 @@ Page({
     })
   },
 
+  // 获取可选择的员工列表
+  getStaffList() {
+    wx.cloud.callFunction({
+      name: 'getUserInfo',
+      success: (userRes: any) => {
+        if (userRes.result && userRes.result.success) {
+          const currentUser = userRes.result.data
+
+          // 如果是管理员，可以选择所有员工；否则只能选择自己
+          if (['Admin', 'SuperAdmin'].includes(currentUser.role)) {
+            // 管理员可以选择所有员工
+            wx.cloud.callFunction({
+              name: 'getUsers',
+              data: {
+                role: 'Staff',
+                page: 1,
+                pageSize: 100
+              },
+              success: (staffRes: any) => {
+                if (staffRes.result && staffRes.result.success) {
+                  const allStaff = staffRes.result.data.users || []
+                  this.setData({
+                    staffList: allStaff,
+                    selectedStaffId: currentUser._openid, // 默认选择自己
+                    selectedStaffDisplay: `${currentUser.nickname} (ID: ${currentUser.userId}) - 自己`
+                  })
+                }
+              }
+            })
+          } else {
+            // 普通员工也可以选择所有员工
+            wx.cloud.callFunction({
+              name: 'getUsers',
+              data: {
+                role: 'Staff',
+                page: 1,
+                pageSize: 100
+              },
+              success: (staffRes: any) => {
+                if (staffRes.result && staffRes.result.success) {
+                  const allStaff = staffRes.result.data.users || []
+                  this.setData({
+                    staffList: allStaff,
+                    selectedStaffId: currentUser._openid, // 默认选择自己
+                    selectedStaffDisplay: `${currentUser.nickname} (ID: ${currentUser.userId}) - 自己`
+                  })
+                } else {
+                  // 如果获取失败，至少让用户能选择自己
+                  this.setData({
+                    staffList: [currentUser],
+                    selectedStaffId: currentUser._openid,
+                    selectedStaffDisplay: `${currentUser.nickname} (ID: ${currentUser.userId}) - 自己`
+                  })
+                }
+              },
+              fail: () => {
+                this.setData({
+                  staffList: [currentUser],
+                  selectedStaffId: currentUser._openid,
+                  selectedStaffDisplay: `${currentUser.nickname} (ID: ${currentUser.userId}) - 自己`
+                })
+              }
+            })
+          }
+        }
+      }
+    })
+  },
+
   onGameChange(e: any) {
     this.setData({
       selectedGame: this.data.games[e.detail.value]
@@ -137,6 +212,16 @@ Page({
     })
   },
 
+  onStaffChange(e: any) {
+    const selectedStaff = this.data.staffList[e.detail.value]
+    const isForOtherStaff = selectedStaff._openid !== this.data.selectedStaffId
+    this.setData({
+      selectedStaffId: selectedStaff._openid,
+      selectedStaffDisplay: `${selectedStaff.nickname} (ID: ${selectedStaff.userId})${selectedStaff._openid === this.data.selectedStaffId ? ' - 自己' : ''}`,
+      isForOtherStaff
+    })
+  },
+
   onRemarkInput(e: any) {
     this.setData({
       remark: e.detail.value
@@ -171,6 +256,7 @@ Page({
       name: 'createOrder',
       data: {
         bossId: this.data.selectedBossId,
+        actualStaffId: this.data.selectedStaffId, // 实际服务员工ID
         game: this.data.selectedGame,
         duration: selectedDuration?.value || 2,
         date: this.data.date,

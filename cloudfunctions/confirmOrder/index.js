@@ -86,10 +86,42 @@ exports.main = async (event, context) => {
       })
       
       console.log('扣款成功')
-      
+
       updateData.status = 'completed'
       updateData.paymentStatus = 'paid'
       updateData.paymentTime = db.serverDate()
+
+      // 更新直属流水：为实际服务员工的所有老板增加直属流水
+      try {
+        const actualStaffId = order.actualStaffId || order.staffId
+        const orderAmount = parseFloat(order.amount)
+
+        if (actualStaffId && orderAmount > 0) {
+          // 查找该员工对应的所有绑定关系
+          const bindingsResult = await db.collection('bindings').where({
+            staffId: actualStaffId,
+            status: 'active'
+          }).get()
+
+          // 为每个老板更新直属流水
+          for (const binding of bindingsResult.data) {
+            await db.collection('users').where({
+              _openid: binding.bossId,
+              role: 'Boss'
+            }).update({
+              data: {
+                subordinateRevenue: db.command.inc(orderAmount),
+                updateTime: db.serverDate()
+              }
+            })
+          }
+
+          console.log(`直属流水更新成功，为 ${bindingsResult.data.length} 个老板增加了 ¥${orderAmount}`)
+        }
+      } catch (error) {
+        console.error('更新直属流水失败:', error)
+        // 不影响订单确认流程
+      }
     } else if (event.action === 'reject') {
       // 拒绝订单（将状态从pending改为cancelled）
       if (order.status !== 'pending') {

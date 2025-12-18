@@ -29,6 +29,19 @@
         <text class="form-hint" wx:else>选择已绑定的老板创建订单</text>
       </view>
 
+      <!-- 选择服务员工 -->
+      <view class="form-section">
+        <text class="form-label">服务员工 *</text>
+        <picker mode="selector" range="{{staffList}}" range-key="nickname" bindchange="onStaffChange">
+          <view class="picker-input">
+            <text wx:if="{{selectedStaffId}}">{{selectedStaffDisplay}}</text>
+            <text wx:else>请选择服务员工</text>
+            <text class="arrow">›</text>
+          </view>
+        </picker>
+        <text class="form-hint">选择实际提供服务的员工</text>
+      </view>
+
       <!-- 游戏类型 -->
       <view class="form-section">
         <text class="form-label">游戏类型 *</text>
@@ -38,17 +51,6 @@
             <text class="arrow">›</text>
           </view>
         </picker>
-      </view>
-
-      <!-- 服务时长 -->
-      <view class="form-section">
-        <text class="form-label">服务时长 *</text>
-        <view class="duration-grid">
-          <view class="duration-btn {{item.selected ? 'selected' : ''}}" wx:for="{{durations}}" wx:key="value" data-value="{{item.value}}" bindtap="onDurationSelect">
-            {{item.label}}
-          </view>
-        </view>
-        <input class="form-input" placeholder="自定义时长（小时）" type="digit" />
       </view>
 
       <!-- 服务金额 -->
@@ -70,16 +72,6 @@
             <text class="arrow">›</text>
           </view>
         </picker>
-      </view>
-
-      <!-- 游戏位置/角色 -->
-      <view class="form-section">
-        <text class="form-label">游戏位置/角色</text>
-        <view class="position-grid">
-          <view class="position-btn {{item.selected ? 'selected' : ''}}" wx:for="{{positions}}" wx:key="value" data-value="{{item.value}}" bindtap="onPositionSelect">
-            {{item.label}}
-          </view>
-        </view>
       </view>
 
       <!-- 备注信息 -->

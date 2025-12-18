@@ -1,8 +1,5 @@
 <!-- 员工端 - 我的 -->
 <view class="page">
-  <!-- 全局雪花效果 -->
-  <global-snow></global-snow>
-
   <!-- 顶部导航 -->
   <view class="header">
     <view class="header-title">陪玩店</view>
@@ -112,6 +109,30 @@
           <text class="menu-desc">{{item.desc}}</text>
         </view>
         <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 开发者信息 -->
+    <view class="developer-card" wx:if="{{developerInfo}}">
+      <view class="dev-avatar">
+        <image wx:if="{{developerInfo.avatar}}" src="{{developerInfo.avatar}}" mode="aspectFill" class="dev-avatar-img" />
+      </view>
+      <view class="dev-info">
+        <view class="dev-title">开发者：{{developerInfo.nickname || developerInfo.userId}}</view>
+        <view class="dev-contact">微信号：foggy_dream77</view>
+        <view class="dev-contact">邮箱：lostinskyfog.dev@gmail.com</view>
+      </view>
+      <view class="dev-tip-btn" bindtap="showTipQrcode">打赏</view>
+    </view>
+    <view class="dev-thanks">制作不易，感谢支持 ♥</view>
+
+    <!-- 打赏弹窗 -->
+    <view class="tip-popup-mask" wx:if="{{showTipPopup}}" bindtap="closeTipPopup">
+      <view class="tip-popup" catchtap="">
+        <view class="tip-header">感谢支持</view>
+        <image class="tip-qrcode" src="{{tipQrcodeUrl}}" mode="aspectFit" />
+        <view class="tip-hint">长按识别二维码打赏</view>
+        <view class="tip-close" bindtap="closeTipPopup">关闭</view>
       </view>
     </view>
 

@@ -1,8 +1,0 @@
-<!-- 全局雪花效果组件 -->
-<view class="global-snow-container">
-  <view wx:for="{{snowflakes}}" wx:key="id"
-        class="snowflake"
-        style="left: {{item.left}}px; animation-duration: {{item.duration}}s; animation-delay: {{item.delay}}s; font-size: {{item.size}}rpx;">
-    ❄
-  </view>
-</view>

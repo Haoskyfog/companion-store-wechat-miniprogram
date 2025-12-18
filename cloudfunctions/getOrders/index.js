@@ -25,47 +25,39 @@ exports.main = async (event, context) => {
     }
 
     const userRole = userResult.data[0].role
-    let query = db.collection('orders')
+    
+    // 构建查询条件
+    let whereCondition = {}
 
     // 根据角色过滤数据
     if (userRole === 'Boss') {
       // 老板只能看到自己的订单
-      query = query.where({
-        bossId: openid
-      })
+      whereCondition.bossId = openid
     } else if (userRole === 'Staff') {
       // 员工只能看到自己创建的订单
-      query = query.where({
-        staffId: openid
-      })
+      whereCondition.staffId = openid
     }
     // Admin和SuperAdmin可以看到所有订单
 
     // 额外的筛选条件
     if (event.status) {
-      query = query.where({
-        status: event.status
-      })
+      whereCondition.status = event.status
     }
 
-    // 按员工ID过滤（老板查看特定员工的订单）
+    // 按员工ID过滤（老板查看特定员工的订单）- 使用displayStaffId
     if (event.staffId && userRole === 'Boss') {
-      query = query.where({
-        staffId: event.staffId
-      })
+      whereCondition.displayStaffId = event.staffId
     }
 
     if (event.paymentStatus) {
-      query = query.where({
-        paymentStatus: event.paymentStatus
-      })
+      whereCondition.paymentStatus = event.paymentStatus
     }
 
     if (event.complaintStatus) {
-      query = query.where({
-        complaintStatus: event.complaintStatus
-      })
+      whereCondition.complaintStatus = event.complaintStatus
     }
+
+    let query = db.collection('orders').where(whereCondition)
 
     // 分页参数
     const page = event.page || 1
@@ -83,10 +75,12 @@ exports.main = async (event, context) => {
       let staffInfo = null
       let bossInfo = null
 
-      // 获取员工信息
+      // 获取员工信息（显示给老板看的服务员工）
+      // 优先使用 displayStaffId，没有则使用 staffId
+      const displayStaffId = order.displayStaffId || order.staffId
       try {
         const staffResult = await db.collection('users')
-          .where({ _openid: order.staffId })
+          .where({ _openid: displayStaffId })
           .get()
         if (staffResult.data && staffResult.data.length > 0) {
           staffInfo = {
@@ -103,7 +97,7 @@ exports.main = async (event, context) => {
           }
         }
       } catch (err) {
-        console.warn('获取员工信息失败:', order.staffId, err.message)
+        console.warn('获取员工信息失败:', displayStaffId, err.message)
         staffInfo = {
           nickname: '员工已删除',
           userId: '未知',

@@ -35,7 +35,6 @@
         <text class="title-icon">⭐</text>
         <text class="title-text">今日推荐</text>
         </view>
-        <view class="section-tag">精选</view>
       </view>
       
       <view class="staff-list">
@@ -72,7 +71,6 @@
         <text class="title-icon">👥</text>
           <text class="title-text">全部员工</text>
         </view>
-        <text class="section-count">{{filteredStaffList.length}}位</text>
       </view>
       
       <view class="staff-grid">

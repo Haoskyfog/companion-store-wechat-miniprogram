@@ -6,6 +6,64 @@
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
+/* 排行榜类型切换 - 标签页样式 */
+.tab-switch {
+  display: flex;
+  background: #fff;
+  border-bottom: 2rpx solid #e5e7eb;
+}
+
+.tab-item {
+  flex: 1;
+  text-align: center;
+  padding: 28rpx 0;
+  font-size: 30rpx;
+  color: #6b7280;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.tab-item.active {
+  color: #8b5cf6;
+  font-weight: 600;
+}
+
+.tab-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80rpx;
+  height: 6rpx;
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  border-radius: 3rpx;
+}
+
+/* 时间周期选择 */
+.period-switch {
+  display: flex;
+  justify-content: center;
+  gap: 16rpx;
+  padding: 20rpx 32rpx;
+  background: #fff;
+}
+
+.period-item {
+  padding: 12rpx 32rpx;
+  font-size: 26rpx;
+  color: #6b7280;
+  background: #f3f4f6;
+  border-radius: 32rpx;
+  transition: all 0.3s ease;
+}
+
+.period-item.active {
+  color: #fff;
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  font-weight: 500;
+}
+
 /* 标题区域 */
 .title-section {
   background: #fff;

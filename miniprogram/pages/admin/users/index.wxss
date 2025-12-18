@@ -181,6 +181,12 @@
   margin-bottom: 4rpx;
 }
 
+.user-id {
+  font-size: 22rpx;
+  color: #9ca3af;
+  margin-bottom: 4rpx;
+}
+
 .role-badge {
   padding: 2rpx 8rpx;
   border-radius: 6rpx;

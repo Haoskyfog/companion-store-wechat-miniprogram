@@ -43,6 +43,8 @@ exports.main = async (event, context) => {
         return await batchDeleteBindings(event, currentUser, isAdmin)
       case 'validate':
         return await validateBindings(event, currentUser, isAdmin)
+      case 'getMyBosses':
+        return await getMyBosses(currentUser)
       default:
         return {
           success: false,
@@ -386,6 +388,52 @@ async function batchDeleteBindings(event, currentUser, isAdmin) {
       results,
       errors
     }
+  }
+}
+
+// 获取员工绑定的所有老板
+async function getMyBosses(currentUser) {
+  // 只有员工可以调用
+  if (currentUser.role !== 'Staff') {
+    return {
+      success: false,
+      error: '只有员工可以查看绑定的老板'
+    }
+  }
+
+  // 查询该员工的所有活跃绑定
+  const bindingsResult = await db.collection('bindings').where({
+    staffId: currentUser._openid,
+    status: 'active'
+  }).get()
+
+  if (bindingsResult.data.length === 0) {
+    return {
+      success: true,
+      data: []
+    }
+  }
+
+  // 获取所有老板的ID
+  const bossIds = bindingsResult.data.map(b => b.bossId)
+
+  // 查询老板信息
+  const bossesResult = await db.collection('users').where({
+    _openid: db.command.in(bossIds)
+  }).get()
+
+  // 返回老板列表
+  const bosses = bossesResult.data.map(boss => ({
+    _openid: boss._openid,
+    nickname: boss.nickname || '未设置昵称',
+    userId: boss.userId || '',
+    avatar: boss.avatar || '',
+    vipLevel: boss.vipLevel || ''
+  }))
+
+  return {
+    success: true,
+    data: bosses
   }
 }
 

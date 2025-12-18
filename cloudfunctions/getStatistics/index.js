@@ -48,6 +48,67 @@ exports.main = async (event, context) => {
   }
 }
 
+// 计算老板的直属流水（所有直属员工完成的订单金额总和）
+async function calculateSubordinateRevenue(bossId) {
+  try {
+    // 1. 找到该老板的所有直属员工
+    const bindingsResult = await db.collection('bindings').where({
+      bossId: bossId,
+      status: 'active'
+    }).get()
+
+    if (bindingsResult.data.length === 0) {
+      return 0
+    }
+
+    const staffIds = bindingsResult.data.map(binding => binding.staffId)
+
+    // 2. 计算这些员工完成的所有订单金额
+    const ordersResult = await db.collection('orders').where({
+      staffId: _.in(staffIds),
+      status: 'completed',
+      paymentStatus: 'paid'
+    }).get()
+
+    // 3. 累加订单金额
+    let totalRevenue = 0
+    for (const order of ordersResult.data) {
+      const amount = parseFloat(order.amount) || 0
+      totalRevenue += amount
+    }
+
+    return totalRevenue
+  } catch (error) {
+    console.error('计算直属流水失败:', error)
+    return 0
+  }
+}
+
+// 计算员工的直属流水（该员工作为服务员工完成的已支付订单金额总和）
+async function calculateStaffSubordinateRevenue(staffId) {
+  try {
+    // 查询该员工作为服务员工完成的所有已支付订单
+    const ordersResult = await db.collection('orders').where({
+      staffId: staffId,
+      status: 'completed',
+      paymentStatus: 'paid'
+    }).get()
+
+    // 累加订单金额
+    let totalRevenue = 0
+    for (const order of ordersResult.data) {
+      const amount = parseFloat(order.amount) || 0
+      totalRevenue += amount
+    }
+
+    console.log(`员工 ${staffId} 直属流水: ${totalRevenue}`)
+    return totalRevenue
+  } catch (error) {
+    console.error('计算员工直属流水失败:', error)
+    return 0
+  }
+}
+
 // 老板统计数据
 async function getBossStatistics(bossId) {
   // 订单统计
@@ -68,6 +129,9 @@ async function getBossStatistics(bossId) {
     })
     .count()
 
+  // 直属流水
+  const subordinateRevenue = await calculateSubordinateRevenue(bossId)
+
   return {
     success: true,
     data: {
@@ -79,7 +143,8 @@ async function getBossStatistics(bossId) {
       },
       staff: {
         total: staffCount.total
-      }
+      },
+      subordinateRevenue: subordinateRevenue
     }
   }
 }
@@ -105,30 +170,12 @@ async function getStaffStatistics(staffId) {
   const totalReports = reportStats.data.length
   const pendingReports = reportStats.data.filter(r => r.status === 'pending').length
   const approvedReports = reportStats.data.filter(r => r.status === 'approved').length
-  
-  // 调试：输出所有报备的金额信息
-  console.log('=== 员工所有报备金额调试 ===')
-  reportStats.data.forEach((report, index) => {
-    console.log(`报备${index + 1}:`, {
-      报备ID: report._id,
-      状态: report.status,
-      金额: report.amount,
-      金额类型: typeof report.amount
-    })
-  })
-  console.log('=== 调试结束 ===')
 
   // 计算个人流水（通过报备的总金额）
   const approvedReportsList = reportStats.data.filter(r => r.status === 'approved')
   
-  console.log('=== 员工个人流水计算调试 ===')
-  console.log('员工ID:', staffId)
-  console.log('总报备数:', reportStats.data.length)
-  console.log('已通过报备数:', approvedReportsList.length)
-  
   let totalRevenue = 0
-  approvedReportsList.forEach((report, index) => {
-    // 确保金额是数字类型
+  approvedReportsList.forEach((report) => {
     let amount = 0
     if (report.amount !== undefined && report.amount !== null) {
       if (typeof report.amount === 'number') {
@@ -139,22 +186,11 @@ async function getStaffStatistics(staffId) {
         amount = Number(report.amount) || 0
       }
     }
-    
     totalRevenue += amount
-    
-    console.log(`已通过报备${index + 1}:`, {
-      报备ID: report._id,
-      金额原始值: report.amount,
-      金额类型: typeof report.amount,
-      转换后金额: amount,
-      累计流水: totalRevenue,
-      状态: report.status,
-      完整报备对象: JSON.stringify(report, null, 2)
-    })
   })
-  
-  console.log('最终个人流水:', totalRevenue)
-  console.log('=== 调试结束 ===')
+
+  // 计算员工的直属流水
+  const staffSubordinateRevenue = await calculateStaffSubordinateRevenue(staffId)
 
   return {
     success: true,
@@ -171,7 +207,8 @@ async function getStaffStatistics(staffId) {
         pending: pendingReports,
         approved: approvedReports,
         totalRevenue: totalRevenue
-      }
+      },
+      subordinateRevenue: staffSubordinateRevenue
     }
   }
 }
@@ -193,31 +230,19 @@ async function getAdminStatistics() {
   const approvedReports = await db.collection('reports').where({
     status: 'approved'
   }).get()
-  
-  // 额外验证：直接查询数据库，确保金额字段存在
-  console.log('=== 数据库查询验证 ===')
-  const sampleReport = approvedReports.data.length > 0 ? approvedReports.data[0] : null
-  if (sampleReport) {
-    console.log('示例报备记录:', {
-      报备ID: sampleReport._id,
-      所有字段: Object.keys(sampleReport),
-      金额字段存在: 'amount' in sampleReport,
-      金额值: sampleReport.amount,
-      金额类型: typeof sampleReport.amount
-    })
-  }
 
-  // 调试日志：输出所有通过报备的详细信息
-  console.log('=== 总流水计算调试 ===')
-  console.log('通过报备数量:', approvedReports.data.length)
-  
-  if (approvedReports.data.length === 0) {
-    console.log('⚠️ 没有已通过的报备，总流水为0')
-  }
+  // 计算时间范围
+  const now = new Date()
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)
+  const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0)
+  const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
 
   let totalRevenue = 0
-  approvedReports.data.forEach((report, index) => {
-    // 确保金额是数字类型
+  let dayTotal = 0
+  let monthTotal = 0
+
+  approvedReports.data.forEach((report) => {
     let amount = 0
     if (report.amount !== undefined && report.amount !== null) {
       if (typeof report.amount === 'number') {
@@ -228,27 +253,20 @@ async function getAdminStatistics() {
         amount = Number(report.amount) || 0
       }
     }
-    
     totalRevenue += amount
-    console.log(`报备${index + 1}:`, {
-      报备ID: report._id,
-      员工ID: report.staffId,
-      金额原始值: report.amount,
-      金额类型: typeof report.amount,
-      转换后金额: amount,
-      状态: report.status,
-      当前累计: totalRevenue
-    })
-    
-    // 如果金额为0或无效，输出警告和完整对象
-    if (!amount || amount === 0) {
-      console.warn(`⚠️ 报备${index + 1}的金额为0或无效:`, report.amount)
-      console.warn('完整报备对象:', JSON.stringify(report, null, 2))
+
+    // 按时间统计
+    const reportTime = report.approveTime || report.createTime
+    if (reportTime) {
+      const reportDate = new Date(reportTime)
+      if (reportDate >= todayStart && reportDate <= todayEnd) {
+        dayTotal += amount
+      }
+      if (reportDate >= monthStart && reportDate <= monthEnd) {
+        monthTotal += amount
+      }
     }
   })
-
-  console.log('最终总流水:', totalRevenue)
-  console.log('=== 调试结束 ===')
 
   // 报备统计
   const reportStats = await db.collection('reports').get()
@@ -276,7 +294,9 @@ async function getAdminStatistics() {
         completed: completedOrders
       },
       revenue: {
-        total: totalRevenue
+        total: totalRevenue,
+        dayTotal: dayTotal,
+        monthTotal: monthTotal
       },
       reports: {
         total: totalReports,

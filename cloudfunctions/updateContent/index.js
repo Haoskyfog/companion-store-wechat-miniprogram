@@ -24,7 +24,21 @@ exports.main = async (event, context) => {
       }
     }
 
-    const { action, data } = event
+    const { action, data, type } = event
+
+    // 权益管理
+    if (type === 'benefits') {
+      switch (action) {
+        case 'add':
+          return await addBenefits(data)
+        case 'update':
+          return await updateBenefits(data)
+        case 'delete':
+          return await deleteBenefits(data._id)
+        default:
+          return { success: false, error: '无效的操作' }
+      }
+    }
 
     switch (action) {
       case 'create':
@@ -130,4 +144,41 @@ async function listContent(filters = {}) {
     success: true,
     data: result.data
   }
+}
+
+// 添加权益
+async function addBenefits(data) {
+  const result = await db.collection('benefits').add({
+    data: {
+      bossId: data.bossId,
+      bossNickname: data.bossNickname,
+      content: data.content,
+      createTime: db.serverDate(),
+      updateTime: db.serverDate()
+    }
+  })
+
+  return {
+    success: true,
+    data: { _id: result._id }
+  }
+}
+
+// 更新权益
+async function updateBenefits(data) {
+  await db.collection('benefits').doc(data._id).update({
+    data: {
+      content: data.content,
+      bossNickname: data.bossNickname,
+      updateTime: db.serverDate()
+    }
+  })
+
+  return { success: true }
+}
+
+// 删除权益
+async function deleteBenefits(id) {
+  await db.collection('benefits').doc(id).remove()
+  return { success: true }
 }

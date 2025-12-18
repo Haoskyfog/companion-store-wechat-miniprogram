@@ -10,13 +10,20 @@ const _ = db.command
 
 exports.main = async (event, context) => {
   try {
+    const type = event.type || 'staff' // 'staff' 或 'subordinate'
     const period = event.period || 'total' // month, quarter, year, total
     const periodValue = event.periodValue || (period === 'total' ? 'all' : getCurrentPeriod(period))
 
     // 不再需要测试模式，直接查询真实数据
 
-    // 简化版：直接计算排行榜，不保存到数据库
-    let rankings = await calculateRankingsSimple(period, periodValue)
+    let rankings
+    if (type === 'subordinate') {
+      // 直属排行榜（老板按直属流水排名）
+      rankings = await calculateSubordinateRankings(period, periodValue)
+    } else {
+      // 员工排行榜（默认）
+      rankings = await calculateRankingsSimple(period, periodValue)
+    }
 
     // 获取所有员工用户信息（一次性查询，避免多次查询）
     const allStaffUsers = await db.collection('users')
@@ -58,6 +65,7 @@ exports.main = async (event, context) => {
       success: true,
       data: {
         rankings,
+        type,
         period,
         periodValue
       }
@@ -201,25 +209,31 @@ function getDateRange(period, periodValue) {
   let start, end
 
   switch (period) {
+    case 'day':
+      // 今日
+      start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)
+      end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)
+      break
     case 'month':
-      const [year, month] = periodValue.split('-').map(Number)
-      start = new Date(year, month - 1, 1)
-      end = new Date(year, month, 0, 23, 59, 59)
+      // 本月
+      start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0)
+      end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
       break
     case 'quarter':
       // 简化为按季度计算
-      const quarter = parseInt(periodValue.split('-')[1])
-      const quarterStartMonth = (quarter - 1) * 3
+      const quarter = Math.floor(now.getMonth() / 3)
+      const quarterStartMonth = quarter * 3
       start = new Date(now.getFullYear(), quarterStartMonth, 1)
       end = new Date(now.getFullYear(), quarterStartMonth + 3, 0, 23, 59, 59)
       break
     case 'year':
-      start = new Date(parseInt(periodValue), 0, 1)
-      end = new Date(parseInt(periodValue), 11, 31, 23, 59, 59)
+      start = new Date(now.getFullYear(), 0, 1)
+      end = new Date(now.getFullYear(), 11, 31, 23, 59, 59)
       break
     default:
-      start = new Date(now.getFullYear(), now.getMonth(), 1)
-      end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59)
+      // total - 不限制时间
+      start = new Date(2020, 0, 1)
+      end = new Date(2099, 11, 31, 23, 59, 59)
   }
 
   return { start, end }
@@ -239,6 +253,71 @@ function getCurrentPeriod(period) {
     default:
       return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`
   }
+}
+
+// 计算直属排行榜（员工按直属流水排名）
+async function calculateSubordinateRankings(period, periodValue) {
+  const db = cloud.database()
+  const _ = db.command
+
+  // 获取所有员工用户
+  const staffUsers = await db.collection('users')
+    .where({
+      role: 'Staff'
+    })
+    .get()
+
+  if (staffUsers.data.length === 0) {
+    console.log('没有找到员工用户，返回空排行榜')
+    return []
+  }
+
+  const staffIds = staffUsers.data.map(user => user._openid)
+
+  // 初始化所有员工的统计数据
+  const staffStats = {}
+  for (const staffId of staffIds) {
+    staffStats[staffId] = {
+      staffId,
+      subordinateRevenue: 0 // 直属流水
+    }
+  }
+
+  // 为每个员工计算直属流水（该员工作为服务员工完成的已支付订单金额总和）
+  let ordersQuery = {
+    staffId: _.in(staffIds),
+    status: 'completed',
+    paymentStatus: 'paid'
+  }
+
+  // 根据周期过滤（如果不是总排行）
+  if (period !== 'total') {
+    const dateRange = getDateRange(period, periodValue)
+    ordersQuery.paymentTime = _.gte(dateRange.start).and(_.lte(dateRange.end))
+  }
+
+  const ordersResult = await db.collection('orders').where(ordersQuery).get()
+
+  // 按员工统计订单金额
+  for (const order of ordersResult.data) {
+    const staffId = order.staffId
+    if (staffStats[staffId]) {
+      const amount = parseFloat(order.amount) || 0
+      staffStats[staffId].subordinateRevenue += amount
+    }
+  }
+
+  // 转换为数组并按直属流水排序
+  const rankings = Object.values(staffStats)
+    .sort((a, b) => b.subordinateRevenue - a.subordinateRevenue)
+    .map((item, index) => ({
+      ...item,
+      rank: index + 1
+    }))
+
+  console.log(`直属排行榜计算完成: ${rankings.length}个员工用户`)
+
+  return rankings
 }
 
 // 添加测试员工数据

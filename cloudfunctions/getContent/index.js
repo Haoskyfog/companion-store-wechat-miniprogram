@@ -9,7 +9,18 @@ const db = cloud.database()
 
 exports.main = async (event, context) => {
   try {
-    const { type } = event
+    const { type, bossId } = event
+
+    // 如果是获取权益内容
+    if (type === 'benefits') {
+      const benefitsResult = await db.collection('benefits').get()
+      return {
+        success: true,
+        data: {
+          benefits: benefitsResult.data || []
+        }
+      }
+    }
 
     // 统一处理的内容类型
     const allTypes = ['banner', 'notice', 'birthday', 'gallery', 'recommend']

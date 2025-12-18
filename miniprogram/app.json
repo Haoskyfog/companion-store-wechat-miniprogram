@@ -32,6 +32,7 @@
     "pages/admin/preview-staff/index",
     "pages/admin/preview-boss/index",
     "pages/admin/recent-reports/index",
+    "pages/admin/benefits/index",
     "pages/profile/edit/index"
   ],
   "window": {
@@ -86,8 +87,5 @@
   },
   "style": "v2",
   "componentFramework": "glass-easel",
-  "lazyCodeLoading": "requiredComponents",
-  "usingComponents": {
-    "global-snow": "/components/global-snow/index"
-  }
+  "lazyCodeLoading": "requiredComponents"
 }
