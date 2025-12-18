@@ -47,6 +47,31 @@
   opacity: 0.6;
 }
 
+/* 下雪效果 */
+.page::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+    radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+    radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+    radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+    radial-gradient(circle at 90% 30%, rgba(255, 255, 255, 0.9) 1px, transparent 1px),
+    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+    radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+    radial-gradient(circle at 60% 90%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+    radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.7) 1px, transparent 1px);
+  background-size: 100px 100px, 120px 120px, 80px 80px, 150px 150px, 90px 90px, 110px 110px, 130px 130px, 70px 70px, 140px 140px;
+  animation: snowfall 20s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+}
+
 /* 新订单提醒 */
 .order-notification {
   position: fixed;
@@ -553,47 +578,60 @@
 }
 
 /* 高级设计感装饰元素 */
-/* 装饰元素 */
-.decoration-elements {
+/* 圣诞装饰 */
+.christmas-decoration {
   position: absolute;
   top: 50%;
   right: 32rpx;
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 12rpx;
+  gap: 8rpx;
   z-index: 2;
   pointer-events: none;
 }
 
-.decoration-dot {
-  width: 8rpx;
-  height: 8rpx;
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 50%;
-  animation: subtle-pulse 3s ease-in-out infinite;
+.snowflake {
+  font-size: 24rpx;
+  animation: float 3s ease-in-out infinite;
+  opacity: 0.8;
 }
 
-.dot-1 {
+.christmas-light {
+  font-size: 28rpx;
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.light-1 {
   animation-delay: 0s;
 }
 
-.dot-2 {
+.light-2 {
   animation-delay: 1s;
 }
 
-.dot-3 {
-  animation-delay: 2s;
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10rpx) rotate(180deg); }
 }
 
-@keyframes subtle-pulse {
-  0%, 100% { opacity: 0.3; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(1.2); }
+@keyframes twinkle {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.2); }
 }
 
 @keyframes rotate-halo {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(-100px) translateX(0);
+  }
+  100% {
+    transform: translateY(100vh) translateX(50px);
+  }
 }
 
 @keyframes snowfall {

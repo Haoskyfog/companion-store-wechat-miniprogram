@@ -11,11 +11,11 @@
     <text class="notification-arrow">›</text>
   </view>
 
-  <!-- 装饰元素 -->
-  <view class="decoration-elements">
-    <view class="decoration-dot dot-1"></view>
-    <view class="decoration-dot dot-2"></view>
-    <view class="decoration-dot dot-3"></view>
+  <!-- 圣诞装饰 -->
+  <view class="christmas-decoration">
+    <text class="snowflake">❄️</text>
+    <text class="christmas-light light-1">🎄</text>
+    <text class="christmas-light light-2">🎅</text>
   </view>
 
   <scroll-view scroll-y="{{true}}" class="scroll-content">
