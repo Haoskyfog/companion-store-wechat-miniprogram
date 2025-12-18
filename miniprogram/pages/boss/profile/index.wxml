@@ -1,14 +1,16 @@
 <!-- 老板端 - 我的 -->
 <view class="page">
-  <!-- 全局雪花效果 -->
-  <global-snow></global-snow>
-
-  <!-- 旋转雪花装饰 -->
-  <view class="rotating-snowflakes">
-    <text class="rotating-snowflake snowflake-1">❄️</text>
-    <text class="rotating-snowflake snowflake-2">❄️</text>
-    <text class="rotating-snowflake snowflake-3">❄️</text>
-    <text class="rotating-snowflake snowflake-4">❄️</text>
+  <!-- 背景装饰 -->
+  <view class="bg-decorations">
+    <!-- 旋转雪花 -->
+    <text class="rotating-snow snow-1">❄️</text>
+    <text class="rotating-snow snow-2">❄️</text>
+    <text class="rotating-snow snow-3">❄️</text>
+    <text class="rotating-snow snow-4">❄️</text>
+    <!-- 静态圣诞树 -->
+    <text class="christmas-tree tree-1">🎄</text>
+    <text class="christmas-tree tree-2">🎄</text>
+    <text class="christmas-tree tree-3">🎄</text>
   </view>
 
   <!-- 刷新按钮 -->
