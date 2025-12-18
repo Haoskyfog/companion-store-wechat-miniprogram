@@ -19,6 +19,7 @@
     "pages/staff/orders/index",
     "pages/staff/reports/index",
     "pages/staff/staff-detail/index",
+    "pages/staff/my-bosses/index",
     "pages/admin/dashboard/index",
     "pages/admin/content/index",
     "pages/admin/users/index",
@@ -85,5 +86,8 @@
   },
   "style": "v2",
   "componentFramework": "glass-easel",
-  "lazyCodeLoading": "requiredComponents"
+  "lazyCodeLoading": "requiredComponents",
+  "usingComponents": {
+    "global-snow": "/components/global-snow/index"
+  }
 }

@@ -1,59 +1,117 @@
-<!-- 员工端 - 主页 -->
+<!-- 员工端 - 我的 -->
 <view class="page">
+  <!-- 全局雪花效果 -->
+  <global-snow></global-snow>
+
   <!-- 顶部导航 -->
   <view class="header">
     <view class="header-title">陪玩店</view>
     <view class="header-actions">
       <view class="mode-badge">员工模式</view>
-      <text class="icon-btn">🔔</text>
+      <view class="refresh-btn" bindtap="onRefresh">🔄</view>
     </view>
   </view>
 
   <scroll-view scroll-y="{{true}}" class="scroll-content">
-    <!-- 快捷操作 -->
-    <view class="quick-actions">
-      <view class="action-btn action-primary" bindtap="onCreateOrder">
-        <text class="action-icon">📝</text>
-        <text class="action-title">创建订单</text>
-        <text class="action-desc">为老板创建服务记录</text>
+    <!-- 用户信息卡片 -->
+    <view class="user-card">
+      <view class="user-header">
+        <view class="user-avatar">
+          <image wx:if="{{userInfo.avatar}}" src="{{userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
+          <text wx:else>👧</text>
+        </view>
+        <view class="user-info">
+          <view class="user-name-row">
+            <text class="user-name">{{userInfo.nickname || '未设置昵称'}}</text>
+            <view class="status-badge">在线</view>
+          </view>
+          <text class="user-id">ID: {{userInfo.userId || '未设置'}}</text>
+        </view>
       </view>
-      <view class="action-btn action-secondary" bindtap="onSubmitReport">
-        <text class="action-icon">📋</text>
-        <text class="action-title">提交报备</text>
-        <text class="action-desc">记录接单信息</text>
+
+      <!-- 本月数据 -->
+      <view class="stats-grid" wx:if="{{!loading}}">
+        <view class="stat-box stat-purple">
+          <text class="stat-value">{{stats.totalOrders}}</text>
+          <text class="stat-label">订单数</text>
+        </view>
+        <view class="stat-box stat-orange">
+          <text class="stat-value">{{stats.approvedReports || 0}}</text>
+          <text class="stat-label">报备通过</text>
+        </view>
+        <view class="stat-box stat-green">
+          <text class="stat-value">¥{{stats.personalRevenue || 0}}</text>
+          <text class="stat-label">个人流水</text>
+        </view>
+        <view class="stat-box stat-blue">
+          <text class="stat-value">¥{{stats.subordinateRevenue || 0}}</text>
+          <text class="stat-label">直属流水</text>
+        </view>
       </view>
     </view>
 
-    <!-- 功能导航 -->
-    <view class="function-grid">
-      <view class="function-item" bindtap="onViewRanking">
-        <text class="function-icon">🏆</text>
-        <text class="function-title">排行榜</text>
-        <text class="function-desc">查看排名情况</text>
+    <!-- 我的老板入口 -->
+    <view class="my-boss-entry" bindtap="goToMyBosses">
+      <view class="boss-entry-left">
+        <text class="boss-entry-icon">👑</text>
+        <text class="boss-entry-text">我的老板</text>
       </view>
-      <view class="function-item" bindtap="onViewProfile">
-        <text class="function-icon">👤</text>
-        <text class="function-title">个人资料</text>
-        <text class="function-desc">完善个人信息</text>
-      </view>
-      <view class="function-item" bindtap="onViewOrders">
-        <text class="function-icon">📋</text>
-        <text class="function-title">我的订单</text>
-        <text class="function-desc">订单历史记录</text>
-      </view>
-      <view class="function-item" bindtap="onViewReports">
-        <text class="function-icon">📄</text>
-        <text class="function-title">报备记录</text>
-        <text class="function-desc">报备历史记录</text>
+      <view class="boss-entry-right">
+        <text class="boss-count">{{myBosses.length || 0}}位</text>
+        <text class="boss-arrow">›</text>
       </view>
     </view>
 
-    <!-- 温馨提示 -->
-    <view class="welcome-card">
-      <text class="welcome-icon">💡</text>
-      <view class="welcome-content">
-        <text class="welcome-title">欢迎使用陪玩店</text>
-        <text class="welcome-text">请及时维护个人资料，提升服务质量和推荐率！</text>
+    <!-- 快捷功能 -->
+    <view class="quick-grid">
+      <view class="quick-item" wx:for="{{quickActions}}" wx:key="id" data-action="{{item.action}}" bindtap="onQuickAction">
+        <view class="quick-icon" style="background: {{item.bgColor}};">
+          <text class="quick-emoji">{{item.icon}}</text>
+        </view>
+        <text class="quick-label">{{item.label}}</text>
+      </view>
+    </view>
+
+    <!-- 个人资料维护 -->
+    <view class="section-card">
+      <view class="section-header-special">
+        <text class="section-icon">✨</text>
+        <text class="section-title">个人资料</text>
+      </view>
+
+      <!-- 自我介绍图片展示 -->
+      <view class="intro-image-section" wx:if="{{voiceSettings.introImage}}">
+        <text class="intro-image-label">自我介绍图片：</text>
+        <image src="{{voiceSettings.introImage}}" mode="aspectFill" class="intro-image" />
+      </view>
+
+      <!-- 语音介绍展示 -->
+      <view class="audio-section" wx:if="{{voiceSettings.audioUrl}}">
+        <text class="audio-label">语音介绍：</text>
+        <view class="audio-info">
+          <text class="audio-icon">🎵</text>
+          <text class="audio-text">已上传语音介绍</text>
+        </view>
+      </view>
+
+      <view class="menu-item" wx:for="{{profileMenu}}" wx:key="id" data-action="{{item.action}}" bindtap="onProfileMenu">
+        <text class="menu-icon">{{item.icon}}</text>
+        <text class="menu-label">{{item.label}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 其他功能 -->
+    <view class="section-card">
+      <view class="menu-item" wx:for="{{otherMenu}}" wx:key="id" data-action="{{item.action}}" bindtap="onOtherMenu">
+        <view class="menu-icon-box" style="background: {{item.bgColor}};">
+          <text class="menu-icon-emoji">{{item.icon}}</text>
+        </view>
+        <view class="menu-info">
+          <text class="menu-title">{{item.title}}</text>
+          <text class="menu-desc">{{item.desc}}</text>
+        </view>
+        <text class="arrow">›</text>
       </view>
     </view>
 
