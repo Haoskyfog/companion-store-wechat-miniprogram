@@ -577,10 +577,10 @@
 
 .rotating-snowflake {
   position: absolute;
-  font-size: 32rpx;
+  font-size: 60rpx;
   color: rgba(255, 255, 255, 0.6);
   animation: rotate-snowflake linear infinite;
-  text-shadow: 0 0 4rpx rgba(255, 255, 255, 0.3);
+  text-shadow: 0 0 6rpx rgba(255, 255, 255, 0.3);
 }
 
 /* 不同位置的雪花 */
