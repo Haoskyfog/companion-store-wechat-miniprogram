@@ -91,7 +91,10 @@
       <view class="ranking-list">
         <view class="ranking-item {{item.rank <= 3 ? 'top-rank' : ''}}" wx:for="{{rankings}}" wx:key="rank">
           <view class="rank-number {{getRankClass(item.rank)}}">
-            <text>{{item.rank}}</text>
+            <text wx:if="{{item.rank === 1}}">🥇</text>
+            <text wx:elif="{{item.rank === 2}}">🥈</text>
+            <text wx:elif="{{item.rank === 3}}">🥉</text>
+            <text wx:else>{{item.rank}}</text>
           </view>
           <view class="staff-avatar">
             <image wx:if="{{item.userInfo && item.userInfo.avatar}}" src="{{item.userInfo.avatar}}" mode="aspectFill" class="avatar-image" />
