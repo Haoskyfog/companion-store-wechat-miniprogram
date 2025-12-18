@@ -1,17 +1,21 @@
 <!-- 老板端 - 我的 -->
 <view class="page">
-  <!-- 设置按钮 -->
-  <view class="settings-btn">⚙️</view>
-
   <!-- 刷新按钮 -->
-  <view class="refresh-btn" bindtap="onRefresh">🔄</view>
+  <view class="refresh-btn" bindtap="onRefresh">↻</view>
 
-  <!-- 高级设计感装饰元素 -->
-  <view class="profile-decoration">
-    <view class="profile-sparkle-1">✦</view>
-    <view class="profile-sparkle-2">✦</view>
-    <view class="profile-dot-1"></view>
-    <view class="profile-dot-2"></view>
+  <!-- 新订单提醒 -->
+  <view class="order-notification" wx:if="{{pendingOrderCount > 0}}" bindtap="onOrderNotificationTap">
+    <view class="notification-content">
+      <text class="notification-text">您有 {{pendingOrderCount}} 个新订单待处理</text>
+    </view>
+    <text class="notification-arrow">›</text>
+  </view>
+
+  <!-- 圣诞装饰 -->
+  <view class="christmas-decoration">
+    <text class="snowflake">❄️</text>
+    <text class="christmas-light light-1">🎄</text>
+    <text class="christmas-light light-2">🎅</text>
   </view>
 
   <scroll-view scroll-y="{{true}}" class="scroll-content">
@@ -35,10 +39,16 @@
     <view class="wallet-info-card" wx:if="{{!loading}}">
       <view class="wallet-info">
         <view class="wallet-content">
-          <text class="wallet-icon">💰</text>
           <view class="wallet-details">
             <view class="wallet-title">钱包余额</view>
             <view class="wallet-balance">¥{{walletInfo.balance}}</view>
+          </view>
+        </view>
+        <view class="wallet-divider"></view>
+        <view class="wallet-content">
+          <view class="wallet-details">
+            <view class="wallet-title">消费总额</view>
+            <view class="wallet-balance">¥{{totalConsumption}}</view>
           </view>
         </view>
       </view>
@@ -48,22 +58,19 @@
     <view class="vip-info-card" wx:if="{{!loading}}" bindtap="onVipTap">
       <view class="vip-info">
         <view class="vip-content">
-          <text class="vip-icon">💎</text>
           <view class="vip-details">
             <view class="vip-title">尊贵VIP会员</view>
-            <view class="vip-desc">消费总额：¥{{totalConsumption}}</view>
+            <view class="vip-desc">享受专属特权</view>
           </view>
         </view>
         <text class="arrow">›</text>
       </view>
     </view>
 
-
     <!-- 我的直属员工 -->
     <view class="staff-section surface">
       <view class="section-header">
         <text class="section-title">我的直属员工</text>
-        <text class="section-more">查看全部</text>
       </view>
       <scroll-view scroll-x="{{true}}" class="staff-scroll">
         <view class="staff-item" wx:for="{{myStaffs}}" wx:key="_openid">
@@ -79,7 +86,7 @@
     <!-- 主线故事 -->
     <view class="story-section surface" wx:if="{{!loading}}">
       <view class="section-header">
-        <text class="section-title">📖 主线故事</text>
+        <text class="section-title">主线故事</text>
       </view>
       <view class="story-content">
         <view class="story-text">{{storyContent}}</view>
