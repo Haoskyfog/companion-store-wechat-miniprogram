@@ -3,6 +3,14 @@
   <!-- 全局雪花效果 -->
   <global-snow></global-snow>
 
+  <!-- 旋转雪花装饰 -->
+  <view class="rotating-snowflakes">
+    <text class="rotating-snowflake snowflake-1">❄️</text>
+    <text class="rotating-snowflake snowflake-2">❄️</text>
+    <text class="rotating-snowflake snowflake-3">❄️</text>
+    <text class="rotating-snowflake snowflake-4">❄️</text>
+  </view>
+
   <!-- 刷新按钮 -->
   <view class="refresh-btn" bindtap="onRefresh">↻</view>
 
