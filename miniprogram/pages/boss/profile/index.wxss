@@ -217,28 +217,10 @@
   align-items: center;
   justify-content: center;
   border: 6rpx solid rgba(255, 255, 255, 0.9);
-  box-shadow:
-    0 4rpx 16rpx rgba(0, 0, 0, 0.1),
-    0 0 0 4rpx rgba(255, 182, 193, 0.3),
-    0 0 0 8rpx rgba(173, 216, 230, 0.2),
-    0 0 0 12rpx rgba(255, 182, 193, 0.1);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
   overflow: hidden;
   backdrop-filter: blur(5rpx);
   -webkit-backdrop-filter: blur(5rpx);
-  position: relative;
-}
-
-.user-avatar::before {
-  content: '';
-  position: absolute;
-  top: -12rpx;
-  left: -12rpx;
-  right: -12rpx;
-  bottom: -12rpx;
-  border-radius: 50%;
-  background: linear-gradient(45deg, rgba(255, 182, 193, 0.4), rgba(173, 216, 230, 0.4), rgba(255, 182, 193, 0.4));
-  z-index: -1;
-  animation: rotate-halo 8s linear infinite;
 }
 
 .avatar-text {
@@ -610,95 +592,6 @@
 }
 
 /* 高级设计感装饰元素 */
-/* 圣诞装饰元素 */
-.christmas-decorations {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.top-decoration {
-  position: absolute;
-  top: 120rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 60rpx;
-}
-
-.christmas-star {
-  font-size: 48rpx;
-  animation: twinkle 2s ease-in-out infinite;
-  filter: drop-shadow(0 0 8rpx rgba(255, 215, 0, 0.8));
-}
-
-.christmas-bell {
-  font-size: 44rpx;
-  animation: twinkle 1.8s ease-in-out infinite 0.5s;
-}
-
-.left-decoration {
-  position: absolute;
-  left: 32rpx;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 80rpx;
-}
-
-.christmas-tree {
-  font-size: 56rpx;
-  animation: float 3s ease-in-out infinite;
-}
-
-.christmas-gift {
-  font-size: 40rpx;
-  animation: float 2.5s ease-in-out infinite 1s;
-}
-
-.right-decoration {
-  position: absolute;
-  right: 32rpx;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 80rpx;
-}
-
-.christmas-santa {
-  font-size: 52rpx;
-  animation: float 3.5s ease-in-out infinite 0.5s;
-}
-
-.christmas-cookie {
-  font-size: 36rpx;
-  animation: twinkle 2.5s ease-in-out infinite;
-}
-
-.bottom-decoration {
-  position: absolute;
-  bottom: 200rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 80rpx;
-}
-
-.christmas-candle {
-  font-size: 38rpx;
-  animation: float 2.8s ease-in-out infinite;
-}
-
-.christmas-snowman {
-  font-size: 42rpx;
-  animation: twinkle 3s ease-in-out infinite 1.5s;
-}
 
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -708,11 +601,6 @@
 @keyframes twinkle {
   0%, 100% { opacity: 0.6; transform: scale(1); }
   50% { opacity: 1; transform: scale(1.2); }
-}
-
-@keyframes rotate-halo {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
 }
 
 @keyframes snowfall {

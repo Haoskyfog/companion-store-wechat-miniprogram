@@ -11,32 +11,6 @@
     <text class="notification-arrow">›</text>
   </view>
 
-  <!-- 圣诞装饰元素 -->
-  <view class="christmas-decorations">
-    <!-- 顶部装饰 -->
-    <view class="top-decoration">
-      <text class="christmas-star">⭐</text>
-      <text class="christmas-bell">🔔</text>
-    </view>
-
-    <!-- 左侧装饰 -->
-    <view class="left-decoration">
-      <text class="christmas-tree">🎄</text>
-      <text class="christmas-gift">🎁</text>
-    </view>
-
-    <!-- 右侧装饰 -->
-    <view class="right-decoration">
-      <text class="christmas-santa">🎅</text>
-      <text class="christmas-cookie">🍪</text>
-    </view>
-
-    <!-- 底部装饰 -->
-    <view class="bottom-decoration">
-      <text class="christmas-candle">🕯️</text>
-      <text class="christmas-snowman">☃️</text>
-    </view>
-  </view>
 
   <scroll-view scroll-y="{{true}}" class="scroll-content">
     <!-- 顶部用户信息区域 -->
