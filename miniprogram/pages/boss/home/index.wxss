@@ -365,14 +365,14 @@
   right: 0;
   z-index: 3;
   width: 100%;
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(5rpx) saturate(180%);
-  -webkit-backdrop-filter: blur(5rpx) saturate(180%);
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(2rpx) saturate(180%);
+  -webkit-backdrop-filter: blur(2rpx) saturate(180%);
   border-radius: 24rpx 24rpx 0 0;
-  padding: 24rpx 32rpx 32rpx;
+  padding: 16rpx 32rpx 24rpx;
   border: 1rpx solid rgba(255, 255, 255, 0.3);
   border-bottom: none;
-  box-shadow: 0 -8rpx 32rpx rgba(0, 0, 0, 0.2);
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.1);
   margin: 0;
   box-sizing: border-box;
 }
@@ -383,9 +383,9 @@
 }
 
 .banner-title {
-  font-size: 52rpx;
+  font-size: 44rpx;
   font-weight: bold;
-  margin-bottom: 16rpx;
+  margin-bottom: 12rpx;
   text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.3);
   letter-spacing: 2rpx;
 }
