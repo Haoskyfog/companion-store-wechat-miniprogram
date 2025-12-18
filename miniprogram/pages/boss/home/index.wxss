@@ -41,9 +41,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(8rpx) saturate(180%);
-  -webkit-backdrop-filter: blur(8rpx) saturate(180%);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5rpx) saturate(180%);
+  -webkit-backdrop-filter: blur(5rpx) saturate(180%);
   border-bottom: 1rpx solid rgba(255, 255, 255, 0.3);
 }
 
@@ -116,9 +116,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10rpx);
-  -webkit-backdrop-filter: blur(10rpx);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4rpx);
+  -webkit-backdrop-filter: blur(4rpx);
   border-radius: 50%;
   border: 1rpx solid rgba(255, 255, 255, 0.4);
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
@@ -365,9 +365,9 @@
   right: 0;
   z-index: 3;
   width: 100%;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(6rpx) saturate(180%);
-  -webkit-backdrop-filter: blur(6rpx) saturate(180%);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5rpx) saturate(180%);
+  -webkit-backdrop-filter: blur(5rpx) saturate(180%);
   border-radius: 24rpx 24rpx 0 0;
   padding: 24rpx 32rpx 32rpx;
   border: 1rpx solid rgba(255, 255, 255, 0.3);
@@ -400,8 +400,8 @@
 .banner-tag {
   display: inline-block;
   padding: 6rpx 16rpx;
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(3rpx);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4rpx);
   border-radius: 16rpx;
   font-size: 22rpx;
   border: 1rpx solid rgba(255, 255, 255, 0.3);
@@ -428,9 +428,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20rpx) saturate(180%);
-  -webkit-backdrop-filter: blur(20rpx) saturate(180%);
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(6rpx) saturate(180%);
+  -webkit-backdrop-filter: blur(6rpx) saturate(180%);
   border: 1rpx solid rgba(255, 255, 255, 0.3);
 }
 
@@ -577,9 +577,9 @@
 
 .gallery-item {
   position: relative;
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20rpx) saturate(180%);
-  -webkit-backdrop-filter: blur(20rpx) saturate(180%);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5rpx) saturate(180%);
+  -webkit-backdrop-filter: blur(5rpx) saturate(180%);
   border-radius: 24rpx;
   overflow: hidden;
   border: 1rpx solid rgba(255, 255, 255, 0.3);
@@ -626,9 +626,9 @@
   font-size: 26rpx;
   font-weight: 500;
   color: #374151;
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10rpx);
-  -webkit-backdrop-filter: blur(10rpx);
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(4rpx);
+  -webkit-backdrop-filter: blur(4rpx);
   word-break: break-all;
   line-height: 1.4;
 }
@@ -646,4 +646,111 @@
 /* 图片错误处理 */
 .banner-bg-image {
   background-color: #f3f4f6;
+}
+
+/* 新订单弹窗 */
+.order-popup-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.order-popup {
+  width: 600rpx;
+  background: #fff;
+  border-radius: 32rpx;
+  overflow: hidden;
+  animation: popupIn 0.3s ease;
+}
+
+@keyframes popupIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.popup-header {
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+  padding: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16rpx;
+}
+
+.popup-icon {
+  font-size: 48rpx;
+}
+
+.popup-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #fff;
+}
+
+.popup-content {
+  padding: 40rpx;
+}
+
+.popup-info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f3f4f6;
+}
+
+.popup-info-row:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  color: #6b7280;
+  font-size: 28rpx;
+}
+
+.info-value {
+  color: #1f2937;
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.info-value.highlight {
+  color: #ec4899;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.popup-actions {
+  display: flex;
+  border-top: 1rpx solid #f3f4f6;
+}
+
+.popup-btn {
+  flex: 1;
+  padding: 32rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 500;
+}
+
+.popup-btn.secondary {
+  color: #6b7280;
+  background: #f9fafb;
+}
+
+.popup-btn.primary {
+  color: #fff;
+  background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
 }
