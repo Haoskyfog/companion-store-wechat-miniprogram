@@ -21,6 +21,14 @@ Page({
       userId: string;
       avatar: string;
     }>,
+    // 雪花效果
+    showSnow: true,
+    snowflakes: [] as Array<{
+      id: number;
+      left: number;
+      duration: number;
+      delay: number;
+    }>,
     menuList: [
       {
         id: 1,
@@ -60,6 +68,30 @@ Page({
 
   onLoad() {
     this.loadUserInfo()
+    this.initSnowflakes()
+  },
+
+  // 初始化雪花
+  initSnowflakes() {
+    const snowflakes = []
+    const snowflakeCount = 25 // 适中的雪花数量
+
+    // 获取屏幕宽度
+    const systemInfo = wx.getSystemInfoSync()
+    const screenWidth = systemInfo.windowWidth
+
+    for (let i = 0; i < snowflakeCount; i++) {
+      snowflakes.push({
+        id: i,
+        left: Math.random() * screenWidth, // 随机水平位置
+        duration: 8 + Math.random() * 6, // 8-14秒随机持续时间
+        delay: Math.random() * 8 // 0-8秒随机延迟
+      })
+    }
+
+    this.setData({
+      snowflakes: snowflakes
+    })
   },
 
   onShow() {

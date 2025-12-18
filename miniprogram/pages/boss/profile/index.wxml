@@ -11,6 +11,14 @@
     <text class="notification-arrow">›</text>
   </view>
 
+  <!-- 雪花容器 -->
+  <view class="snow-container" wx:if="{{showSnow}}">
+    <view wx:for="{{snowflakes}}" wx:key="id"
+          class="snowflake"
+          style="left: {{item.left}}px; animation-duration: {{item.duration}}s; animation-delay: {{item.delay}}s;">
+      ❄
+    </view>
+  </view>
 
   <scroll-view scroll-y="{{true}}" class="scroll-content">
     <!-- 顶部用户信息区域 -->
