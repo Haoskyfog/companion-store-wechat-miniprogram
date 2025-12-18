@@ -288,7 +288,11 @@
 .wallet-balance {
   font-size: 36rpx;
   font-weight: 700;
-  color: #16a34a;
+  background: linear-gradient(135deg, #dc2626 0%, #ea580c 50%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 1rpx;
 }
 
 /* 直属流水卡片 */
@@ -371,13 +375,13 @@
 .vip-title {
   font-size: 28rpx;
   font-weight: 600;
-  color: #1f2937;
+  color: #dc2626;
   margin-bottom: 4rpx;
 }
 
 .vip-desc {
   font-size: 24rpx;
-  color: #7c3aed;
+  color: #dc2626;
   font-weight: 600;
 }
 
@@ -487,9 +491,9 @@
 
 .story-level {
   font-size: 24rpx;
-  color: #7c3aed;
+  color: #ea580c;
   font-weight: 600;
-  background: rgba(124, 58, 237, 0.1);
+  background: rgba(234, 88, 12, 0.15);
   padding: 8rpx 16rpx;
   border-radius: 16rpx;
   display: inline-block;
